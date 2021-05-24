@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'power','live','drop_date','academy_id','last_login'
     ];
 
     /**
@@ -40,4 +41,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function academy(){
+        return $this->belongsTo(Academies::class,'academy_id');
+    }
 }

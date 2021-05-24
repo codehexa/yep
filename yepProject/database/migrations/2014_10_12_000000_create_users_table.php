@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->enum('live',['Y','N'])->default('N');
             $table->timestamp('drop_date')->nullable();
             $table->bigInteger('academy_id')->unsigned()->nullable()->default(0)->comment('academies.id');
+            $table->timestamp('last_login')->nullable();
         });
     }
 
