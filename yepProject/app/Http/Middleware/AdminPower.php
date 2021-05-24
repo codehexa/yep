@@ -24,6 +24,6 @@ class AdminPower
             }
         }
 
-        return redirect()->back()->withErrors(["msg"=>"NO_HAS_POWER_ADMIN"]);
+        return Auth::logout();
     }
 }
