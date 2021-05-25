@@ -24,6 +24,6 @@ class AdminPower
             }
         }
 
-        return Auth::logout();
+        return redirect("/");
     }
 }

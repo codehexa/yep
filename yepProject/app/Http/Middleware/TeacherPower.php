@@ -23,6 +23,6 @@ class TeacherPower
             }
         }
 
-        return Auth::logout();
+        return redirect("/");
     }
 }

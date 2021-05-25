@@ -20,6 +20,7 @@ return [
     "lb_live"  => "운영여부",
     "lb_btn_manage" => "관리",
     "lb_alert"  => "알림",
+    "lb_function"   => "기능",
 
     /* 학원 관리 */
     "lb_academy_manage" => "학원관리",

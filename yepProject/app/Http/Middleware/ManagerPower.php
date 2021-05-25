@@ -23,6 +23,6 @@ class ManagerPower
             }
         }
 
-        return Auth::logout();
+        return redirect("/");
     }
 }
