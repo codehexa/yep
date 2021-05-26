@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <h5>{{ __('strings.lb_settings') }} &gt; {{ __('strings.lb_user_manage') }}</h5>
-    <div class="mt-3"><a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_backward") }}</a></div>
+    <div class="mt-3"><a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_backward") }}</a></div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
@@ -38,8 +38,8 @@
                     <th scope="col">{{ __('strings.lb_created_date') }}</th>
                     <th scope="col">{{ __('strings.lb_last_login') }}</th>
                     <th scope="col">{{ __('strings.lb_live') }}</th>
+                    <th scope="col">{{ __('strings.lb_function') }}</th>
                     <th scope="col">{{ __('strings.lb_drop_date') }}</th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,8 +65,17 @@
                             {{ __('strings.fn_live_n') }}
                         @endif
                     </td>
+                    <td><a href="#" class="btn btn-primary btn-sm fn_user" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a>
+                        <div class="list-group d-none position-fixed float-end">
+                            <div class="list-group-item list-group-item-action">
+                                <a href="#" class="btn btn-link btn-sm fn_c_show" fn_c_id="{{ $datum->id }}"><i class="fa fa-eye"></i> {{ __('strings.fn_show') }}</a>
+                            </div>
+                            <div class="list-group-item list-group-item-action">
+                                <a href="#" class="btn btn-link btn-sm fn_c_modify" fn_c_id="{{ $datum->id }}"><i class="fa fa-user-edit"></i> {{ __('strings.fn_modify') }}</a>
+                            </div>
+                        </div>
+                    </td>
                     <td>{{ $datum->drop_date }}</td>
-                    <td><a href="#" class="btn btn-primary btn-sm fn_user" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
             @endforeach
             </tbody>
@@ -124,9 +133,20 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // show
+        $(document).on("click",".fn_c_show",function (){
+            let uid = $(this).attr("fn_c_id");
+            location.href = "/userView/" + uid;
+        });
+
+        $(document).on("click",".fn_c_modify",function (){
+            let uid = $(this).attr("fn_c_id");
+            location.href = "/userModify/" + uid;
+        });
+
         $(document).on("click",".fn_user",function (){
             event.preventDefault();
-            $("#alertModalCenter").modal("show");
+            $(this).parent().children("div").toggleClass("d-none");
         });
 
         function showAlert(str){

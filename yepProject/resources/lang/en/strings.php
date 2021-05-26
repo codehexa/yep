@@ -21,6 +21,21 @@ return [
     "lb_btn_manage" => "관리",
     "lb_alert"  => "알림",
     "lb_function"   => "기능",
+    "lb_confirm"    => "다시 확인합니다",
+    "lb_confirm_update_again"  => "변경하는 정보를 업데이트 하겠습니까?",
+
+    /* 운영자 관리 */
+    "lb_user_view"  => "사용자 보기",
+    "lb_user_modify"  => "사용자 편집",
+    "lb_password"   => "비밀번호",
+    "lb_created_at"   => "생성일자",
+    "lb_updated_at"   => "업데이트 일자",
+    "lb_change_password"   => "비밀번호 변경",
+    "lb_no_academy_register"    => "등록된 소속이 없습니다",
+    "lb_crypt_string"   => "암호화되어 있음",
+    "lb_change_password_title"    => "비밀번호를 변경합니다",
+    "str_insert_new_password"   => "변경할 비밀번호를 입력하세요",
+    "str_insert_re_password"    => "변경할 비밀번호를 다시 확인하세요",
 
     /* 학원 관리 */
     "lb_academy_manage" => "학원관리",
@@ -37,6 +52,12 @@ return [
     "fn_cancel" => "취소",
     "fn_okay"   => "확인",
     "fn_delete" => "삭제",
+    "fn_show"   => "보기",
+    "fn_modify" => "편집",
+    "fn_stop"   => "정지",
+    "fn_update" => "업데이트",
+    "fn_submit" => "확인",
+    "fn_list"   => "리스트",
 
     /* strings */
     "str_there_is_no_data"  => "자료가 없습니다",
@@ -48,4 +69,6 @@ return [
     "err_has_already"   => "이미 등록된 정보입니다",
     "err_get_info"  => "정보를 가져오는데 실패했습니다",
     "err_fail_to_modify"    => "변경하는데 실패했습니다",
+    "err_fail_to_update"    => "업데이트 하는데 실패했습니다",
+    "err_no_match_password" => "입력한 비밀번호가 맞지 않습니다",
 ];

@@ -14,4 +14,6 @@ class Configurations extends Model
     public static $USER_POWER_TEACHER   = "TEACHER";
 
     public static $SETTINGS_PAGE_LIMIT_CODE = "PAGE_CODE";
+
+
 }
