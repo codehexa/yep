@@ -149,7 +149,7 @@
             <div class="modal-body">
                 <form name="pwFrm" id="pwFrm" method="post" action="/userPasswordChange">
                     @csrf
-                    <input type="hidden" name="up_id" id="up_id" value="{{ $data->id }}"/>
+                    <input type="hidden" name="up_new_id" id="up_new_id" value="{{ $data->id }}"/>
                     <h4>{{ __('strings.lb_change_password_title') }}</h4>
                     <div class="form-group">
                         <label for="up_new_password">{{ __('strings.str_insert_new_password') }}</label>

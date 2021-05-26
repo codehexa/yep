@@ -35,3 +35,5 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::post("/deleteCategory",[\App\Http\Controllers\AcademyController::class, 'delete'])->name('deleteCategory');
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/s',[\App\Http\Controllers\TempController::class, 'tmp']);

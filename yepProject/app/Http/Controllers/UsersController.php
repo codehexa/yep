@@ -117,8 +117,8 @@ class UsersController extends Controller
     }
 
     public function changePw(Request $request){
-        $upId = $request->get("up_id");
-        $pw = $request->get("up_password");
+        $upId = $request->get("up_new_id");
+        $pw = $request->get("up_new_password");
 
         $my = Auth::user();
 
@@ -134,7 +134,7 @@ class UsersController extends Controller
             $user->save();
 
             $logUserCtrl = new LogUsersController();
-            $logUserCtrl->addLog($my->id,$upId,$field_name,$old_value,$new_value);
+            $logUserCtrl->addLog($user_id,$target_id,$field_name,$old_value,$new_value);
 
             return redirect()->route('userView',['id'=>$upId]);
         }catch (\Exception $e){
