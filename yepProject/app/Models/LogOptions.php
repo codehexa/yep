@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LogUsers extends Model
+class LogOptions extends Model
 {
     use HasFactory;
 
-    protected $table = "log_users";
-
+    protected $table = "log_options";
     protected $fillable = [
-        "user_id","target_id","field_name","old_value","new_value"
+        "user_id","opt_code","opt_old_value","opt_new_value","opt_log_desc"
     ];
 
     public function writer(){
-        return $this->belongsTo(User::class, "user_id");
+        return $this->belongsTo(User::class,"user_id");
     }
 }

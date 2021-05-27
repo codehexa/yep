@@ -93,11 +93,12 @@ class AcademyController extends Controller
         $data = Academies::find($delId);
 
         try {
+            $oldName = $data->ac_name;
             $data->delete();
 
             $this->logMode = "delete";
             $this->logTarget = $delId;
-            $this->logDesc = trans("logstrings.academy_delete",["TARGET_ID"=>$delId]);
+            $this->logDesc = trans("logstrings.academy_delete",["TARGET_ID"=>$delId,"ACNAME"=>$oldName]);
 
             $logCtrl = new LogAcademiesController();
             $logCtrl->store($this->logCategory, $this->logMode, $this->logTarget, $this->logDesc);

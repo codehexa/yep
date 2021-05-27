@@ -11,7 +11,9 @@ return [
     "lb_search_key" => "검색",
     "lb_insert_user_name"   => "찾는 이름을 입력하세요",
     "lb_power"  => "권한",
+    "lb_user_name"  => "작성자",
     "lb_name"   => "이름",
+    "lb_date"   => "일자",
     "lb_email"  => "이메일",
     "lb_created_date"  => "등록일",
     "lb_last_login"  => "최근접속일자",
@@ -23,6 +25,8 @@ return [
     "lb_function"   => "기능",
     "lb_confirm"    => "다시 확인합니다",
     "lb_confirm_update_again"  => "변경하는 정보를 업데이트 하겠습니까?",
+    "lb_mode"   => "모드",
+    "lb_target" => "대상",
 
     /* 운영자 관리 */
     "lb_user_view"  => "사용자 보기",
@@ -43,6 +47,7 @@ return [
 
 
     /* functions */
+    "fn_init"   => "초기 화면",
     "fn_backward"   => "뒤로",
     "fn_search" => "찾기",
     "fn_not_set"    => "미지정",
@@ -58,6 +63,32 @@ return [
     "fn_update" => "업데이트",
     "fn_submit" => "확인",
     "fn_list"   => "리스트",
+    "fn_information"    => "정보",
+
+    /* 학년 관리 */
+    "lb_grade_manage"   => "학년관리",
+    "lb_grade_title"    => "구분",
+    "lb_grade_name" => "학년",
+    "lb_index"  => "순서",
+    "lb_new_school_grade"   => "신규 학년을 등록합니다",
+    "lb_select" => "선택하세요",
+    "lb_insert_grade"   => "학년을 입력하세요",
+
+    /* options */
+    "lb_options_manage"  => "옵션관리",
+    "lb_code"   => "코드",
+    "lb_value"   => "값",
+    "lb_desc"   => "요약 설명",
+    "lb_old_value"  => "변경 이전",
+    "lb_new_value"  => "변경 이후",
+    "lb_option_log" => "옵션 로그 리스트",
+
+    /* 로그 관리 */
+    "lb_logs_manage"    => "로그관리",
+    "lb_logs_users" => "사용자 정보 로그",
+    "lb_logs_academy"   => "학원정보 로그",
+    "lb_logs_options"   => "옵션 로그",
+    "lb_deleted_academy"    => "삭제된 학원",
 
     /* strings */
     "str_there_is_no_data"  => "자료가 없습니다",
@@ -71,4 +102,6 @@ return [
     "err_fail_to_modify"    => "변경하는데 실패했습니다",
     "err_fail_to_update"    => "업데이트 하는데 실패했습니다",
     "err_no_match_password" => "입력한 비밀번호가 맞지 않습니다",
+    "err_insert_value"  => "값을 입력하세요",
+    "err_deleted_data"  => "삭제된 정보",
 ];

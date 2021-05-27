@@ -14,4 +14,12 @@ class LogAcademies extends Model
         "user_id","log_category","log_mode",
         "target_id","log_desc"
     ];
+
+    public function writer(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function academy(){
+        return $this->belongsTo(Academies::class,"target_id");
+    }
 }
