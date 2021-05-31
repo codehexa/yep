@@ -20,6 +20,7 @@ class CreateTestweeksTable extends Migration
             $table->integer("weeks")->unsigned()->comment("weeks numbering");
             $table->mediumText("context")->nullable()->comment("comments");
             $table->enum("show",["Y","N"])->default("Y")->comment("show or hide");
+            $table->bigInteger("hakgi")->unsigned()->default(0)->comment("hakgi.id");
         });
     }
 

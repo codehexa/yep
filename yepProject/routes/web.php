@@ -63,6 +63,19 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/storeClass",[\App\Http\Controllers\ClassesController::class, "store"]);
     Route::post("/setClassTeacher",[\App\Http\Controllers\ClassesController::class, "setClassTeacher"]);
     Route::post("/getTeachersJson",[\App\Http\Controllers\ClassesController::class, "getTeacher"]);
+
+    /* 학기 관리 */
+    Route::get("/hakgis",[\App\Http\Controllers\HakgiController::class, "index"])->name("hakgis");
+    Route::post("/addHakgi",[\App\Http\Controllers\HakgiController::class, "add"]);
+    Route::post("/hakgiInfoJson",[\App\Http\Controllers\HakgiController::class, "getInfo"]);
+    Route::post("/storeHakgi",[\App\Http\Controllers\HakgiController::class, "store"]);
+    Route::post("/delHakgi",[\App\Http\Controllers\HakgiController::class, "delete"]);
+
+    /* 시험주 관리 */
+    Route::get("/testWeeks",[\App\Http\Controllers\TestWeeksController::class, "list"])->name("testweeks");
+    Route::post("/getHakgiListJson",[\App\Http\Controllers\TestWeeksController::class, "getHakgiListJson"]);
+    Route::post("/addTestWeek",[\App\Http\Controllers\TestWeeksController::class, "add"]);
+
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

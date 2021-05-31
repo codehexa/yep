@@ -107,9 +107,22 @@ return [
 
     /* 학기 관리 */
     "lb_hakgi_manage" => "학기 관리",
+    "lb_hakgi"  => "학기",
+    "lb_year_name"  => "년도",
+    "lb_hakgi_name" => "학기명칭",
+    "str_insert_hakgi_name" => "학기 명칭을 입력하세요",
+    "lb_common_insert"  => "모든 학제에 공통 입력",
 
     /* 시험주 관리 */
     "lb_testweek_manage" => "시험주 관리",
+    "lb_haknyon"    => "학년",
+    "lb_week_st"    => "주차",
+    "lb_context"    => "블로그 소식",
+    "lb_new_context"    => "새로운 블로그 소식",
+    "lb_insert_context" => "내용을 입력하세요",
+    "str_select_hakyon" => "학년을 선택하세요",
+    "str_select_hakgi"  => "학기를 선택하세요",
+
 
     /* 코멘트 관리 */
     "lb_comment_manage" => "코멘트 관리",
@@ -139,4 +152,6 @@ return [
     "err_deleted_data"  => "삭제된 정보",
     "err_already_has"   => "기존에 등록된 데이터가 있습니다.",
     "err_select_teacher"    => "선생님을 선택하세요",
+    "err_fail_to_delete"    => "삭제하는데 실패했습니다",
+
 ];
