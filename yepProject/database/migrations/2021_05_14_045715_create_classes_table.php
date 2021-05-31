@@ -18,8 +18,9 @@ class CreateClassesTable extends Migration
             $table->timestamps();
             $table->string("class_name");
             $table->bigInteger("ac_id")->unsigned()->default(0);
+            $table->bigInteger("sg_id")->unsigned()->default(0);
             $table->enum("show",["Y","N"])->default("Y");
-            //$table->bigInteger("homeschool_id")->unsigned()->nullable()->comment("담임 , users.id. 사용 안함. 링크로 사용함.");
+            $table->bigInteger("teacher_id")->unsigned()->default(0)->comment("담임 , users.id. 사용 안함. 링크로 사용함.");
             $table->string("class_desc")->nullable()->comment("반 정보 간단 설명.");
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLnClassTeacherTable extends Migration
+class CreateLogClassesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateLnClassTeacherTable extends Migration
      */
     public function up()
     {
-        Schema::create('ln_class_teacher', function (Blueprint $table) {
+        Schema::create('log_classes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('class_id')->unsigned()->comment("classes.id");
-            $table->bigInteger('teacher_id')->unsigned()->comment('users.id');
+            $table->bigInteger("user_id")->unsigned()->default(0);
+            $table->string("log_category");
+            $table->string("log_mode");
+            $table->bigInteger("target_id")->unsigned()->nullable();
+            $table->string("log_desc");
         });
     }
 
@@ -28,6 +31,6 @@ class CreateLnClassTeacherTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ln_class_teacher');
+        Schema::dropIfExists('log_classes');
     }
 }

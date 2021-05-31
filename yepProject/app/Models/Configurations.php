@@ -20,6 +20,11 @@ class Configurations extends Model
     public static $SCHOOL_PRE_GRADE_MIDDLE  = "M";
     public static $SCHOOL_PRE_GRADE_HIGH  = "H";
     public static $SCHOOL_PRE_GRADE_UNIVERSITY  = "U";
+    public static $SCHOOL_PRE_GRADE_KINDER_HAN  = "유치원";
+    public static $SCHOOL_PRE_GRADE_ELEMENT_HAN  = "초등학교";
+    public static $SCHOOL_PRE_GRADE_MIDDLE_HAN  = "중학교";
+    public static $SCHOOL_PRE_GRADE_HIGH_HAN  = "고등학교";
+    public static $SCHOOL_PRE_GRADE_UNIVERSITY_HAN  = "대학(교)";
 
     public static $SCHOOL_PRE_GRADES = [
         ["name"=>"유치원","value"=>"K"],

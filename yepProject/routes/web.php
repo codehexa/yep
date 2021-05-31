@@ -53,6 +53,17 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::get("/logsAcademy",[\App\Http\Controllers\LogsViewController::class, 'academy'])->name('logsAcademy');
     Route::get("/logsUsers",[\App\Http\Controllers\LogsViewController::class, 'users'])->name('logsUsers');
 });
+
+/* Manager Power */
+Route::group(['middleware' => ['managerPower']],function() {
+    /* 반 관리 */
+    Route::get("/classes/{acaid?}",[\App\Http\Controllers\ClassesController::class, "index"])->name("classes");
+    Route::post("/addClass",[\App\Http\Controllers\ClassesController::class, "add"]);
+    Route::post("/classInfoJson",[\App\Http\Controllers\ClassesController::class, "infoJson"]);
+    Route::post("/storeClass",[\App\Http\Controllers\ClassesController::class, "store"]);
+    Route::post("/setClassTeacher",[\App\Http\Controllers\ClassesController::class, "setClassTeacher"]);
+    Route::post("/getTeachersJson",[\App\Http\Controllers\ClassesController::class, "getTeacher"]);
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/s',[\App\Http\Controllers\TempController::class, 'tmp']);

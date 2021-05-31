@@ -42,7 +42,17 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @auth
+                            @if (\Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
+                                <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
+                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_hakgi_manage') }}</a>
+                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>
+                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
+                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
+                            @endif
+                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
+                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
+                        @endauth
                     </ul>
 
 
