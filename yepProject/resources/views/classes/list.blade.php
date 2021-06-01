@@ -57,30 +57,7 @@
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ $datum->academy->ac_name }}</td>
-                    <td>
-                        @switch ($datum->school_grade->scg_pre_code)
-                            @case (\App\Models\Configurations::$SCHOOL_PRE_GRADE_KINDER)
-                            {{ \App\Models\Configurations::$SCHOOL_PRE_GRADE_KINDER_HAN }}
-                            @break
-
-                            @case (\App\Models\Configurations::$SCHOOL_PRE_GRADE_ELEMENT)
-                            {{ \App\Models\Configurations::$SCHOOL_PRE_GRADE_ELEMENT_HAN }}
-                            @break
-
-                            @case (\App\Models\Configurations::$SCHOOL_PRE_GRADE_MIDDLE)
-                            {{ \App\Models\Configurations::$SCHOOL_PRE_GRADE_MIDDLE_HAN }}
-                            @break
-
-                            @case (\App\Models\Configurations::$SCHOOL_PRE_GRADE_HIGH)
-                            {{ \App\Models\Configurations::$SCHOOL_PRE_GRADE_HIGH_HAN }}
-                            @break
-
-                            @case (\App\Models\Configurations::$SCHOOL_PRE_GRADE_UNIVERSITY)
-                            {{ \App\Models\Configurations::$SCHOOL_PRE_GRADE_UNIVERSITY_HAN }}
-                            @break
-                        @endswitch
-                        {{ $datum->school_grade->scg_name }}
-                    </td>
+                    <td>{{ $datum->school_grade->scg_name }}</td>
                     <td>{{ $datum->class_name }}</td>
                     <td>
                         {{ is_null($datum->teacher) ? '':$datum->teacher->name }}

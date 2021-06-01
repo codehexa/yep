@@ -46,7 +46,7 @@
                             @if (!is_null($rgrade) && $sgrade->id == $rgrade)
                             selected
                         @endif
-                    >{{ $sgrade->gname }}</option>
+                    >{{ $sgrade->scg_name }}</option>
                 @endforeach
             </select>
             <span id="in_spin" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
@@ -144,7 +144,7 @@
                         <select name="info_grade" id="info_grade" class="form-control">
                             <option value="">{{ __('strings.fn_all') }}</option>
                             @foreach($sgrades as $sgrade)
-                                <option value="{{ $sgrade->id }}">{{ $sgrade->gname }}</option>
+                                <option value="{{ $sgrade->id }}">{{ $sgrade->scg_name }}</option>
                             @endforeach
                         </select>
                     </div>

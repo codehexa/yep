@@ -32,7 +32,11 @@
             <select name="section_grades" id="section_grades" class="form-select ml-3">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach($grades as $grade)
-                    <option value="{{ $grade->value }}">{{ $grade->name }}</option>
+                    <option value="{{ $grade->id }}"
+                            @if ($rGrade != '' && $rGrade == $grade->id)
+                                selected
+                            @endif
+                    >{{ $grade->scg_name }}</option>
                 @endforeach
             </select>
         </div>
@@ -43,6 +47,7 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">#</th>
+                    <th scope="col">{{ __('strings.lb_section_grades') }}</th>
                     <th scope="col">{{ __('strings.lb_parent_subject') }}</th>
                     <th scope="col">{{ __('strings.lb_subject') }}</th>
                     <th scope="col">{{ __('strings.lb_code') }}</th>
@@ -55,6 +60,7 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
+                    <td>{{ is_null($datum->SchoolGrades)? '-':$datum->SchoolGrades->scg_name }}</td>
                     <td>{{ !is_null($datum->testParent) ? $datum->testParent->ta_name : "-"}}</td>
                     <td>{{ $datum->ta_name }}</td>
                     <td>{{ $datum->ta_code }}</td>
@@ -84,6 +90,16 @@
                 <form name="taFrm" id="taFrm" method="post" action="/addTestArea">
                     @csrf
                     <input type="hidden" name="info_id" id="info_id"/>
+                    <div class="form-group">
+                        <label for="info_school_grade_id">{{ __('strings.lb_section_grades') }}</label>
+                        <select name="info_school_grade_id" id="info_school_grade_id" class="form-control">
+                            <option value="">{{ __('strings.lb_select') }}</option>
+                            @foreach ($grades as $grade)
+                                <option value="{{ $grade->id }}" >{{ $grade->scg_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="info_name">{{ __('strings.lb_subject') }}</label>
                         <input type="text" name="info_name" id="info_name" class="form-control" placeholder="{{ __('strings.str_insert_subject') }}"/>
@@ -169,6 +185,16 @@
 @section('scripts')
     <script type="text/javascript">
 
+        $(document).on("change","#section_grades",function (){
+            let curVal = $(this).val();
+
+            if (curVal === ''){
+                location.href = "/testAreas";
+            }else{
+                location.href = "/testAreas/" + curVal;
+            }
+        });
+
         $(document).on("click","#btn_add",function (){
             event.preventDefault();
 
@@ -188,20 +214,6 @@
             $("#info_code").val(nCode + "_");
         });
 
-        // 검색.
-        $(document).on("click","#btn_search",function (){
-            let syear = $("#up_year").val();
-            let sgrade = $("#up_school_grade").val();
-            let shakgi = $("#up_hakgi").val();
-
-            if (sgrade != ""){
-                location.href = "/testWeeks/" + syear + "/" + sgrade;
-            } else if (sgrade != "" && shakgi != ""){
-                location.href = "/testWeeks/" + syear + "/" + sgrade + "/" + shakgi;
-            } else {
-                location.href = "/testWeeks/" + syear;
-            }
-        });
 
         $(document).on("click","#btnTaDelete",function (){
             event.preventDefault();

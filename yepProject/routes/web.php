@@ -79,8 +79,8 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/storeTestWeek",[\App\Http\Controllers\TestWeeksController::class, "storeTestWeek"]);
     Route::post("/delTestWeek",[\App\Http\Controllers\TestWeeksController::class, "delTestWeek"]);
 
-    /* 시험 관리 */
-    Route::get("/testAreas",[\App\Http\Controllers\TestAreasController::class,"list"])->name("testAreas");
+    /* 시험 관리 -> 과목 */
+    Route::get("/testAreas/{grade?}",[\App\Http\Controllers\TestAreasController::class,"list"])->name("testAreas");
     Route::post("/addTestArea",[\App\Http\Controllers\TestAreasController::class, "add"]);
     Route::post("/testAreaJson",[\App\Http\Controllers\TestAreasController::class, "info"]);
     Route::post("/delTestArea",[\App\Http\Controllers\TestAreasController::class, "del"]);

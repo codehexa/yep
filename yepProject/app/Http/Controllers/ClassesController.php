@@ -20,30 +20,6 @@ class ClassesController extends Controller
         $user = Auth::user();
 
         $grades = schoolGrades::orderBy("scg_index","asc")->get();
-        $gradesArray = [];
-        foreach($grades as $grade){
-            $g_id = $grade->id;
-            $g_pre_code = $grade->scg_pre_code;
-            switch ($g_pre_code){
-                case Configurations::$SCHOOL_PRE_GRADE_KINDER:
-                    $g_kr = Configurations::$SCHOOL_PRE_GRADE_KINDER_HAN;
-                    break;
-                case Configurations::$SCHOOL_PRE_GRADE_ELEMENT:
-                    $g_kr = Configurations::$SCHOOL_PRE_GRADE_ELEMENT_HAN;
-                    break;
-                case Configurations::$SCHOOL_PRE_GRADE_MIDDLE:
-                    $g_kr = Configurations::$SCHOOL_PRE_GRADE_MIDDLE_HAN;
-                    break;
-                case Configurations::$SCHOOL_PRE_GRADE_HIGH:
-                    $g_kr = Configurations::$SCHOOL_PRE_GRADE_HIGH_HAN;
-                    break;
-                case Configurations::$SCHOOL_PRE_GRADE_UNIVERSITY:
-                    $g_kr = Configurations::$SCHOOL_PRE_GRADE_UNIVERSITY_HAN;
-                    break;
-            }
-
-            $gradesArray[] = ["id"=>$g_id,"scg_name"=>$g_kr." ".$grade->scg_name];
-        }
 
         if ($user->power != Configurations::$USER_POWER_ADMIN){
             $acId = $user->academy_id;
@@ -68,9 +44,7 @@ class ClassesController extends Controller
 
         }
 
-        $gradesObj = json_decode(json_encode($gradesArray),FALSE);
-
-        return view("classes.list",["data"=>$data,"academies"=>$academies,"grades"=>$gradesObj,"acaid"=>$acaid]);
+        return view("classes.list",["data"=>$data,"academies"=>$academies,"grades"=>$grades,"acaid"=>$acaid]);
     }
 
     public function add(Request $request){
@@ -124,8 +98,6 @@ class ClassesController extends Controller
         $old = Classes::find($upId);
 
         $old->class_desc = $upDesc;
-
-
 
         if ($old->class_name != $upName){
             $logClassCtrl = new LogClassesController();

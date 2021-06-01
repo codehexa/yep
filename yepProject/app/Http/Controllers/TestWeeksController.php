@@ -30,21 +30,6 @@ class TestWeeksController extends Controller
 
         $sgrades = schoolGrades::orderBy("scg_index","asc")->get();
 
-        $gradesArray = [];
-
-        foreach($sgrades as $grade){
-            //$g = ["id"=>$grade->id,"stitle"=>]
-            for($i=0; $i < sizeof(Configurations::$SCHOOL_PRE_GRADES); $i++){
-                if (Configurations::$SCHOOL_PRE_GRADES[$i]["value"] == $grade->scg_pre_code){
-                    $stitle = Configurations::$SCHOOL_PRE_GRADES[$i]["name"];
-                    break;
-                }
-            }
-            $gval = $stitle . " " .$grade->scg_name;
-            $g = ["id"=>$grade->id,"gname"=>$gval];
-            $gradesArray[] = $g;
-        }
-
         $tmpHakgi = [];
         if ($gradeVal != ""){
             $tmpHakgi = Hakgi::where('school_grade','=',$gradeVal)
@@ -53,9 +38,8 @@ class TestWeeksController extends Controller
                 ->orderBy('hakgi_name','asc')->get();
         }
 
-        $gradesObject = json_decode(json_encode($gradesArray),FALSE);
 
-        return view('testweek.list',["data"=>$data,"sgrades"=>$gradesObject,"tmpHakgies"=>$tmpHakgi,"ryear"=>$year,"rgrade"=>$gradeVal,"rhakgi"=>$hakgi]);
+        return view('testweek.list',["data"=>$data,"sgrades"=>$sgrades,"tmpHakgies"=>$tmpHakgi,"ryear"=>$year,"rgrade"=>$gradeVal,"rhakgi"=>$hakgi]);
     }
 
     public function getHakgiListJson(Request $request){

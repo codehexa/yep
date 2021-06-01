@@ -11,6 +11,6 @@ class schoolGrades extends Model
 
     protected $table = "school_grades";
     protected $fillable = [
-        "scg_name","scg_index","scg_pre_code"
+        "scg_name","scg_index"
     ];
 }

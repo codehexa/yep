@@ -14,60 +14,9 @@ class HakgiController extends Controller
     public function index(){
         $data = Hakgi::orderBy('year','asc')->orderBy('hakgi_name')->get();
 
-        $dataVal = [];
-
-        foreach ($data as $datum){
-            $dataVal[] = [
-                "id"=>$datum->id,
-                "year"  => $datum->year,
-                "hakgi_name"    => $datum->hakgi_name,
-                "show"  => $datum->show,
-                "school_grade_val"  => $this->gradeToPrint($datum->school_grade)
-            ];
-        }
-
         $grades = schoolGrades::orderBy('scg_index','asc')->get();
-        $gradesArray = [];
-        foreach ($grades as $grade){
-            $v = [
-                "id"=>$grade->id,
-                "cName"   => $this->codeGradeToPrint($grade->scg_pre_code). " ".$grade->scg_name
-            ];
-            $gradesArray[] = $v;
-        }
 
-        $data = json_decode(json_encode($dataVal),FALSE);
-        $gradesArrayObject = json_decode(json_encode($gradesArray),FALSE);
-
-        return view('hakgi.list',["data"=>$data,"grades"=>$gradesArrayObject]);
-    }
-
-    public function codeGradeToPrint($precode){
-        $val = "";
-        $gradesArray = Configurations::$SCHOOL_PRE_GRADES;
-        for ($i=0; $i < sizeof($gradesArray); $i++){
-            if ($gradesArray[$i]["value"] == $precode){
-                $val = $gradesArray[$i]["name"];
-            }
-        }
-
-        return $val;
-    }
-
-    public function gradeToPrint($grade){
-        $data = schoolGrades::find($grade);
-
-        $preCode = $data->scg_pre_code;
-        $name = $data->scg_name;
-        $val = "";
-        $gradesArray = Configurations::$SCHOOL_PRE_GRADES;
-        for ($i=0; $i < sizeof($gradesArray); $i++){
-            if ($gradesArray[$i]["value"] == $preCode){
-                $val = $gradesArray[$i]["name"];
-            }
-        }
-
-        return $name." ".$val;
+        return view('hakgi.list',["data"=>$data,"grades"=>$grades]);
     }
 
     public function add(Request $request){

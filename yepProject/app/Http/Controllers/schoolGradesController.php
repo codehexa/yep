@@ -21,12 +21,10 @@ class schoolGradesController extends Controller
     }
 
     public function add(Request $request){
-        $preCode = $request->get("up_new_pre");
         $gName = $request->get("up_new_name");
 
         $schoolGrade = new schoolGrades();
         $schoolGrade->scg_name = $gName;
-        $schoolGrade->scg_pre_code = $preCode;
 
         $preCount = schoolGrades::orderBy('scg_index','desc')->count();
 
@@ -89,11 +87,9 @@ class schoolGradesController extends Controller
 
     public function store(Request $request){
         $edId = $request->get("ed_id");
-        $preCode = $request->get("up_new_pre");
         $grade = $request->get("up_new_name");
 
         $data = schoolGrades::find($edId);
-        $data->scg_pre_code = $preCode;
         $data->scg_name = $grade;
 
         $data->save();

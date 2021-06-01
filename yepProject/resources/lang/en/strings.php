@@ -127,19 +127,19 @@ return [
     /* 코멘트 관리 */
     "lb_comment_manage" => "코멘트 관리",
 
-    /* 시험 관리 */
-    "lb_test_manage" => "시험 관리",
+    /* 시험->과목 관리 */
+    "lb_test_manage" => "과목 관리",
     "lb_section_grades" => "구분",
     "lb_parent_subject" => "대분류이름",
     "lb_test_code"  => "코드",
-    "lb_subject"    => "시험이름",
-    "lb_test_area_info" => "시험 정보",
+    "lb_subject"    => "과목 이름",
+    "lb_test_area_info" => "과목 정보",
     "lb_children_count" => "소속시험수",
     "lb_max_score"  => "최고 점수",
-    "str_insert_subject"    => "시험 이름을 입력하세요",
+    "str_insert_subject"    => "과목 이름을 입력하세요",
     "str_insert_code"    => "코드를 입력하세요",
     "str_insert_max_score"  => "최대값을 입력하세요",
-    "lb_no_parent"  => "소속 시험 없음",
+    "lb_no_parent"  => "소속 과목 없음",
 
     /* 원생 관리 */
     "lb_student_manage" => "원생 관리",

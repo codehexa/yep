@@ -40,7 +40,7 @@
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ $datum->year }}</td>
-                    <td>{{ $datum->school_grade_val }}</td>
+                    <td>{{ $datum->SchoolGrades->scg_name }}</td>
                     <td>{{ $datum->hakgi_name }}</td>
                     <td>{{ $datum->show }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
@@ -84,7 +84,7 @@
                         <label for="up_school_grade">{{ __('strings.lb_interdisciplinary') }}</label>
                         <select name="up_school_grade" id="up_school_grade" class="form-control">
                             @foreach ($grades as $grade)
-                                <option value="{{ $grade->id }}">{{ $grade->cName }}</option>
+                                <option value="{{ $grade->id }}">{{ $grade->scg_name }}</option>
                             @endforeach
                         </select>
                     </div>

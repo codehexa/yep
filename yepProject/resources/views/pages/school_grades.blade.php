@@ -24,7 +24,6 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">#</th>
-                    <th scope="col">{{ __('strings.lb_grade_title') }}</th>
                     <th scope="col">{{ __('strings.lb_grade_name') }}</th>
                     <th scope="col">{{ __('strings.lb_index') }}</th>
                     <th scope="col">{{ __('strings.lb_function') }}</th>
@@ -34,13 +33,6 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
-                    <td>
-                        @foreach ($grades as $grade)
-                            @if ($grade->value == $datum->scg_pre_code)
-                                {{ $grade->name }}
-                            @endif
-                        @endforeach
-                    </td>
                     <td>{{ $datum->scg_name }}</td>
                     <td>{{ $datum->scg_index }}</td>
                     <td>
@@ -77,15 +69,6 @@
                 <form name="newFrm" id="newFrm" method="post" action="/schoolGradePost">
                     <input type="hidden" name="ed_id" id="ed_id"/>
                     @csrf
-                    <div class="form-group">
-                        <label for="up_new_pre">{{ __('strings.lb_grade_title') }}</label>
-                        <select name="up_new_pre" id="up_new_pre" class="form-control">
-                            <option value="">{{ __('strings.lb_select') }}</option>
-                            @foreach ($grades as $grade)
-                                <option value="{{ $grade->value }}">{{ $grade->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                     <div class="form-group">
                         <label for="up_new_name">{{ __('strings.lb_grade_name') }}</label>
                         <input type="text" name="up_new_name" id="up_new_name" placeholder="{{ __('strings.lb_insert_grade') }}" class="form-control"/>
@@ -223,7 +206,6 @@
                     if (msg.result === "true"){
                         $("#ed_id").val(msg.data.id);
                         $("#up_new_name").val(msg.data.scg_name);
-                        $("#up_new_pre").val(msg.data.scg_pre_code);
                         $("#newFrm").attr({"action":"/schoolGradeStore"});
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");

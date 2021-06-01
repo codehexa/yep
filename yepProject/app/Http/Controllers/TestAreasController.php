@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Configurations;
+use App\Models\schoolGrades;
 use App\Models\Settings;
 use App\Models\TestAreas;
 use Illuminate\Http\Request;
@@ -10,21 +11,26 @@ use Illuminate\Http\Request;
 class TestAreasController extends Controller
 {
     //
-    public function list(){
-        $data = TestAreas::orderBy('ta_depth','asc')->orderBy('parent_id','asc')->orderBy('ta_name','asc')->get();
+    public function list($grade = ''){
+        if ($grade != ''){
+            $data = TestAreas::where('ta_school_grade','=',$grade)->orderBy('ta_depth','asc')->orderBy('parent_id','asc')->orderBy('ta_name','asc')->get();
+        }else{
+            $data = TestAreas::orderBy('ta_depth','asc')->orderBy('parent_id','asc')->orderBy('ta_name','asc')->get();
+        }
 
-        $testGradesArray = Configurations::$SCHOOL_PRE_GRADES;
-        $testGradesObj = json_decode(json_encode($testGradesArray),FALSE);
+
+        $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
         $maxScoreObj = Settings::where('set_code','=',Configurations::$SETTINGS_TEST_MAX_SCORE)->first();
         $maxScore = $maxScoreObj->set_value;
 
         $parents = TestAreas::where('ta_depth','=',0)->orderBy('ta_name','asc')->get();
 
-        return view("testareas.list",["data"=>$data,"grades"=>$testGradesObj,"parents"=>$parents,"maxScore"=>$maxScore]);
+        return view("testareas.list",["data"=>$data,"grades"=>$schoolGrades,"parents"=>$parents,"maxScore"=>$maxScore,"rGrade"=>$grade]);
     }
 
     public function add(Request $request){
+        $gradeId = $request->get("info_school_grade_id");
         $name = $request->get("info_name");
         $parent = $request->get("info_parent_id");
         $code = $request->get("info_code");
@@ -39,13 +45,14 @@ class TestAreasController extends Controller
             $depth = 1;
         }
 
-        $check = TestAreas::where("ta_name",'=',$name)
+        $check = TestAreas::where("ta_name",'=',$name)->where("ta_school_grade",'=',$gradeId)
             ->orWhere('ta_code','=',$code)->count();
 
         if ($check > 0){
             return redirect()->back()->withErrors(['msg'=>'FAIL_ALREADY_HAS']);
         }else{
             $ta = new TestAreas();
+            $ta->ta_school_grade = $gradeId;
             $ta->ta_name = $name;
             $ta->parent_id = $parent;
             $ta->ta_code = $code;
@@ -110,12 +117,22 @@ class TestAreasController extends Controller
 
     public function store(Request $request){
         $upId = $request->get("info_id");
+        $gradeId = $request->get("info_school_grade_id");
         $upName = $request->get("info_name");
         $parent_id = $request->get("info_parent_id");
         $code = $request->get("info_code");
         $score = $request->get("info_max_score");
 
         $old = TestAreas::find($upId);
+
+        if ($gradeId != $old->ta_school_grade){
+            $mode = "modify";
+            $oldVal = $old->ta_school_grade;
+            $newVal = $gradeId;
+            $this->addLog($mode,$upId,$oldVal,$newVal);
+
+            $old->ta_school_grade = $gradeId;
+        }
 
         if ($parent_id != $old->parent_id){
             $mode = "modify";

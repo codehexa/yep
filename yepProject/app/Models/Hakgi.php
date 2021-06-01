@@ -13,4 +13,8 @@ class Hakgi extends Model
     protected $fillable = [
         "year","hakgi_name","show","school_grade"
     ];
+
+    public function SchoolGrades(){
+        return $this->belongsTo(schoolGrades::class,"school_grade");
+    }
 }
