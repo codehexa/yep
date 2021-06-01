@@ -72,10 +72,12 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/delHakgi",[\App\Http\Controllers\HakgiController::class, "delete"]);
 
     /* 시험주 관리 */
-    Route::get("/testWeeks",[\App\Http\Controllers\TestWeeksController::class, "list"])->name("testweeks");
+    Route::get("/testWeeks/{year?}/{grade?}/{hakgi?}",[\App\Http\Controllers\TestWeeksController::class, "list"])->name("testweeks");
     Route::post("/getHakgiListJson",[\App\Http\Controllers\TestWeeksController::class, "getHakgiListJson"]);
     Route::post("/addTestWeek",[\App\Http\Controllers\TestWeeksController::class, "add"]);
-
+    Route::post("/testWeekJson",[\App\Http\Controllers\TestWeeksController::class, "testWeekJson"]);
+    Route::post("/storeTestWeek",[\App\Http\Controllers\TestWeeksController::class, "storeTestWeek"]);
+    Route::post("/delTestWeek",[\App\Http\Controllers\TestWeeksController::class, "delTestWeek"]);
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

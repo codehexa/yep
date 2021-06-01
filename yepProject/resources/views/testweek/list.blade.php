@@ -16,6 +16,9 @@
                 @case ("FAIL_TO_DELETE")
                 <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_delete') }}</h4>
                 @break
+                @case ("FAIL_TO_MODIFY")
+                <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_update') }}</h4>
+                @break
                 @case ("FAIL_TO_SAVE")
                 <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_save') }}</h4>
                 @break
@@ -29,7 +32,7 @@
             <select name="up_year" id="up_year" class="form-select mr-2">
                 @for ($i=date('Y') + 1; $i > (date('Y') -4); $i--)
                     <option value="{{ $i }}"
-                            @if ($i == date('Y'))
+                            @if ($i == date('Y') || $i == $ryear)
                             selected
                         @endif
                     >{{ $i }} {{ __('strings.lb_year_name') }}</option>
@@ -39,13 +42,27 @@
             <select name="up_school_grade" id="up_school_grade" class="form-select mr-2">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach($sgrades as $sgrade)
-                    <option value="{{ $sgrade->id }}">{{ $sgrade->gname }}</option>
+                    <option value="{{ $sgrade->id }}"
+                            @if (!is_null($rgrade) && $sgrade->id == $rgrade)
+                            selected
+                        @endif
+                    >{{ $sgrade->gname }}</option>
                 @endforeach
             </select>
             <span id="in_spin" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
             <label for="up_hakgi" class="form-label mr-2">{{ __('strings.lb_hakgi') }}</label>
             <select name="up_hakgi" id="up_hakgi" class="form-select">
                 <option value="">{{ __('strings.fn_all') }}</option>
+                @if ($tmpHakgies)
+                    @foreach($tmpHakgies as $tmpHakgi)
+                        <option value="{{ $tmpHakgi->id }}"
+                        @if ($tmpHakgi->id == $rhakgi)
+                            selected
+                        @endif
+                        >{{ $tmpHakgi->hakgi_name }}</option>
+                    @endforeach
+                @endif
+
             </select>
 
             <button id="btn_search" class="btn btn-sm btn-primary ml-3"><i class="fa fa-search"></i> {{ __('strings.fn_search') }} </button>
@@ -123,6 +140,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="info_grade">{{ __('strings.lb_haknyon') }}</label>
+                        <select name="info_grade" id="info_grade" class="form-control">
+                            <option value="">{{ __('strings.fn_all') }}</option>
+                            @foreach($sgrades as $sgrade)
+                                <option value="{{ $sgrade->id }}">{{ $sgrade->gname }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="info_hakgi">{{ __('strings.lb_hakgi') }}</label>
                         <select name="info_hakgi" id="info_hakgi" class="form-control">
                         </select>
@@ -182,7 +209,7 @@
             </div>
             <div class="modal-body">
                 <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
-                <form name="delFrm" id="delFrm" method="post" action="/delHakgi">
+                <form name="delFrm" id="delFrm" method="post" action="/delTestWeek">
                     @csrf
                     <input type="hidden" name="del_id" id="del_id"/>
                 </form>
@@ -199,12 +226,16 @@
 
 @section('scripts')
     <script type="text/javascript">
+        let rhakgi = "{{ $rhakgi }}";
+
         $(document).on("change","#up_school_grade",function (){
             event.preventDefault();
             if ($("#up_school_grade").val() === ""){
                 showAlert("{{ __('strings.str_select_hakyon') }}");
                 return;
             }
+
+            $("#info_grade").val($("#up_school_grade").val());
             $("#in_spin").removeClass("d-none");
             $.ajax({
                 type:"POST",
@@ -223,6 +254,33 @@
                     $("<option value=''>{{ __('strings.fn_all') }}</option>").appendTo($("#info_hakgi"));
                     $.each(msg.data,function(i,obj){
                         $("<option value='" + obj.id + "'>" + obj.hakgi_name + "</option>").appendTo($("#up_hakgi"));
+                        $("<option value='" + obj.id + "'>" + obj.hakgi_name + "</option>").appendTo($("#info_hakgi"));
+                    });
+                    $("#in_spin").addClass("d-none");
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                }
+            });
+        });
+
+        $(document).on("change","#info_grade",function (){
+            event.preventDefault();
+            $("#in_spin").removeClass("d-none");
+            $.ajax({
+                type:"POST",
+                url:"/getHakgiListJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "sHaknyon":$("#info_grade").val(),
+                    "sYear":$("#info_year").val()
+                },
+                success:function(msg){
+                    //
+                    $("#info_hakgi").empty();
+                    $("<option value=''>{{ __('strings.fn_all') }}</option>").appendTo($("#info_hakgi"));
+                    $.each(msg.data,function(i,obj){
                         $("<option value='" + obj.id + "'>" + obj.hakgi_name + "</option>").appendTo($("#info_hakgi"));
                     });
                     $("#in_spin").addClass("d-none");
@@ -253,10 +311,24 @@
             $("#info_hakgi").val($("#up_hakgi").val());
         });
 
-        $(document).on("click","#btnHakgiDelete",function (){
+        // 검색.
+        $(document).on("click","#btn_search",function (){
+            let syear = $("#up_year").val();
+            let sgrade = $("#up_school_grade").val();
+            let shakgi = $("#up_hakgi").val();
+
+            if (sgrade != ""){
+                location.href = "/testWeeks/" + syear + "/" + sgrade;
+            } else if (sgrade != "" && shakgi != ""){
+                location.href = "/testWeeks/" + syear + "/" + sgrade + "/" + shakgi;
+            } else {
+                location.href = "/testWeeks/" + syear;
+            }
+        });
+
+        $(document).on("click","#btnTwDelete",function (){
             event.preventDefault();
             $("#confirmModalCenter").modal("show");
-
         });
 
         $(document).on("click","#btnDeleteDo",function (){
@@ -267,16 +339,19 @@
         $(document).on("click",".fn_item",function (){
             event.preventDefault();
             $("#infoModalCenter").modal("show");
-            $("#btnHakgiDelete").removeClass("d-none");
+            $("#btnTwDelete").removeClass("d-none");
             $("#fn_loading").removeClass("d-none");
-            $("#hakgiFrm").attr({"action":"/storeHakgi"});
+            $("#twFrm").attr({"action":"/storeTestWeek"});
 
             let clId = $(this).attr("fn_id");
             $("#del_id").val(clId);
+            $("#info_id").val(clId);
+
+            // 여기까지 작업 중.
 
             $.ajax({
                 type:"POST",
-                url:"/hakgiInfoJson",
+                url:"/testWeekJson",
                 dataType:"json",
                 data:{
                     "_token":$("input[name='_token']").val(),
@@ -284,11 +359,18 @@
                 },
                 success:function (msg){
                     if (msg.result === "true"){
-                        $("#up_id").val(clId);
-                        $("#up_year").val(msg.data.year);
-                        $("#up_school_grade").val(msg.data.school_grade);
-                        $("#up_name").val(msg.data.hakgi_name);
-                        $("#up_show").val(msg.data.show);
+                        $("#info_hakgi").empty();
+                        $.each(msg.hakgiData,function(i,obj){
+                            $("<option value='" + obj.id + "'>" + obj.hakgi_name + "</option>").appendTo($("#info_hakgi"));
+                        });
+
+                        $("#info_id").val(clId);
+                        $("#info_year").val(msg.data.year);
+                        $("#info_week").val(msg.data.weeks);
+                        $("#info_grade").val(msg.data.school_grade);
+                        $("#info_hakgi").val(msg.data.hakgi);
+                        $("#info_show").val(msg.data.show);
+                        $("#info_context").val(msg.data.context);
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");
                         return;
