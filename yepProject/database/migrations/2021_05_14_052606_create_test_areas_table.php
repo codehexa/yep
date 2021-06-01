@@ -21,6 +21,7 @@ class CreateTestAreasTable extends Migration
             $table->string("ta_code")->nullable();
             $table->integer("ta_child_count")->unsigned()->default(0)->comment("하위 그룹 노드 갯수");
             $table->integer("ta_max_score")->unsigned()->default(0)->comment("시험 최대 점수");
+            $table->integer("ta_depth")->unsigned()->default(0);
         });
     }
 

@@ -14,6 +14,7 @@ class Configurations extends Model
     public static $USER_POWER_TEACHER   = "TEACHER";
 
     public static $SETTINGS_PAGE_LIMIT_CODE = "PAGE_CODE";
+    public static $SETTINGS_TEST_MAX_SCORE  = "MAX_SCORE_CODE";
 
     public static $SCHOOL_PRE_GRADE_KINDER  = "K";
     public static $SCHOOL_PRE_GRADE_ELEMENT  = "E";
@@ -33,4 +34,6 @@ class Configurations extends Model
         ["name"=>"고등학교","value"=>"H"],
         ["name"=>"대학(교)","value"=>"U"],
     ];
+
+
 }
