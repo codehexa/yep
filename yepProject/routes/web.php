@@ -79,16 +79,24 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/storeTestWeek",[\App\Http\Controllers\TestWeeksController::class, "storeTestWeek"]);
     Route::post("/delTestWeek",[\App\Http\Controllers\TestWeeksController::class, "delTestWeek"]);
 
-    /* 시험 관리 -> 과목 */
+    /* 시험 관리 -> 과목 -> 취소 함 */
     Route::get("/testAreas/{grade?}",[\App\Http\Controllers\TestAreasController::class,"list"])->name("testAreas");
     Route::post("/addTestArea",[\App\Http\Controllers\TestAreasController::class, "add"]);
     Route::post("/testAreaJson",[\App\Http\Controllers\TestAreasController::class, "info"]);
     Route::post("/delTestArea",[\App\Http\Controllers\TestAreasController::class, "del"]);
     Route::post("/storeTestArea",[\App\Http\Controllers\TestAreasController::class, "store"]);
 
+    /* 과목관리 */
+    Route::get("/kwamoks/{grade?}",[\App\Http\Controllers\LnCurriSubjectController::class, "index"])->name('kwamoks');
+    Route::get("/subjects/{grade?}",[\App\Http\Controllers\SubjectsController::class, "index"])->name('subjects');
+
     /* 코멘트 관리 */
-    //Route::get("/comments",[Comments])
+    Route::get("/comments/{grade?}/{taId?}",[\App\Http\Controllers\CommentsController::class,"index"])->name("comments");
 });
+
+/* 학생 관리 */
+Route::get("/students/{acId?}",[\App\Http\Controllers\StudentsController::class,"index"])->name("students");
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/s',[\App\Http\Controllers\TempController::class, 'tmp']);

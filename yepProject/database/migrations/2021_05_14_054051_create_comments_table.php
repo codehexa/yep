@@ -16,7 +16,7 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger("lv_id")->unsigned()->default(0)->comment("levels.id");
+            $table->bigInteger("scg_id")->unsigned()->default(0)->comment("school_grades.id");
             $table->bigInteger("ta_id")->unsigned()->default(0)->comment("test_areas.id");
             $table->integer("min_score")->unsigned()->default(0)->comment("test minimum score");
             $table->integer("max_score")->unsigned()->default(0)->comment("test maximum score");

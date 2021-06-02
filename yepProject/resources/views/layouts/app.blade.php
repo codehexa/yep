@@ -47,10 +47,10 @@
                                 <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
                                 <a href="/hakgis" class="btn btn-link text-warning">{{ __('strings.lb_hakgi_manage') }}</a>
                                 <a href="/testWeeks" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>
-                                <a href="/testAreas" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
-                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
+                                <a href="/kwamoks" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
+                                <a href="/comments" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
                             @endif
-                                <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
+                                <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
                                 <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
                         @endauth
                     </ul>

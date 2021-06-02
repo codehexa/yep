@@ -126,6 +126,10 @@ return [
 
     /* 코멘트 관리 */
     "lb_comment_manage" => "코멘트 관리",
+    "lb_min_score_title"    => "최저점수",
+    "lb_max_score_title"    => "최고점수",
+    "lb_comment_context"    => "코멘트",
+    "lb_select_subject" => "과목을 선택하세요",
 
     /* 시험->과목 관리 */
     "lb_test_manage" => "과목 관리",
@@ -141,8 +145,21 @@ return [
     "str_insert_max_score"  => "최대값을 입력하세요",
     "lb_no_parent"  => "소속 과목 없음",
 
+    /* 과목 관리 신규 */
+    "lb_add_subject"    => "신규 과목",
+    "lb_add_curriculum" => "신규 과목 영역",
+
     /* 원생 관리 */
     "lb_student_manage" => "원생 관리",
+    "lb_year"   => "년도",
+    "lb_student_hp" => "원생 HP",
+    "lb_parent_hp"  => "보호자 HP",
+    "lb_school_name"    => "학교",
+    "lb_school_grade"   => "학년",
+    "lb_class_name" => "반명",
+    "lb_teacher_name"   => "담임명",
+    "lb_academy_label"  => "관",
+    "lb_upload_excel"   => "Excel 업로드",
 
     /* SMS 업무 */
     "lb_sms_work_manage" => "SMS 업무",
