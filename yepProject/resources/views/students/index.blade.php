@@ -54,6 +54,16 @@
                     >{{ $academy->ac_name }}</option>
                 @endforeach
             </select>
+            <label for="section_class" class="form-label ml-3">{{ __('strings.lb_academy_label') }}</label>
+            <select name="section_class" id="section_class" class="form-select ml-3">
+                @foreach ($classes as $class)
+                    <option value="{{ $class->id }}"
+                            @if ($rClsId != '' && $rClsId == $class->id)
+                            selected
+                        @endif
+                    >{{ $class->class_name }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
 
