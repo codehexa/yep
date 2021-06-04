@@ -150,7 +150,7 @@ return [
     "lb_add_curriculum" => "신규 과목 영역",
 
     /* 원생 관리 */
-    "lb_student_manage" => "원생 관리",
+    "lb_student_manage" => "학생 관리",
     "lb_year"   => "년도",
     "lb_student_hp" => "원생 HP",
     "lb_parent_hp"  => "보호자 HP",

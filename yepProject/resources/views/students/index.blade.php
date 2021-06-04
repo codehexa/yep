@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5>{{ __('strings.lb_test_manage') }} </h5>
+    <h5>{{ __('strings.lb_student_manage') }} </h5>
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
         <button id="btn_add_excel" name="btn_add_excel" class="btn btn-sm btn-primary"><i class="fa fa-file-excel"></i> {{ __('strings.lb_upload_excel') }}</button>
@@ -29,7 +29,7 @@
     <div class="mt-3 form-group">
         <div class="form-inline">
             <label for="section_year" class="form-label">{{ __('strings.lb_year') }}</label>
-            <select name="section_year" id="section_year" class="form-select ml-3">
+            <select name="section_year" id="section_year" class="form-select ml-1">
                 @for ($y = date("Y"); $y >= date("Y") -3; $y--)
                     <option value="{{ $y }}"
                             @if ($rYear != '' && $rYear == $y)
@@ -40,12 +40,12 @@
             </select>
 
             <label for="section_hakgi" class="form-label ml-3">{{ __('strings.lb_hakgi') }}</label>
-            <select name="section_hakgi" id="section_hakgi" class="form-select ml-3">
+            <select name="section_hakgi" id="section_hakgi" class="form-select ml-1">
                 <option value="">{{ __('strings.fn_all') }}</option>
             </select>
 
             <label for="section_academy" class="form-label ml-3">{{ __('strings.lb_academy_label') }}</label>
-            <select name="section_academy" id="section_academy" class="form-select ml-3">
+            <select name="section_academy" id="section_academy" class="form-select ml-1">
                 @foreach ($academies as $academy)
                     <option value="{{ $academy->id }}"
                     @if ($rAcId != '' && $rAcId == $academy->id)
@@ -54,8 +54,8 @@
                     >{{ $academy->ac_name }}</option>
                 @endforeach
             </select>
-            <label for="section_class" class="form-label ml-3">{{ __('strings.lb_academy_label') }}</label>
-            <select name="section_class" id="section_class" class="form-select ml-3">
+            <label for="section_class" class="form-label ml-3">{{ __('strings.lb_class_name') }}</label>
+            <select name="section_class" id="section_class" class="form-select ml-1">
                 @foreach ($classes as $class)
                     <option value="{{ $class->id }}"
                             @if ($rClsId != '' && $rClsId == $class->id)
