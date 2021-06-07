@@ -6,6 +6,7 @@
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
         <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</button>
+        <button id="btn_del" name="btn_del" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
     </div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -43,6 +44,14 @@
             <label for="section_subject" class="form-label ml-3">{{ __('strings.lb_subject') }}</label>
             <select name="section_subject" id="section_subject" class="form-select ml-3">
                 <option value="">{{ __('strings.lb_select_subject') }}</option>
+                @foreach($subjects as $subject)
+                    <option value="{{ $subject->id }}"
+                        @if ($rSjId == $subject->id)
+                            selected
+                        @endif
+                    >{{ $subject->curri_id == "0" ? "": $subject->Curriculum->curri_name."_" }}
+                    {{ $subject->sj_title }}</option>
+                @endforeach
             </select>
         </div>
     </div>
@@ -64,8 +73,8 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ is_null($datum->SchoolGrades)? '-':$datum->SchoolGrades->scg_name }}</td>
-                    <td>{{ !is_null($datum->Subject) ? $datum->Subject->ta_name : "-"}}</td>
+                    <td>{{ is_null($datum->SchoolGrade)? '-':$datum->SchoolGrade->scg_name }}</td>
+                    <td>{{ $datum->Subject->sj_title }}</td>
                     <td>{{ $datum->min_score }}</td>
                     <td>{{ $datum->max_score }}</td>
                     <td>{{ $datum->opinion }}</td>
@@ -84,50 +93,55 @@
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.lb_test_area_info') }}</h5>
+                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.lb_comment_setting') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form name="taFrm" id="taFrm" method="post" action="/addTestArea">
+                <form name="cmFrm" id="cmFrm" method="post" action="/setComments">
                     @csrf
-                    <input type="hidden" name="info_id" id="info_id"/>
-                    <div class="form-group">
-                        <label for="info_school_grade_id">{{ __('strings.lb_section_grades') }}</label>
-                        <select name="info_school_grade_id" id="info_school_grade_id" class="form-control">
-                            <option value="">{{ __('strings.lb_select') }}</option>
-                            @foreach ($grades as $grade)
-                                <option value="{{ $grade->id }}" >{{ $grade->scg_name }}</option>
-                            @endforeach
-                        </select>
+                    <input type="hidden" name="sj_id" id="sj_id" value="{{ $rSjId }}"/>
+                    <input type="hidden" name="sg_id" id="sg_id" value="{{ $rGrade }}"/>
+                    <div class="form-group d-flex">
+                        <input type="text" name="info_gap" id="info_gap" class="form-control" placeholder="{{ __('strings.str_insert_comment_gap') }}"/>
                     </div>
-
-                    <div class="form-group">
-                        <label for="info_name">{{ __('strings.lb_subject') }}</label>
-                        <input type="text" name="info_name" id="info_name" class="form-control" placeholder="{{ __('strings.str_insert_subject') }}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="info_parent_id">{{ __('strings.lb_parent_subject') }}</label>
-                        <select name="info_parent_id" id="info_parent_id" class="form-control">
-                            <option value="">{{ __('strings.lb_no_parent') }}</option>
-
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="info_code">{{ __('strings.lb_test_code') }}</label>
-                        <input type="text" name="info_code" id="info_code" class="form-control" placeholder="{{ __('strings.str_insert_code') }}"/>
-                    </div>
-
                 </form>
             </div>
             <div class="modal-footer">
                 <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
-                <button type="button" class="btn btn-primary" id="btnTaSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
+                <button type="button" class="btn btn-primary" id="btnCmSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
-                <button type="button" class="btn btn-danger d-none" id="btnTaDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="opinionModalCenter" tabindex="-1" role="dialog" aria-labelledby="opinionModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="opinionModalLongTitle">{{ __('strings.lb_alert') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="frmOpinion" id="frmOpinion" method="post" action="/storeComment">
+                    @csrf
+                    <input type="hidden" name="up_cm_id" id="up_cm_id"/>
+                    <input type="hidden" name="up_sg_id" id="up_sg_id" value="{{ $rGrade }}"/>
+                    <input type="hidden" name="up_sj_id" id="up_sj_id" value="{{ $rSjId }}"/>
+                    <div class="form-group">
+                        <label for="in_opinion">{{ __('strings.lb_comment_opinion') }}</label>
+                        <input type="text" name="in_opinion" id="in_opinion" class="form-control" placeholder="{{ __('strings.str_insert_opinion') }}"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="opinion_spin" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
+                <button type="button" class="btn btn-primary" id="btn_store_opinion"><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
             </div>
         </div>
     </div>
@@ -185,28 +199,57 @@
             let curVal = $(this).val();
 
             if (curVal === ''){
-                location.href = "/testAreas";
+                location.href = "/comments";
             }else{
-                location.href = "/testAreas/" + curVal;
+                location.href = "/comments/" + curVal;
+            }
+        });
+
+        $(document).on("change","#section_subject",function (){
+            let curVal = $(this).val();
+            let grade = $("#section_grades").val();
+
+            if (curVal === ''){
+                location.href = "/comments/" + grade;
+            }else{
+                location.href = "/comments/" + grade + "/" + curVal;
             }
         });
 
         $(document).on("click","#btn_add",function (){
             event.preventDefault();
 
-            $("#infoModalCenter").modal("show");
-            $("#taFrm").attr({"action":"/addTestArea"});
-            $("#btnTaDelete").addClass("d-none");
+            if ($("#section_grades").val() === ""){
+                showAlert("{{ __('strings.str_select_grade') }}");
+                return;
+            }
 
-            $("#info_name").val("");
-            $("#info_parent_id").val("");
-            $("#info_code").val("");
+            if ($("#section_subject").val() === ""){
+                showAlert("{{ __('strings.str_select_subject') }}");
+                return;
+            }
+
+            $("#infoModalCenter").modal("show");
+            $("#sjFrm").attr({"action":"/setComments"});
         });
 
         // pre code
-        $(document).on("change","#info_parent_id",function (){
-            let nCode = $(this).find("option:selected").data("sub");
-            $("#info_code").val(nCode + "_");
+        $(document).on("click","#btnCmSubmit",function (){
+            event.preventDefault();
+
+            let inGap = $("#info_gap").val();
+
+            if (parseInt(inGap) <= 0){
+                showAlert("{{ __('strings.str_must_zero_over') }}");
+                return;
+            }
+
+            if (parseInt($("#info_gap").val()) >= {{ $score }}){
+                showAlert("{{ __('strings.str_must_max_under',["MAX"=>$score]) }}");
+                return;
+            }
+
+            $("#cmFrm").submit();
         });
 
 
@@ -222,20 +265,20 @@
 
         $(document).on("click",".fn_item",function (){
             event.preventDefault();
-            $("#infoModalCenter").modal("show");
-            $("#btnTaDelete").removeClass("d-none");
-            $("#fn_loading").removeClass("d-none");
-            $("#taFrm").attr({"action":"/storeTestArea"});
+            $("#opinionModalCenter").modal("show");
+            $("#btnCmDelete").removeClass("d-none");
+            $("#opinion_spin").removeClass("d-none");
+            $("#frmOpinion").attr({"action":"/storeComment"});
 
             let clId = $(this).attr("fn_id");
             $("#del_id").val(clId);
-            $("#info_id").val(clId);
+            $("#up_cm_id").val(clId);
 
             // 여기까지 작업 중.
 
             $.ajax({
                 type:"POST",
-                url:"/testAreaJson",
+                url:"/getCommentJson",
                 dataType:"json",
                 data:{
                     "_token":$("input[name='_token']").val(),
@@ -243,21 +286,12 @@
                 },
                 success:function (msg){
                     if (msg.result === "true"){
-                        $("#info_parent_id").empty();
-                        $.each(msg.parents,function(i,obj){
-                            $("<option value='" + obj.id + "' data-sub='" + obj.ta_code + "'>" + obj.ta_name + "</option>").appendTo($("#info_parent_id"));
-                        });
-
-                        $("#info_id").val(clId);
-                        $("#info_name").val(msg.data.ta_name);
-                        $("#info_parent_id").val(msg.data.parent_id);
-                        $("#info_code").val(msg.data.ta_code);
-                        $("#info_max_score").val(msg.data.ta_max_score);
+                        $("#in_opinion").val(msg.data.opinion);
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");
                         return;
                     }
-                    $("#fn_loading").addClass("d-none");
+                    $("#opinion_spin").addClass("d-none");
                 },
                 error:function(e1,e2,e3){
                     showAlert(e2);
@@ -266,24 +300,14 @@
         });
 
 
-        $(document).on("click","#btnTaSubmit",function (){
+        $(document).on("click","#btn_store_opinion",function (){
             event.preventDefault();
-            if ($("#info_name").val() === ""){
-                showAlert("{{ __('strings.str_insert_subject') }}");
+            if ($("#in_opinion").val() === ""){
+                showAlert("{{ __('strings.str_insert_opinion') }}");
                 return;
             }
 
-            if ($("#info_code").val() === ""){
-                showAlert("{{ __('strings.str_insert_code') }}");
-                return;
-            }
-
-            if ($("#info_max_score").val() === ""){
-                showAlert("{{ __('strings.str_insert_max_score') }}");
-                return;
-            }
-
-            $("#taFrm").submit();
+            $("#frmOpinion").submit();
         });
 
 

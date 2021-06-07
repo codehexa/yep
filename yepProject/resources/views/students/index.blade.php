@@ -46,6 +46,7 @@
 
             <label for="section_academy" class="form-label ml-3">{{ __('strings.lb_academy_label') }}</label>
             <select name="section_academy" id="section_academy" class="form-select ml-1">
+                <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($academies as $academy)
                     <option value="{{ $academy->id }}"
                     @if ($rAcId != '' && $rAcId == $academy->id)
@@ -56,6 +57,7 @@
             </select>
             <label for="section_class" class="form-label ml-3">{{ __('strings.lb_class_name') }}</label>
             <select name="section_class" id="section_class" class="form-select ml-1">
+                <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($classes as $class)
                     <option value="{{ $class->id }}"
                             @if ($rClsId != '' && $rClsId == $class->id)

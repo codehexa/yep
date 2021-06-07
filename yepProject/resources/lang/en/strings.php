@@ -68,6 +68,7 @@ return [
     "fn_information"    => "정보",
     "fn_select" => "조회",
     "fn_all"    => "전체에서",
+    "fn_execute"    => "실행",
 
     /* 학년 관리 */
     "lb_grade_manage"   => "학년관리",
@@ -130,24 +131,41 @@ return [
     "lb_max_score_title"    => "최고점수",
     "lb_comment_context"    => "코멘트",
     "lb_select_subject" => "과목을 선택하세요",
+    "lb_comment_setting"    => "코멘트 셋팅",
+    "lb_gap"    => "점수 간격",
+    "lb_comment_opinion"    => "코멘트",
+    "str_select_grade"  => "구분을 선택하세요",
+    "str_select_subject"    => "과목 이름을 입력하세요",
+    "str_insert_comment_gap"    => "점수 간격을 입력하세요",
+    "str_must_zero_over"    => "0 점 보다 많아야 합니다.",
+    "str_must_max_under"    => ":MAX 점 보다 적어야 합니다",
+    "str_insert_opinion"    => "코멘트를 입력하세요",
 
     /* 시험->과목 관리 */
     "lb_test_manage" => "과목 관리",
     "lb_section_grades" => "구분",
-    "lb_parent_subject" => "대분류이름",
+    "lb_parent_subject" => "과목 영역",
     "lb_test_code"  => "코드",
     "lb_subject"    => "과목 이름",
+    "lb_subject_group"    => "소속 그룹",
     "lb_test_area_info" => "과목 정보",
     "lb_children_count" => "소속시험수",
     "lb_max_score"  => "최고 점수",
+    "lb_subject_desc"   => "부연 설명",
     "str_insert_subject"    => "과목 이름을 입력하세요",
     "str_insert_code"    => "코드를 입력하세요",
     "str_insert_max_score"  => "최대값을 입력하세요",
+    "lb_no_subject_group"   => "소속 과목 그룹 없음",
     "lb_no_parent"  => "소속 과목 없음",
+
+    "str_select_school_grade"   => "구분을 선택하세요",
+    "str_insert_subject_desc"   => "부연 설명 입력하세요",
+    "str_insert_score"  => "최대 점수를 입력하세요",
 
     /* 과목 관리 신규 */
     "lb_add_subject"    => "신규 과목",
     "lb_add_curriculum" => "신규 과목 영역",
+    "str_insert_subject_group"  => "과목 영역을 입력하세요",
 
     /* 원생 관리 */
     "lb_student_manage" => "학생 관리",

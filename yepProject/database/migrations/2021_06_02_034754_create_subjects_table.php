@@ -19,6 +19,8 @@ class CreateSubjectsTable extends Migration
             $table->string("sj_title");
             $table->integer("sj_max_score");
             $table->string("sj_desc");
+            $table->bigInteger("curri_id")->unsigned()->default(0);
+            $table->bigInteger("sg_id")->unsigned()->default(0);
         });
     }
 

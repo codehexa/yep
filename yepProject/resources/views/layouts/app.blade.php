@@ -47,7 +47,7 @@
                                 <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
                                 <a href="/hakgis" class="btn btn-link text-warning">{{ __('strings.lb_hakgi_manage') }}</a>
                                 <a href="/testWeeks" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>
-                                <a href="/kwamoks" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
+                                <a href="/subjects" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
                                 <a href="/comments" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
                             @endif
                                 <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>

@@ -19,7 +19,7 @@ class Comments extends Model
     }
 
     public function Subject(){
-        return $this->belongsTo(TestAreas::class, "ta_id");
+        return $this->belongsTo(Subjects::class, "sj_id");
     }
 
     public function Writer(){

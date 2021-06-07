@@ -12,10 +12,14 @@ class Subjects extends Model
     protected $table = "subjects";
     protected $fillable = [
         "sj_title","sj_max_score","sj_desc",
-        "curri_id"
+        "curri_id","sg_id"
     ];
 
     public function Curriculum(){
         return $this->belongsTo(Curriculums::class,"curri_id");
+    }
+
+    public function SchoolGrade(){
+        return $this->belongsTo(schoolGrades::class, "sg_id");
     }
 }

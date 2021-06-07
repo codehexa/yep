@@ -17,7 +17,7 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger("scg_id")->unsigned()->default(0)->comment("school_grades.id");
-            $table->bigInteger("ta_id")->unsigned()->default(0)->comment("test_areas.id");
+            $table->bigInteger("sj_id")->unsigned()->default(0)->comment("test_areas.id");
             $table->integer("min_score")->unsigned()->default(0)->comment("test minimum score");
             $table->integer("max_score")->unsigned()->default(0)->comment("test maximum score");
             $table->bigInteger("writer_id")->unsigned()->default(0)->comment("users.id");

@@ -57,7 +57,7 @@ class ClassesController extends Controller
         $checkClass = Classes::where('ac_id','=',$upAcId)->where('class_name','=',$upName)->first();
         if (is_null($checkClass)){
             $newClass = new Classes();
-            $newClass->scg_name = $upName;
+            $newClass->class_name = $upName;
             $newClass->ac_id = $upAcId;
             $newClass->sg_id = $upClassId;
             $newClass->show = $upShow;
@@ -67,9 +67,11 @@ class ClassesController extends Controller
                 $newClass->save();
                 return redirect()->route("classes");
             }catch (\Exception $e){
-                return redirect()->back()->withErrors(['msg'=>"FAIL_ALREADY_HAS"]);
+                //dd($e);
+                return redirect()->back()->withErrors(['msg'=>"FAIL_TO_SAVE"]);
             }
-
+        }else{
+            return redirect()->back()->withErrors(['msg'=>"FAIL_ALREADY_HAS"]);
         }
     }
 
@@ -87,7 +89,6 @@ class ClassesController extends Controller
     }
 
     public function store(Request $request){
-        $user = Auth::user();
         $upId = $request->get("up_id");
         $acId = $request->get("up_ac_id");
         $scgId = $request->get("up_scg_id");

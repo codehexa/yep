@@ -51,7 +51,6 @@
                     <th scope="col">{{ __('strings.lb_section_grades') }}</th>
                     <th scope="col">{{ __('strings.lb_parent_subject') }}</th>
                     <th scope="col">{{ __('strings.lb_subject') }}</th>
-                    <th scope="col">{{ __('strings.lb_code') }}</th>
                     <th scope="col">{{ __('strings.lb_max_score') }}</th>
                     <th scope="col">{{ __('strings.lb_children_count') }}</th>
                     <th scope="col">{{ __('strings.lb_function') }}</th>
@@ -64,7 +63,6 @@
                     <td>{{ is_null($datum->SchoolGrades)? '-':$datum->SchoolGrades->scg_name }}</td>
                     <td>{{ !is_null($datum->testParent) ? $datum->testParent->ta_name : "-"}}</td>
                     <td>{{ $datum->ta_name }}</td>
-                    <td>{{ $datum->ta_code }}</td>
                     <td>{{ $datum->ta_max_score }}</td>
                     <td>{{ $datum->ta_child_count }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
@@ -111,11 +109,6 @@
                         <select name="info_parent_id" id="info_parent_id" class="form-control">
                             <option value="">{{ __('strings.lb_no_parent') }}</option>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="info_code">{{ __('strings.lb_test_code') }}</label>
-                        <input type="text" name="info_code" id="info_code" class="form-control" placeholder="{{ __('strings.str_insert_code') }}"/>
                     </div>
                 </form>
             </div>

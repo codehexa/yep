@@ -87,11 +87,19 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/storeTestArea",[\App\Http\Controllers\TestAreasController::class, "store"]);
 
     /* 과목관리 */
-    Route::get("/kwamoks/{grade?}",[\App\Http\Controllers\LnCurriSubjectController::class, "index"])->name('kwamoks');
+    /*Route::get("/kwamoks/{grade?}",[\App\Http\Controllers\LnCurriSubjectController::class, "index"])->name('kwamoks');*/
     Route::get("/subjects/{grade?}",[\App\Http\Controllers\SubjectsController::class, "index"])->name('subjects');
+    Route::post("/addSubject",[\App\Http\Controllers\SubjectsController::class, "add"]);
+    Route::post("/addSubjectGroupJson",[\App\Http\Controllers\SubjectsController::class, "addGroup"]);
+    Route::post("/storeSubject",[\App\Http\Controllers\SubjectsController::class,"store"]);
+    Route::post("/getSubjectJson",[\App\Http\Controllers\SubjectsController::class,"getSubjectJson"]);
+    Route::post("/delSubject",[\App\Http\Controllers\SubjectsController::class,"deleteSubject"]);
 
     /* 코멘트 관리 */
-    Route::get("/comments/{grade?}/{taId?}",[\App\Http\Controllers\CommentsController::class,"index"])->name("comments");
+    Route::get("/comments/{grade?}/{sjId?}",[\App\Http\Controllers\CommentsController::class,"index"])->name("comments");
+    Route::post("/setComments",[\App\Http\Controllers\CommentsController::class, "setGap"]);
+    Route::post("/getCommentJson",[\App\Http\Controllers\CommentsController::class, "getInfoJson"]);
+    Route::post("/storeComment",[\App\Http\Controllers\CommentsController::class, "storeComment"]);
 });
 
 /* 학생 관리 */
