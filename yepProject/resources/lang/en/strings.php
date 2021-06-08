@@ -138,6 +138,7 @@ return [
     "str_select_subject"    => "과목 이름을 입력하세요",
     "str_insert_comment_gap"    => "점수 간격을 입력하세요",
     "str_must_zero_over"    => "0 점 보다 많아야 합니다.",
+    "str_must_one_over"    => "1 점 보다 많아야 합니다.",
     "str_must_max_under"    => ":MAX 점 보다 적어야 합니다",
     "str_insert_opinion"    => "코멘트를 입력하세요",
 
@@ -199,5 +200,6 @@ return [
     "err_already_has"   => "기존에 등록된 데이터가 있습니다.",
     "err_select_teacher"    => "선생님을 선택하세요",
     "err_fail_to_delete"    => "삭제하는데 실패했습니다",
+    "err_nothing_to_delete" => "삭제할 대상이 없습니다",
 
 ];

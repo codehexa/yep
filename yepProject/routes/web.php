@@ -100,6 +100,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/setComments",[\App\Http\Controllers\CommentsController::class, "setGap"]);
     Route::post("/getCommentJson",[\App\Http\Controllers\CommentsController::class, "getInfoJson"]);
     Route::post("/storeComment",[\App\Http\Controllers\CommentsController::class, "storeComment"]);
+    Route::post("/delComments",[\App\Http\Controllers\CommentsController::class, "delete"]);
 });
 
 /* 학생 관리 */

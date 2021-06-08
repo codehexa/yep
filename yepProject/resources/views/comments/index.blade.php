@@ -23,11 +23,14 @@
                 @case ("FAIL_TO_SAVE")
                 <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_save') }}</h4>
                 @break
+                @case ("NOTHING_TO_DELETE")
+                <h4 class="text-center text-danger"> {{ __('strings.err_nothing_to_delete') }}</h4>
+                @break
             @endswitch
         @endforeach
     @endif
 
-    <div class="mt-3 form-group">
+    <div class="mt-3 form-group border p-2 bg-primary">
         <div class="form-inline">
             <label for="section_grades" class="form-label">{{ __('strings.lb_section_grades') }}</label>
             <select name="section_grades" id="section_grades" class="form-select ml-3">
@@ -61,8 +64,6 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">#</th>
-                    <th scope="col">{{ __('strings.lb_section_grades') }}</th>
-                    <th scope="col">{{ __('strings.lb_subject') }}</th>
                     <th scope="col">{{ __('strings.lb_min_score_title') }}</th>
                     <th scope="col">{{ __('strings.lb_max_score_title') }}</th>
                     <th scope="col">{{ __('strings.lb_comment_context') }}</th>
@@ -73,8 +74,6 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ is_null($datum->SchoolGrade)? '-':$datum->SchoolGrade->scg_name }}</td>
-                    <td>{{ $datum->Subject->sj_title }}</td>
                     <td>{{ $datum->min_score }}</td>
                     <td>{{ $datum->max_score }}</td>
                     <td>{{ $datum->opinion }}</td>
@@ -177,9 +176,10 @@
             </div>
             <div class="modal-body">
                 <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
-                <form name="delFrm" id="delFrm" method="post" action="/delTestArea">
+                <form name="delFrm" id="delFrm" method="post" action="/delComments">
                     @csrf
-                    <input type="hidden" name="del_id" id="del_id"/>
+                    <input type="hidden" name="del_sgid" id="del_sgid"/>
+                    <input type="hidden" name="del_sjid" id="del_sjid"/>
                 </form>
             </div>
             <div class="modal-footer">
@@ -239,8 +239,8 @@
 
             let inGap = $("#info_gap").val();
 
-            if (parseInt(inGap) <= 0){
-                showAlert("{{ __('strings.str_must_zero_over') }}");
+            if (parseInt(inGap) <= 1){
+                showAlert("{{ __('strings.str_must_one_over') }}");
                 return;
             }
 
@@ -248,6 +248,8 @@
                 showAlert("{{ __('strings.str_must_max_under',["MAX"=>$score]) }}");
                 return;
             }
+
+            $("#fn_loading").removeClass("d-none");
 
             $("#cmFrm").submit();
         });
@@ -271,7 +273,6 @@
             $("#frmOpinion").attr({"action":"/storeComment"});
 
             let clId = $(this).attr("fn_id");
-            $("#del_id").val(clId);
             $("#up_cm_id").val(clId);
 
             // 여기까지 작업 중.
@@ -308,6 +309,24 @@
             }
 
             $("#frmOpinion").submit();
+        });
+
+        $(document).on("click","#btn_del",function (){
+            event.preventDefault();
+
+            if ($("#section_grades").val() === ""){
+                showAlert("{{ __('strings.str_select_grade') }}");
+                return;
+            }
+
+            if ($("#section_subject").val() === ""){
+                showAlert("{{ __('strings.str_select_subject') }}");
+                return;
+            }
+
+            $("#confirmModalCenter").modal("show");
+            $("#del_sgid").val($("#section_grades").val());
+            $("#del_sjid").val($("#section_subject").val());
         });
 
 

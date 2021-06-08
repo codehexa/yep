@@ -79,22 +79,24 @@ class CommentsController extends Controller
             $tmpGaps[] = $nowScore;
         }
 
-        for ($i=0; $i < sizeof($tmpGaps) -1; $i++){
+        for ($i=0; $i < sizeof($tmpGaps) -1 ; $i++){
             $max = $tmpGaps[$i];
             $min = $tmpGaps[$i + 1];
             $newComment = new Comments();
             $newComment->scg_id = $sg_id;
             $newComment->sj_id = $sj_id;
-            if ($min - $gap < 0) {
-                $newComment->min_score = 0;
-            }else{
-                if ($i == sizeof($tmpGaps) -1){
-                    $newComment->min_score = 0;
-                }else{
-                    $newComment->min_score = $min +1;
-                }
-            }
+
+            if ($min < 0) $min = 0;
+            $newComment->min_score = $min;
             $newComment->max_score = $max;
+            $newComment->writer_id = $user->id;
+            $newComment->save();
+        }
+
+        /* 혹시 모를 최저 점수가 0 이 아닐 경우 처리하기 위함 */
+        if ($min > 0){
+            $newComment->min_score = 0;
+            $newComment->max_score = $min;
             $newComment->writer_id = $user->id;
             $newComment->save();
         }
@@ -128,6 +130,24 @@ class CommentsController extends Controller
                 return redirect()->route("comments",["grade"=>$sgid,"sjId"=>$sjid]);
             }catch (\Exception $e){
                 return redirect()->back()->withErrors(["msg"=>"FAIL_TO_MODIFY"]);
+            }
+        }
+    }
+
+    public function delete(Request $request){
+        $sgId = $request->get("del_sgid");
+        $sjId = $request->get("del_sjid");
+
+        $check = Comments::where("scg_id","=",$sgId)
+            ->where("sj_id","=",$sjId)->count();
+        if ($check <= 0){
+            return redirect()->back()->withErrors(["msg"=>"NOTHING_TO_DELETE"]);
+        }else{
+            try {
+                Comments::where("scg_id","=",$sgId)->where("sj_id","=",$sjId)->delete();
+                return redirect("/comments/".$sgId."/".$sjId);
+            }catch (\Exception $e){
+                return redirect()->back()->withErrors(["msg"=>"FAIL_TO_DELETE"]);
             }
         }
     }
