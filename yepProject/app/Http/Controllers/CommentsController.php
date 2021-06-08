@@ -101,6 +101,15 @@ class CommentsController extends Controller
             $newComment->save();
         }
 
+        $logMode = "new";
+        $target_id = $sj_id;
+        $oldVal = "";
+        $newVal = sizeof($tmpGaps);
+        $field = "new_comments";
+
+        $logCtrl = new LogCommentsController();
+        $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+
         return redirect("/comments/".$sg_id."/".$sj_id);
 
     }
@@ -121,12 +130,24 @@ class CommentsController extends Controller
 
         $comment = Comments::find($cmid);
 
+        $oldComment = Comments::find($cmid);
+
         if (is_null($comment)){
             return redirect()->back()->withErrors(["msg"=>"FAIL_TO_MODIFY"]);
         }else{
             $comment->opinion = $opinion;
             try {
                 $comment->save();
+
+                $logMode = "modify";
+                $target_id = $cmid;
+                $oldVal = $oldComment->opinion;
+                $newVal = $opinion;
+                $field = "opinion";
+
+                $logCtrl = new LogCommentsController();
+                $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+
                 return redirect()->route("comments",["grade"=>$sgid,"sjId"=>$sjid]);
             }catch (\Exception $e){
                 return redirect()->back()->withErrors(["msg"=>"FAIL_TO_MODIFY"]);
@@ -145,6 +166,16 @@ class CommentsController extends Controller
         }else{
             try {
                 Comments::where("scg_id","=",$sgId)->where("sj_id","=",$sjId)->delete();
+
+                $logMode = "delete";
+                $target_id = $sjId;
+                $oldVal = $sjId;
+                $newVal = "";
+                $field = "all_data";
+
+                $logCtrl = new LogCommentsController();
+                $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+
                 return redirect("/comments/".$sgId."/".$sjId);
             }catch (\Exception $e){
                 return redirect()->back()->withErrors(["msg"=>"FAIL_TO_DELETE"]);

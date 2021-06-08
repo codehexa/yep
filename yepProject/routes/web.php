@@ -101,10 +101,14 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/getCommentJson",[\App\Http\Controllers\CommentsController::class, "getInfoJson"]);
     Route::post("/storeComment",[\App\Http\Controllers\CommentsController::class, "storeComment"]);
     Route::post("/delComments",[\App\Http\Controllers\CommentsController::class, "delete"]);
+
+
+    /* 학생 관리 */
+    Route::get("/students/{acId?}/{clId?}",[\App\Http\Controllers\StudentsController::class,"index"])->name("students");
+    Route::post("/excelFileUpload",[\App\Http\Controllers\StudentsController::class, "fileUpload"]);
+    Route::get("/testExcel",[\App\Http\Controllers\StudentsController::class, "testExcel"]);
 });
 
-/* 학생 관리 */
-Route::get("/students/{acId?}",[\App\Http\Controllers\StudentsController::class,"index"])->name("students");
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

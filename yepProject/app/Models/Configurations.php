@@ -35,5 +35,7 @@ class Configurations extends Model
         ["name"=>"대학(교)","value"=>"U"],
     ];
 
+    /* excel file upload ... in filesystems.php   name: excels */
+    public static $EXCEL_FOLDER = "excels";
 
 }

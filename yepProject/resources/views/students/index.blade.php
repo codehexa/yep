@@ -28,23 +28,7 @@
 
     <div class="mt-3 form-group">
         <div class="form-inline">
-            <label for="section_year" class="form-label">{{ __('strings.lb_year') }}</label>
-            <select name="section_year" id="section_year" class="form-select ml-1">
-                @for ($y = date("Y"); $y >= date("Y") -3; $y--)
-                    <option value="{{ $y }}"
-                            @if ($rYear != '' && $rYear == $y)
-                            selected
-                        @endif
-                    >{{ $y }}</option>
-                @endfor
-            </select>
-
-            <label for="section_hakgi" class="form-label ml-3">{{ __('strings.lb_hakgi') }}</label>
-            <select name="section_hakgi" id="section_hakgi" class="form-select ml-1">
-                <option value="">{{ __('strings.fn_all') }}</option>
-            </select>
-
-            <label for="section_academy" class="form-label ml-3">{{ __('strings.lb_academy_label') }}</label>
+            <label for="section_academy" class="form-label">{{ __('strings.lb_academy_label') }}</label>
             <select name="section_academy" id="section_academy" class="form-select ml-1">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($academies as $academy)
@@ -66,6 +50,10 @@
                     >{{ $class->class_name }}</option>
                 @endforeach
             </select>
+
+            <button class="btn btn-primary btn-sm ml-2" id="btnLoad"><i class="fa fa-arrow-alt-circle-down"></i>
+                {{ __('strings.fn_load') }}
+            </button>
         </div>
     </div>
 
@@ -154,6 +142,36 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="uploadModalCenter" tabindex="-1" role="dialog" aria-labelledby="uploadModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLongTitle">{{ __('strings.fn_upload') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="excelFrm" id="excelFrm" method="post" enctype="multipart/form-data" action="/excelFileUpload">
+                    @csrf
+                    <input type="hidden" name="up_ac_id" id="up_ac_id"/>
+                    <input type="hidden" name="up_cl_id" id="up_cl_id"/>
+                    <div class="form-group">
+                        <label for="up_file_name" class="form-label">{{ __('strings.lb_excel_file') }}</label>
+                        <input type="file" name="up_file_name" id="up_file_name" class="form-control-file form-control"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="upload_spin" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
+                <button type="button" class="btn btn-primary" id="btn_upload" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="alertModalCenter" tabindex="-1" role="dialog" aria-labelledby="alertModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
@@ -201,6 +219,36 @@
 
 @section('scripts')
     <script type="text/javascript">
+
+        $(document).on("click","#btn_add_excel",function (){
+            event.preventDefault();
+            if ($("#section_academy").val() === ""){
+                showAlert("{{ __('strings.str_select_academy') }}");
+                return;
+            }
+
+            if ($("#section_class").val() === ""){
+                showAlert("{{ __('strings.str_select_class') }}");
+                return;
+            }
+            $("#uploadModalCenter").modal("show");
+            $("#up_file_name").val("");
+        });
+
+        $(document).on("click","#btn_upload",function (){
+            //
+            if ($("#up_file_name").val() === ""){
+                showAlert("{{ __('strings.str_select_excel_file') }}");
+                return;
+            }
+
+            $("#up_ac_id").val($("#section_academy").val());
+            $("#up_cl_id").val($("#section_class").val());
+
+            $("#upload_spin").removeClass("d-none");
+            $("#excelFrm").submit();
+        });
+
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

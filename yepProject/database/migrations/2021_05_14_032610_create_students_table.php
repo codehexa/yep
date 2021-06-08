@@ -22,9 +22,10 @@ class CreateStudentsTable extends Migration
             $table->string("parent_hp")->nullable();
             $table->string("school_name")->nullable();
             $table->string("school_grade")->nullable()->comment("학년");
-            //$table->bigInteger("class_id")->unsigned()->default(0)->comment("classes.id, 복수 클래스 등록이 가능함으로 해당 필드는 사용하지 않음. 다만, 링크로 연결할 것.");
+            $table->bigInteger("class_id")->index()->unsigned()->default(0)->comment("classes.id, 복수 클래스 등록이 가능함으로 해당 필드는 사용하지 않음. 다만, 링크로 연결할 것.");
             //$table->bigInteger("teacher_id")->unsigned()->nullable()->default(0)->comment("users.id, 복수 등록이 가능함으로 해당 필드는 사용하지 않음. 다만, 링크로 연결할 것.");
             $table->string("abs_id")->unique()->comment("학원사랑에서 제공하는 고유 아이디");
+            $table->string("teacher_name")->nullable();
         });
     }
 

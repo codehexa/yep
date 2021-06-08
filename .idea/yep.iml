@@ -114,6 +114,14 @@
       <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/graham-campbell/result-type" />
       <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/laravel/ui" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/phpoffice/phpspreadsheet" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/ezyang/htmlpurifier" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/maennchen/zipstream-php" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/markbaker/matrix" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/maatwebsite/excel" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/myclabs/php-enum" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

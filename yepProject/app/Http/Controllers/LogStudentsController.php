@@ -19,7 +19,7 @@ class LogStudentsController extends Controller
         $log = new LogStudents();
         $log->ls_mode = $mode;
         $log->ls_writer_id = $user->id;
-        $log->ls_target_id = $target->id;
+        $log->ls_target_id = $target;
         $log->ls_field = $field;
         $log->old_value = $old;
         $log->new_value = $new;

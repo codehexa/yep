@@ -69,6 +69,8 @@ return [
     "fn_select" => "조회",
     "fn_all"    => "전체에서",
     "fn_execute"    => "실행",
+    "fn_load"   => "불러오기",
+    "fn_upload" => "업로드",
 
     /* 학년 관리 */
     "lb_grade_manage"   => "학년관리",
@@ -179,6 +181,10 @@ return [
     "lb_teacher_name"   => "담임명",
     "lb_academy_label"  => "관",
     "lb_upload_excel"   => "Excel 업로드",
+    "lb_excel_file" => "Excel 파일",
+    "str_select_class"  => "반을 선택하세요",
+    "str_select_excel_file" => "업로드할 엑셀 파일을 선택하세요",
+    "str_asb_insert"    => "학번 :ABSCODE 신규 입력",
 
     /* SMS 업무 */
     "lb_sms_work_manage" => "SMS 업무",

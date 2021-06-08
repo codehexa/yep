@@ -14,6 +14,6 @@ class Students extends Model
         "student_name","student_tel","student_hp",
         "parent_hp",
         "school_name","school_grade",
-        "abs_id"
+        "abs_id","class_id","teacher_name"
     ];
 }
