@@ -63,6 +63,7 @@
                 <tr class="text-center">
                     <th scope="col">#</th>
                     <th scope="col">{{ __('strings.lb_name') }}</th>
+                    <th scope="col">{{ __('strings.lb_student_tel') }}</th>
                     <th scope="col">{{ __('strings.lb_student_hp') }}</th>
                     <th scope="col">{{ __('strings.lb_parent_hp') }}</th>
                     <th scope="col">{{ __('strings.lb_school_name') }}</th>
@@ -77,12 +78,13 @@
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ $datum->student_name }}</td>
+                    <td>{{ $datum->student_tel }}</td>
                     <td>{{ $datum->student_hp }}</td>
                     <td>{{ $datum->parent_hp }}</td>
                     <td>{{ $datum->school_name }}</td>
                     <td>{{ $datum->school_grade }}</td>
-                    <td>{{ $datum->abs_id }}</td>
-                    <td>{{ $datum->abs_id }}</td>
+                    <td>{{ $datum->ClassObj->class_name }}</td>
+                    <td>{{ $datum->teacher_name }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
             @endforeach
@@ -92,49 +94,76 @@
             <div class="text-secondary">{{ __('strings.str_there_is_no_data')}}</div>
         @endif--}}
     </div>
+
+    {{ $data->links() }}
+
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.lb_test_area_info') }}</h5>
+                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.lb_student_info') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form name="taFrm" id="taFrm" method="post" action="/addTestArea">
+                <form name="stFrm" id="stFrm" method="post" action="/storeStudent">
                     @csrf
+                    <input type="hidden" name="tmp_ac_id" id="tmp_ac_id"/>
+                    <input type="hidden" name="tmp_cl_id" id="tmp_cl_id"/>
                     <input type="hidden" name="info_id" id="info_id"/>
                     <div class="form-group">
-                        <label for="info_school_grade_id">{{ __('strings.lb_section_grades') }}</label>
-                        <select name="info_school_grade_id" id="info_school_grade_id" class="form-control">
-                            <option value="">{{ __('strings.lb_select') }}</option>
+                        <label for="info_name">{{ __('strings.lb_student_name') }}</label>
+                        <input type="text" name="info_name" id="info_name" placeholder="{{ __('strings.str_insert_student_name') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_tel">{{ __('strings.lb_tel') }}</label>
+                        <input type="text" name="info_tel" id="info_tel" placeholder="{{ __('strings.str_insert_tel') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_hp">{{ __('strings.lb_hp') }}</label>
+                        <input type="text" name="info_hp" id="info_hp" placeholder="{{ __('strings.str_insert_hp') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_parent_hp">{{ __('strings.lb_parent_hp') }}</label>
+                        <input type="text" name="info_parent_hp" id="info_parent_hp" placeholder="{{ __('strings.str_insert_parent_hp') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_school_name">{{ __('strings.lb_school_name') }}</label>
+                        <input type="text" name="info_school_name" id="info_school_name" placeholder="{{ __('strings.str_insert_school_name') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_school_grade">{{ __('strings.lb_school_grade') }}</label>
+                        <input type="text" name="info_school_grade" id="info_school_grade" placeholder="{{ __('strings.str_insert_school_grade') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_abs_id">{{ __('strings.lb_abs_id') }}</label>
+                        <input type="text" name="info_abs_id" id="info_abs_id" placeholder="{{ __('strings.str_insert_abs_id') }}" class="form-control" readonly/>
+                    </div>
+                    <div class="form-group">
+                        <label for="info_class_id">{{ __('strings.lb_class_name') }}</label>
+                        <select name="info_class_id" id="info_class_id" class="form-control">
+                            @foreach ($classes as $class)
+                                <option value="{{ $class->id }}"
+                                        @if ($rClsId != '' && $rClsId == $class->id)
+                                        selected
+                                    @endif
+                                >{{ $class->class_name }}</option>
+                            @endforeach
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label for="info_name">{{ __('strings.lb_subject') }}</label>
-                        <input type="text" name="info_name" id="info_name" class="form-control" placeholder="{{ __('strings.str_insert_subject') }}"/>
+                        <label for="info_teacher_name">{{ __('strings.lb_teacher_name') }}</label>
+                        <input type="text" name="info_teacher_name" id="info_teacher_name" placeholder="{{ __('strings.str_insert_teacher_name') }}" class="form-control"/>
                     </div>
 
-                    <div class="form-group">
-                        <label for="info_parent_id">{{ __('strings.lb_parent_subject') }}</label>
-                        <select name="info_parent_id" id="info_parent_id" class="form-control">
-                            <option value="">{{ __('strings.lb_no_parent') }}</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="info_code">{{ __('strings.lb_test_code') }}</label>
-                        <input type="text" name="info_code" id="info_code" class="form-control" placeholder="{{ __('strings.str_insert_code') }}"/>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
-                <button type="button" class="btn btn-primary" id="btnTaSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
+                <button type="button" class="btn btn-primary" id="btnStSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
                 <button type="button" class="btn btn-danger d-none" id="btnTaDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
             </div>
@@ -247,6 +276,88 @@
 
             $("#upload_spin").removeClass("d-none");
             $("#excelFrm").submit();
+        });
+
+        // 불러오기
+        $(document).on("click","#btnLoad",function (){
+            event.preventDefault();
+            let acId = $("#section_academy").val();
+            let clId = $("#section_class").val();
+
+            if (acId !== "" && clId !== ""){
+                location.href = "/students/" + acId + "/" + clId;
+            }else if (acId !== "" && clId === ""){
+                location.href = "/students/" + acId;
+            }else {
+                location.href = "/students";
+            }
+        });
+
+        // 관리 클릭 시...
+        $(document).on("click",".fn_item",function (){
+            //
+            event.preventDefault();
+            let studentId = $(this).attr("fn_id");
+
+            $("#tmp_ac_id").val($("#section_academy").val());
+            $("#tmp_cl_id").val($("#section_class").val());
+
+            $("#infoModalCenter").modal("show");
+
+            $("#fn_loading").removeClass("d-none");
+            $.ajax({
+                type:"POST",
+                url:"/getStudentInfoJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "stId":studentId
+                },
+                success:function (msg){
+                    //
+                    $("#info_id").val(studentId);
+                    if (msg.result === "true"){
+                        $("#info_name").val(msg.data.student_name);
+                        $("#info_tel").val(msg.data.student_tel);
+                        $("#info_hp").val(msg.data.student_hp);
+                        $("#info_parent_hp").val(msg.data.parent_hp);
+                        $("#info_school_name").val(msg.data.school_name);
+                        $("#info_school_grade").val(msg.data.school_grade);
+                        $("#info_abs_id").val(msg.data.abs_id);
+                        $("#info_class_id").val(msg.data.class_id);
+                        $("#info_teacher_name").val(msg.data.teacher_name);
+
+                        $("#fn_loading").addClass("d-none");
+                    }else{
+                        showAlert("{{ __('strings.err_get_info') }}");
+                        $("#infoModalCenter").modal("hide");
+                        return;
+                    }
+                }
+            });
+        });
+
+        $(document).on("click","#btnStSubmit",function (){
+            //
+            event.preventDefault();
+            if ($("#info_name").val() === ""){
+                showAlert("{{ __('strings.str_insert_student_name') }}");
+                return;
+            }
+
+            if ($("#info_hp").val() === ""){
+                showAlert("{{ __('strings.str_insert_hp') }}");
+                return;
+            }
+
+            if ($("#info_parent_hp").val() === ""){
+                showAlert("{{ __('strings.str_insert_parent_hp') }}");
+                return;
+            }
+
+            $("#fn_loading").removeClass("d-none");
+
+            $("#stFrm").submit();
         });
 
 

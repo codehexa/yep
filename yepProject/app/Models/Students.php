@@ -16,4 +16,8 @@ class Students extends Model
         "school_name","school_grade",
         "abs_id","class_id","teacher_name"
     ];
+
+    public function ClassObj(){
+        return $this->belongsTo(Classes::class, "class_id");
+    }
 }

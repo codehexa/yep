@@ -22,7 +22,7 @@ class StudentsController extends Controller
     public function __construct(){
         $this->middleware("auth");
     }
-    public function index($year='',$acid='',$clsId=''){
+    public function index($acid='',$clsId=''){
         $user = Auth::user();
 
         $nowAcId = $user->academy_id;
@@ -51,7 +51,6 @@ class StudentsController extends Controller
             "data"  => $data,
             "academies" => $academies,
             "classes"   => $classes,
-            "rYear" => $year,
             "rAcId" => $acid,
             "rClsId" => $clsId
         ]);
@@ -116,6 +115,164 @@ class StudentsController extends Controller
             return redirect("/students/".$acId."/".$clId);
         }
     }   // file upload done
+
+    public function getStudentJson(Request $request){
+        $stId = $request->get('stId');
+
+        $data = Students::find($stId);
+
+        return response()->json(["result"=>"true","data"=>$data]);
+    }
+
+    public function store(Request $request){
+        $infoId = $request->get("info_id");
+        $acId = $request->get("tmp_ac_id");
+        $clId = $request->get("tmp_cl_id");
+        $name = $request->get("info_name");
+        $tel = $request->get("info_tel");
+        $hp = $request->get("info_hp");
+        $parentHp = $request->get("info_parent_hp");
+        $schoolName = $request->get("info_school_name");
+        $grade = $request->get("info_school_grade");
+        $abs = $request->get("info_abs_id");
+        $classId = $request->get("info_class_id");
+        $teacherName = $request->get("info_teacher_name");
+
+        $oldInfo = Students::find($infoId);
+
+        if ($name != $oldInfo->student_name) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->student_name;
+            $newVal = $name;
+            $lsField = "name";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->student_name = $name;
+        }
+
+        if ($tel != $oldInfo->student_tel) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->student_tel;
+            $newVal = $tel;
+            $lsField = "tel";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->student_tel = $tel;
+        }
+
+        if ($hp != $oldInfo->student_hp) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->student_hp;
+            $newVal = $hp;
+            $lsField = "HP";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->student_hp = $hp;
+        }
+
+        if ($parentHp != $oldInfo->parent_hp) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->parent_hp;
+            $newVal = $parentHp;
+            $lsField = "Parent HP";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->parent_hp = $parentHp;
+        }
+
+        if ($schoolName != $oldInfo->school_name) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->school_name;
+            $newVal = $schoolName;
+            $lsField = "School Name";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->school_name = $schoolName;
+        }
+
+        if ($grade != $oldInfo->school_grade) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->school_grade;
+            $newVal = $grade;
+            $lsField = "School grade";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->school_grade = $grade;
+        }
+
+        if ($abs != $oldInfo->abs_id) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->abs_id;
+            $newVal = $abs;
+            $lsField = "ABS CODE";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->abs_id = $abs;
+        }
+
+        if ($classId != $oldInfo->class_id) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->class_id;
+            $newVal = $classId;
+            $lsField = "Class";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->class_id = $classId;
+        }
+
+        if ($teacherName != $oldInfo->teacher_name) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->teacher_name;
+            $newVal = $teacherName;
+            $lsField = "Teacher name";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->teacher_name = $teacherName;
+        }
+
+        try {
+            $oldInfo->save();
+
+            if ($clId != "" && $acId != "") {
+                return redirect("/students/{$acId}/{$clId}");
+            }elseif ($acId != "" && $clId == "") {
+                return redirect("/students/{$acId}");
+            }elseif ($acId == "" && $clId != ""){
+                return redirect("/students");
+            }else{
+                return redirect("/students");
+            }
+        }catch (\Exception $e){
+            return redirect()->back()->withErrors(["msg"=>"FAIL_TO_MODIFY"]);
+        }
+    }
 
     public function testExcel(){
         $fileName = "1/ST_1623135131.xlsx";

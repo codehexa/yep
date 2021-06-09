@@ -107,6 +107,8 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::get("/students/{acId?}/{clId?}",[\App\Http\Controllers\StudentsController::class,"index"])->name("students");
     Route::post("/excelFileUpload",[\App\Http\Controllers\StudentsController::class, "fileUpload"]);
     Route::get("/testExcel",[\App\Http\Controllers\StudentsController::class, "testExcel"]);
+    Route::post("/getStudentInfoJson",[\App\Http\Controllers\StudentsController::class, "getStudentJson"]);
+    Route::post("/storeStudent",[\App\Http\Controllers\StudentsController::class, "store"]);
 });
 
 
