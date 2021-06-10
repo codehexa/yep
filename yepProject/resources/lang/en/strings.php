@@ -221,5 +221,6 @@ return [
     "err_select_teacher"    => "선생님을 선택하세요",
     "err_fail_to_delete"    => "삭제하는데 실패했습니다",
     "err_nothing_to_delete" => "삭제할 대상이 없습니다",
+    "err_call_to_dev"   => "개발자에게 문의하세요.(CODE: :CODE)",
 
 ];

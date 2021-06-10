@@ -86,6 +86,7 @@
             <div class="text-secondary">{{ __('strings.str_there_is_no_data')}}</div>
         @endif
     </div>
+    {{ $data->links() }}
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">

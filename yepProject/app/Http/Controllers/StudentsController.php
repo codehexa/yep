@@ -45,7 +45,19 @@ class StudentsController extends Controller
 
         $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
         $pageLimit = $optObj->set_value;
-        $data = Students::orderBy('student_name','asc')->paginate($pageLimit);
+
+        if ($acid != "" && $clsId != ""){
+            $data = Students::where("class_id","=",$clsId)->orderBy('student_name','asc')->paginate($pageLimit);
+        }elseif ($acid != "" && $clsId == ""){
+            $clsArray = Classes::where("ac_id","=",$acid)->get();
+            $clsArrayVal = [];
+            foreach($clsArray as $cls){
+                $clsArrayVal[] = $cls->id;
+            }
+            $data = Students::whereIn("class_id",$$clsArrayVal)->orderBy('student_name','asc')->paginate($pageLimit);
+        }else {
+            $data = Students::orderBy('student_name','asc')->paginate($pageLimit);
+        }
 
         return view("students.index",[
             "data"  => $data,
@@ -67,10 +79,27 @@ class StudentsController extends Controller
         }else{
             $path = $excelFile->storeAs($acId,$tmpName,Configurations::$EXCEL_FOLDER);
 
-            //$fileName = $acId."/".$tmpName;
+            if (!Storage::disk(Configurations::$EXCEL_FOLDER)->path($path)){
+                return redirect()->back()->withErrors(["msg"=>"CALL_TO_DEV"]);
+            }
+            $exFilePath = Storage::disk(Configurations::$EXCEL_FOLDER)->path($path);
 
-            //$storedFile = Storage::disk(Configurations::$EXCEL_FOLDER)->path($fileName);
-            $data = ExcelFacade::toArray(new ImportStudents(), $path);
+            $fMode = "upload";
+            $fTarget = "0";
+            $fOld = "";
+            $fNew = $acId."/".$tmpName;
+            $fField = "File";
+            $fCtrl = new LogStudentsController();
+            $fCtrl->addLog($fMode,$fTarget,$fField,$fOld,$fNew);
+
+            $data = ExcelFacade::toArray(new ImportStudents(), $exFilePath);
+
+            $totalCountInClass = Students::where('class_id','=',$clId)->get();
+
+            $forCheck = []; // 유저 클라스 이동 확인하기 위한 기존 반에 소속된 학생 인덱스 값.
+            foreach ($totalCountInClass as $inClass){
+                $forCheck[] = $inClass->id;
+            }
 
             for($i=4; $i < sizeof($data[0]); $i++){
                 $vals = $data[0][$i];
@@ -109,9 +138,128 @@ class StudentsController extends Controller
                     $ctrl->addLog($mode,$target,$field,$old,$new);
 
                 }else{
-                    // 여기부터 해야 함.
+                    $checkStudentId = $check->id;
+
+                    if (($key = array_search($checkStudentId, $forCheck)) !== false){
+                        unset($forCheck[$key]);
+                    }
+
+                    $hasName = $check->student_name;
+                    $hasTel = $check->student_tel;
+                    $hasHp = $check->student_hp;
+                    $hasParentHp = $check->parent_hp;
+                    $hasSchoolName = $check->school_name;
+                    $hasSchoolGrade = $check->school_grade;
+                    $hasAbsId = $check->abs_id;
+                    $hasClassId = $check->class_id;
+                    $hasTeacher = $check->teacher_name;
+
+                    if ($hasName != $name){
+                        $check->student_name = $name;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasName;
+                        $new = $name;
+                        $field = "name";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+
+                    if ($hasTel != $tel){
+                        $check->student_tel = $tel;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasTel;
+                        $new = $tel;
+                        $field = "tel";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+
+                    if ($hasHp != $hp){
+                        $check->student_hp = $hp;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasHp;
+                        $new = $hp;
+                        $field = "Student HP";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+
+                    if ($hasParentHp != $parentHp){
+                        $check->parent_hp = $parentHp;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasParentHp;
+                        $new = $parentHp;
+                        $field = "Parent HP";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+                    if ($hasSchoolName != $school){
+                        $check->school_name = $school;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasSchoolName;
+                        $new = $school;
+                        $field = "School Name";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+                    if ($hasSchoolGrade != $grade){
+                        $check->school_grade = $grade;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasSchoolGrade;
+                        $new = $grade;
+                        $field = "Grade";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+                    if ($hasAbsId != $absCode){
+                        $check->abs_id = $absCode;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasAbsId;
+                        $new = $absCode;
+                        $field = "ABS CODE";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+                    if ($hasClassId != $clId){
+                        $check->class_id = $clId;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasClassId;
+                        $new = $clId;
+                        $field = "Class ID";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+                    if ($hasTeacher != $teacher){
+                        $check->teacher_name = $teacher;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasTeacher;
+                        $new = $teacher;
+                        $field = "Teacher";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
+                    $check->save();
                 }
             } // end for
+            Students::whereIn('id',$forCheck)->update(['class_id'=>0]);
             return redirect("/students/".$acId."/".$clId);
         }
     }   // file upload done
