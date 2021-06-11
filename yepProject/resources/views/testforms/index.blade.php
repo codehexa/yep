@@ -161,36 +161,6 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="uploadModalCenter" tabindex="-1" role="dialog" aria-labelledby="uploadModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="uploadModalLongTitle">{{ __('strings.fn_upload') }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form name="excelFrm" id="excelFrm" method="post" enctype="multipart/form-data" action="/excelFileUpload">
-                    @csrf
-                    <input type="hidden" name="up_ac_id" id="up_ac_id"/>
-                    <input type="hidden" name="up_cl_id" id="up_cl_id"/>
-                    <div class="form-group">
-                        <label for="up_file_name" class="form-label">{{ __('strings.lb_excel_file') }}</label>
-                        <input type="file" name="up_file_name" id="up_file_name" class="form-control-file form-control"/>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <span id="upload_spin" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
-                <button type="button" class="btn btn-primary" id="btn_upload" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="alertModalCenter" tabindex="-1" role="dialog" aria-labelledby="alertModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
@@ -262,6 +232,10 @@
     <script type="text/javascript">
         let subjectDataSet = [];
         let savedDataSet = [];
+
+        $(document).ready(function (){
+            $("#tf_has_items").sortable();
+        });
 
         $(document).on("click","#btn_add",function (){
             event.preventDefault();
@@ -380,6 +354,8 @@
                 showAlert("{{ __('strings.str_select_saved_subjects') }}");
                 return;
             }
+
+            $("#fn_loading").removeClass("d-none");
 
             $("#up_ac_id").val($("#section_academy").val());
             $("#up_grade_id").val($("#section_grade").val());
