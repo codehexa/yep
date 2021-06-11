@@ -200,6 +200,20 @@ return [
     "str_insert_teacher_name"   => "담임명을 입력하세요",
     "str_insert_school_grade"   => "학년을 입력하세요",
 
+    /* 시험 입력 폼 관리 */
+    "lb_test_form_manage"   => "시험 입력 폼 관리",
+    "lb_test_title" => "폼 이름",
+    "lb_test_count" => "과목 수",
+    "lb_test_desc"  => "간략 설명",
+    "lb_test_grade" => "구분",
+    "lb_test_form_info" => "시험 입력 폼 정보",
+    "str_insert_form_title" => "폼 이름을 입력하세요",
+    "str_insert_form_desc"  => "간략한 설명을 입력하세요",
+    "lb_has_items"  => "배정할 과목",
+    "lb_all_items"  => "학년 과목 전체",
+    "str_select_saved_subjects" => "배정할 과목을 적어도 1개는 선택하세요",
+
+
     /* SMS 업무 */
     "lb_sms_work_manage" => "SMS 업무",
 

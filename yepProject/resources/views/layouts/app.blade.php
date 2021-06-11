@@ -27,6 +27,8 @@
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/jquery-ui-1.12.1/jquery-ui.js') }}" defer></script>
 
+    <script src="{{ asset('js/jquery.tmpl.js') }}" defer></script>
+
 </head>
 <body>
     <div id="app">
@@ -49,8 +51,9 @@
                                 <a href="/testWeeks" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>
                                 <a href="/subjects" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
                                 <a href="/comments" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
-                            @endif
+                                <a href="/testForm" class="btn btn-link text-warning">{{ __('strings.lb_test_form_manage') }}</a>
                                 <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
+                            @endif
                                 <a href="#" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
                         @endauth
                     </ul>
