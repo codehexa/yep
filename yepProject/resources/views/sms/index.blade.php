@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5>{{ __('strings.lb_test_form_manage') }} </h5>
+    <h5>{{ __('strings.lb_sms_work_manage') }} </h5>
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
-        <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-file-excel"></i> {{ __('strings.fn_add') }}</button>
+<!--        <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-file-excel"></i> {{ __('strings.fn_add') }}</button>-->
     </div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -53,30 +53,135 @@
                     >{{ $schoolGrade->scg_name }}</option>
                 @endforeach
             </select>
+
+            <span id="fn_class_loader" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
+
+            <label for="section_class" class="form-label ml-3">{{ __('strings.lb_class_name') }}</label>
+            <select name="section_class" id="section_class" class="form-select ml-1">
+                <option value="">{{ __('strings.fn_all') }}</option>
+                @foreach ($classes as $class)
+                    <option value="{{ $class->id }}"
+                            @if ($rClId != '' && $rClId == $class->id)
+                            selected
+                        @endif
+                    >{{ $class->class_name }}</option>
+                @endforeach
+            </select>
+
+            <label for="section_forms" class="form-label ml-3">{{ __('strings.lb_test_title') }}</label>
+            <select name="section_forms" id="section_forms" class="form-select ml-1">
+                <option value="">{{ __('strings.fn_all') }}</option>
+                @foreach($testForms as $tf)
+                    <option value="{{ $tf->id }}"
+                    @if ($rTfId != "" && $rTfId == $tf->id)
+                        selected
+                    @endif
+                    >{{ $tf->form_title }}</option>
+                @endforeach
+            </select>
+
+            <label for="section_year" class="form-label ml-3">{{ __('strings.lb_year') }}</label>
+            <select name="section_year" id="section_year" class="form-select ml-1">
+                @for ($y = date("Y"); $y > date("Y") -5; $y--)
+                    <option value="{{ $y }}"
+                            @if ($rY != '' && $rY == $y)
+                            selected
+                        @endif
+                    >{{ $y }}</option>
+                @endfor
+            </select>
+
+            <label for="section_weeks" class="form-label ml-3">{{ __('strings.lb_weeks') }}</label>
+            <select name="section_weeks" id="section_weeks" class="form-select ml-1">
+                @for ($w = 1; $w <= 52; $w++)
+                    <option value="{{ $w }}"
+                            @if (($rW != '' && $rW == $w) || ($rW == "" && $w == date("W")))
+                            selected
+                        @endif
+                    >{{ $w }}</option>
+                @endfor
+            </select>
+
+            <div class="btn-group ml-2">
+                <button class="btn btn-primary btn-sm" id="btnLoad"><i class="fa fa-arrow-alt-circle-down"></i>
+                    {{ __('strings.fn_load') }}
+                </button>
+            </div>
         </div>
     </div>
-
     <div class="mt-3">
         <table class="mt-3 table table-striped">
             <thead>
-                <tr class="text-center">
-                    <th scope="col">#</th>
-                    <th scope="col">{{ __('strings.lb_test_grade') }}</th>
-                    <th scope="col">{{ __('strings.lb_test_title') }}</th>
-                    <th scope="col">{{ __('strings.lb_test_count') }}</th>
-                    <th scope="col">{{ __('strings.lb_test_desc') }}</th>
-                    <th scope="col">{{ __('strings.lb_function') }}</th>
-                </tr>
+                @if (is_null($testForm))
+                    <tr class="text-center">
+                        <th scope="col">#</th>
+                        <th scope="col">{{ __('strings.lb_student_name') }}</th>
+                        <th scope="col">{{ __('strings.lb_school_name') }}</th>
+                        <th scope="col">{{ __('strings.lb_grade_name') }}</th>
+<!--                        <th scope="col">{{ __('strings.lb_class_name') }}</th>-->
+                        <th scope="col">{{ __('strings.lb_teacher_name') }}</th>
+                        <th scope="col">{{ __('strings.lb_subjects') }}</th>
+                        <th scope="col">{{ __('strings.lb_comment') }}</th>
+                        <th scope="col">{{ __('strings.lb_btn_manage') }}</th>
+                    </tr>
+                @else
+                    <tr class="text-center">
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>#</th>
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>{{ __('strings.lb_student_name') }}</th>
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>{{ __('strings.lb_school_name') }}</th>
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>{{ __('strings.lb_grade_name') }}</th>
+<!--                        <th scope="col" rowspan="2">{{ __('strings.lb_class_name') }}</th>-->
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>{{ __('strings.lb_teacher_name') }}</th>
+                        @for($i=0; $i < sizeof($header0); $i++)
+                            <th scope="col"
+                                @if ($header0[$i]['cols'] == 0)
+                                    rowspan="{{ $prerow }}"
+                                @else
+                                    colspan="{{ $header0[$i]['cols'] }}"
+                                @endif
+                            >{{ $header0[$i]['title'] }}</th>
+                        @endfor
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>{{ __('strings.lb_comment') }}</th>
+                        <th scope="col" @if ($prerow > 1)rowspan="2" @endif>{{ __('strings.lb_btn_manage') }}</th>
+                    </tr>
+                    @if (sizeof($header1) > 0)
+                        <tr>
+                            @for($i=0; $i < sizeof($header1); $i++)
+                                <th>{{ $header1[$i]['title'] }}</th>
+                            @endfor
+                        </tr>
+                    @endif
+
+                @endif
             </thead>
             <tbody>
             @foreach($data as $datum)
                 <tr class="text-center">
-                    <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ is_null($datum->Grades) ? "":$datum->Grades->scg_name }}</td>
-                    <td>{{ $datum->form_title }}</td>
-                    <td>{{ $datum->subjects_count }}</td>
-                    <td>{{ $datum->tf_desc }}</td>
-                    <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
+                    <th scope="row" class="d-flex justify-content-center"><input type="checkbox" name="ss_id[]" id="ss_id_{{ $datum->id }}" value="{{ $datum->id }}" class="form-check-input" checked/> </th>
+                    <td>{{ is_null($datum->Student) ? "":$datum->Student->student_name }}</td>
+                    <td>{{ is_null($datum->Student) ? "":$datum->Student->school_name }}</td>
+                    <td>{{ is_null($datum->Student) ? "":$datum->Student->school_grade }}</td>
+<!--                    <td>{{ is_null($datum->Class) ? "":$datum->Class->class_name }}</td>-->
+                    <td>{{ is_null($datum->Student) ? "":$datum->Student->teacher_name }}</td>
+                    @for ($i=0; $i < sizeof($context); $i++)
+                        <td>
+                            @if ($context[$i]['sj_id'] == "T")
+                                <input type="text" name="ss_{{ $i }}[]" id="" value="T" class="form-control in_number_field"/>
+                            @else
+                                <input type="hidden" name="hidden[]" value="{{ $datum->id }}_{{$i}}"/>
+                                <input type="text" name="ss_{{ $i }}[]" id="" value="{{ $datum->$$fieldName.$$i }}" class="form-control in_number_field"/>
+                            @endif
+
+                        </td>
+                    @endfor
+                    <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $datum->id }}" value="{{ $datum->opinion }}" class="form-control"/> </td>
+                    <td>
+                        @if ($datum->sent == "N")
+                            <a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_save_and_send') }}</a>
+                        @else
+                            <span class="btn btn-secondary btn-sm">{{ __('strings.lb_sent') }}</span>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
             </tbody>
@@ -85,8 +190,6 @@
             <div class="text-secondary">{{ __('strings.str_there_is_no_data')}}</div>
         @endif--}}
     </div>
-
-    {{ $data->links('pagination::bootstrap-4') }}
 
 </div>
 
@@ -105,6 +208,7 @@
                     <input type="hidden" name="info_id" id="info_id"/>
                     <input type="hidden" name="up_ac_id" id="up_ac_id"/>
                     <input type="hidden" name="up_grade_id" id="up_grade_id"/>
+                    <input type="hidden" name="up_cl_id" id="up_cl_id"/>
                     <div class="form-group">
                         <label for="info_name">{{ __('strings.lb_test_title') }}</label>
                         <input type="text" name="info_name" id="info_name" placeholder="{{ __('strings.str_insert_form_title') }}" class="form-control"/>
@@ -126,11 +230,11 @@
                     <div class="d-flex justify-content-between mt-2">
                         <div class="form-group border rounded w-100 p-1 mr-1">
                             <label for="tf_has_items">{{ __('strings.lb_has_items') }} </label>
-                            <div class="list-group overflow-auto" style="height: 20rem" id="tf_has_items"></div>
+                            <div class="list-group overflow-auto" style="height: 10rem" id="tf_has_items"></div>
                         </div>
                         <div class="form-group border rounded w-100 p-1 ml-1">
                             <label for="tf_all_items">{{ __('strings.lb_all_items') }} (<span id="lb_all_items" class="text-primary">0</span>)</label>
-                            <div class="list-group overflow-auto" style="height: 20rem" id="tf_all_items"></div>
+                            <div class="list-group overflow-auto" style="height: 10rem" id="tf_all_items"></div>
                         </div>
                     </div>
                 </form>
@@ -214,69 +318,106 @@
     </script>
 
     <script type="text/javascript">
-        let subjectDataSet = [];
-        let savedDataSet = [];
+        $(document).on("change","#section_academy,#section_grade",function (){
+            event.preventDefault();
+            if ($("#section_academy").val() === ""){
+                showAlert("{{ __('strings.str_select_academy') }}");
+                return;
+            }
 
-        $(document).ready(function (){
-            $("#tf_has_items").sortable();
+            $("#fn_class_loader").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/getClassesJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "section_academy":$("#section_academy").val(),
+                    "section_grade":$("#section_grade").val(),
+                },
+                success:function (msg){
+                    $("#section_class").empty();
+                    $("<option value=''>{{ __('strings.fn_all') }}</option>").appendTo($("#section_class"));
+                    $.each(msg.data,function (i,obj){
+                        $("<option value='" + obj.id + "'>" + obj.class_name + "</option>").appendTo($("#section_class"));
+                    });
+                    $("#fn_class_loader").addClass("d-none");
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                    $("#fn_class_loader").addClass("d-none");
+                    return;
+                }
+            })
         });
 
-        $(document).on("click","#btn_add",function (){
+        $(document).on("change","#section_class",function (){
             event.preventDefault();
+
+            if ($("#section_academy").val() === ""){
+                showAlert("{{ __('strings.str_select_academy') }}");
+                return;
+            }
+
             if ($("#section_grade").val() === ""){
                 showAlert("{{ __('strings.str_select_grade') }}");
                 return;
             }
 
-            subjectDataSet = [];
-            savedDataSet = [];
-            $("#info_id").val("");
-            $("#infoModalCenter").modal("show");
-            $("#info_name").val("");
-            $("#info_count").val("0");
-            $("#info_desc").val("");
-            $("#tf_has_items").empty();
-            $("#tf_all_items").empty();
+            $.ajax({
+                type:"POST",
+                url:"/getTestFormsJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "section_academy":$("#section_academy").val(),
+                    "section_grade":$("#section_grade").val()
+                },
+                success:function (msg){
+                    //
+                    $("#section_forms").empty();
+                    $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($("#section_forms"));
+                    $.each(msg.data,function (i,obj){
+                        $("<option value='" + obj.id + "'>" + obj.form_title + "</option>").appendTo($("#section_forms"));
+                    });
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                    return;
+                }
+            })
+        });
 
-            $("#fn_loading").removeClass("d-none");
+        // 불러오기 버튼 클릭 시
+        $(document).on("click","#btnLoad",function (){
+            event.preventDefault();
+            if ($("#section_academy").val() === ""){
+                showAlert("{{ __('strings.str_select_academy') }}");
+                return;
+            }
 
-            loadSubjects();
+            if ($("#section_grade").val() === ""){
+                showAlert("{{ __('strings.str_select_grades') }}");
+                return;
+            }
+
+            if ($("#section_class").val() === ""){
+                showAlert("{{ __('strings.str_select_class') }}");
+                return;
+            }
+
+            if ($("#section_forms").val() === ""){
+                showAlert("{{ __('strings.str_select_forms') }}");
+                return;
+            }
+
+            location.href = "/SmsJob/" + $("#section_academy").val() + "/" + $("#section_grade").val() + "/" + $("#section_class").val() +
+                "/" + $("#section_forms").val() + "/" + $("#section_year").val() + "/" + $("#section_weeks").val();
         });
 
 
 
-        function loadSubjects(){
-            let gradeId = $("#section_grade").val();
-            $.ajax({
-                type:"POST",
-                url:"/testFormSubjectsJson",
-                dataType:"json",
-                data:{
-                    "_token":$("input[name='_token']").val(),
-                    "gradeId":gradeId
-                },
-                success:function (msg){
-                    $("#fn_loading").addClass("d-none");
-                    $.each(msg.data,function (i,obj){
-                        subjectDataSet.push({"Id":obj.id,"Title":obj.title});
-                    });
-                    setTmpl();
-                },
-                error:function (e1,e2,e3){
-                    showAlert(e2);
-                    $("#fn_loading").addClass("d-none");
-                    return;
-                }
-            })
-        }
-
-        function setTmpl(){
-            $("#tf_all_items,#tf_has_items").empty();
-            $("#subjectTemplate").tmpl(subjectDataSet).appendTo($("#tf_all_items"));
-            $("#savedTemplate").tmpl(savedDataSet).appendTo($("#tf_has_items"));
-            $("#lb_all_items").html(subjectDataSet.length);
-            $("#info_count").val($(".fn_saved").length);
-        }
 
         // 배정시키기.
         $(document).on("click","#btnToLeft",function (){

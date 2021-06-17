@@ -5,8 +5,7 @@
     <h5>{{ __('strings.lb_test_manage') }} </h5>
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
-        <button id="btn_add_curri" name="btn_add_curri" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i> {{ __('strings.lb_add_curriculum') }}</button>
-        <button id="btn_add_subject" name="btn_add_subject" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i> {{ __('strings.lb_add_subject') }}</button>
+        <button id="btn_add" name="btn_add" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i> {{ __('strings.lb_add_subject') }}</button>
     </div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -27,6 +26,10 @@
         @endforeach
     @endif
 
+    <div class="mt-3">
+        <h6 class="text-info">{{ __('strings.str_must_make_total') }}</h6>
+    </div>
+
     <div class="mt-3 form-group">
         <div class="form-inline">
             <label for="section_grades" class="form-label">{{ __('strings.lb_section_grades') }}</label>
@@ -44,39 +47,55 @@
     </div>
 
     <div class="mt-3">
-        <table class="mt-3 table table-striped">
-            <thead>
-                <tr class="text-center">
-                    <th scope="col">#</th>
-                    <th scope="col">{{ __('strings.lb_section_grades') }}</th>
-                    <th scope="col">{{ __('strings.lb_parent_subject') }}</th>
-                    <th scope="col">{{ __('strings.lb_subject') }}</th>
-                    <th scope="col">{{ __('strings.lb_max_score') }}</th>
-                    <th scope="col">{{ __('strings.lb_desc') }}</th>
-                    <th scope="col">{{ __('strings.lb_function') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach($data as $datum)
-                <tr class="text-center">
-                    <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ is_null($datum->SchoolGrade)? '-':$datum->SchoolGrade->scg_name }}</td>
-                    <td>{{ !is_null($datum->Curriculum) ? $datum->Curriculum->curri_name : "-"}}</td>
-                    <td>{{ $datum->sj_title }}</td>
-                    <td>{{ $datum->sj_max_score }}</td>
-                    <td>{{ $datum->sj_desc }}</td>
-                    <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
-                </tr>
+        <ul id="subjects" class="nav flex-column">
+            @foreach ($data as $datum)
+                <li class="nav nav-pills flex-column mb-2 my-1" id="{{ $datum->id }}">
+                    <div class="d-flex justify-content-between border p-2">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" checked/>
+                            <span class="form-check-label ml-2">
+                                {{ $datum->sj_title }} ({{$datum->sj_desc}})
+                            </span>
+                        </div>
+                        <div class="d-flex">
+                            <span class="badge badge-primary badge-pill align-self-center">
+                                {{ $datum->sj_max_score }}</span>
+                            <div class="btn-group btn-group-sm ml-2">
+                                <button class="btn btn-sm btn-primary fn_add_child" fn_parent="{{ $datum->id }}"><i class="fa fa-plus"></i> Add</button>
+                                <button class="btn btn-sm btn-info fn_edit_node" fn_id="{{ $datum->id }}"><i class="fa fa-edit"></i> Modify</button>
+                                <button class="btn btn-sm btn-danger fn_delete_node" fn_id="{{ $datum->id }}"><i class="fa fa-trash"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($datum->has_child == "Y")
+                        <ul class="nav flex-column fn_sortable">
+                            @foreach($datum->children as $child)
+                                <li class="nav-link ml-3 my-1 border" id="{{ $child->id }}">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" checked/>
+                                            <span class="form-check-label ml-2">
+                                                {{ $child->sj_title }} ({{ $child->sj_desc }})
+                                            </span>
+                                        </div>
+                                        <div class="d-flex">
+                                            <span class="badge badge-primary badge-pill align-self-center ">{{ $child->sj_max_score }}</span>
+                                            <div class="btn-group btn-group-sm ml-2">
+                                                <button class="btn btn-sm btn-info fn_edit_node" fn_id="{{ $child->id }}"><i class="fa fa-edit"></i> Modify</button>
+                                                <button class="btn btn-sm btn-danger fn_delete_node" fn_id="{{ $child->id }}"><i class="fa fa-trash"></i> Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </li>
             @endforeach
-            </tbody>
-        </table>
-        @if (sizeof($data) <= 0)
-            <div class="text-secondary">{{ __('strings.str_there_is_no_data')}}</div>
-        @endif
-        <div class="mt-3">
-            {{ $data->links() }}
-        </div>
+        </ul>
     </div>
+
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
@@ -92,6 +111,9 @@
                 <form name="sjFrm" id="sjFrm" method="post" action="/addSubject">
                     @csrf
                     <input type="hidden" name="info_id" id="info_id"/>
+                    <input type="hidden" name="info_parent" id="info_parent"/>
+                    <input type="hidden" name="info_depth" id="info_depth"/>
+                    <input type="hidden" name="info_has_child" id="info_has_child"/>
                     <div class="form-group">
                         <label for="info_school_grade_id">{{ __('strings.lb_section_grades') }}</label>
                         <select name="info_school_grade_id" id="info_school_grade_id" class="form-control">
@@ -100,23 +122,6 @@
                                 <option value="{{ $grade->id }}" >{{ $grade->scg_name }}</option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="info_curri_id">{{ __('strings.lb_subject_group') }}</label>
-                        <div class="d-flex justify-content-between">
-                            <select name="info_curri_id" id="info_curri_id" class="form-control">
-                                <option value="0">{{ __('strings.lb_no_subject_group') }}</option>
-                                @foreach ($curris as $curri)
-                                    <option value="{{ $curri->id }}">{{ $curri->curri_name }}</option>
-                                @endforeach
-
-                            </select>
-                            <button id="add_subject_group_in" class="btn btn-primary btn-sm ml-2" title="{{ __('strings.fn_add') }}">
-                                <i class="fa fa-plus-circle"></i>
-                            </button>
-                        </div>
-
                     </div>
 
                     <div class="form-group">
@@ -202,15 +207,30 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
+                <p id="fn_confirm_body">{!! __('strings.str_confirm_delete_subjects') !!}</p>
                 <form name="delFrm" id="delFrm" method="post" action="/delSubject">
                     @csrf
                     <input type="hidden" name="del_id" id="del_id"/>
                 </form>
             </div>
             <div class="modal-footer">
+                <span id="fn_loading_del" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
                 <button type="button" class="btn btn-primary" id="btnDeleteDo"><i class="fa fa-check-circle"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="loadingModalCenter" tabindex="-1" role="dialog" aria-labelledby="loadingModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loadingModalLongTitle">{{ __('strings.lb_loading_update') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="align-self-center"> <i class="fa fa-spin fa-spinner"></i> {{ __('strings.str_waiting_to_update') }}</div>
             </div>
         </div>
     </div>
@@ -221,27 +241,135 @@
 @section('scripts')
     <script type="text/javascript">
 
+        $(document).ready(function (){
+            $("#subjects, .fn_sortable").sortable({
+                cursor:"move",
+                update:function(event, ui){
+                    let nowOrder = $(this).sortable("toArray").toString();
+                    //console.log("update ... order :" + nowOrder);
+                    updateOrderNow(nowOrder);
+                    $("#loadingModalCenter").modal("show");
+                }
+            });
+        });
+
+        function updateOrderNow(orders){
+            $.ajax({
+                type:"post",
+                url:"/updateOrderSubjects",
+                dataType:"JSON",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "orders":orders
+                },
+                success:function(msg){
+                    if (msg.result === "true"){
+                        $("#loadingModalCenter").modal("hide");
+                    }else{
+                        $("#loadingModalCenter").modal("hide");
+                        showAlert("{{ __('strings.err_fail_to_update') }}");
+                        return;
+                    }
+                },
+                error:function (e1,e2,e3){
+                    $("#loadingModalCenter").modal("hide");
+                    showAlert(e2);
+                    return;
+                }
+            })
+        }
+
         $(document).on("change","#section_grades",function (){
             let curVal = $(this).val();
 
             if (curVal === ''){
-                location.href = "/testAreas";
+                location.href = "/subjects";
             }else{
-                location.href = "/testAreas/" + curVal;
+                location.href = "/subjects/" + curVal;
             }
         });
 
-        $(document).on("click","#btn_add_subject",function (){
+        $(document).on("click","#btn_add",function (){
             event.preventDefault();
 
             $("#infoModalCenter").modal("show");
             $("#sjFrm").attr({"action":"/addSubject"});
             $("#btnSjDelete").addClass("d-none");
 
-            $("#info_name").val("");
-            $("#info_curri_id").val("");
-            $("#info_desc").val("");
+            $("#info_school_grade_id").val($("#section_grades").val());
 
+            $("#info_name").val("");
+            $("#info_desc").val("");
+            $("#info_parent").val("0");
+            $("#info_depth").val("0");
+            $("#info_has_child").val("N");
+
+        });
+
+        // 하위 과목 만들기 클릭
+        $(document).on("click",".fn_add_child",function (){
+            event.preventDefault();
+
+            let nowParentId = $(this).attr("fn_parent");
+
+            $("#infoModalCenter").modal("show");
+            $("#sjFrm").attr({"action":"/addSubject"});
+            $("#btnSjDelete").addClass("d-none");
+
+            $("#info_school_grade_id").val($("#section_grades").val());
+
+            $("#info_name").val("");
+            $("#info_desc").val("");
+            $("#info_parent").val(nowParentId);
+            $("#info_depth").val("1");
+            $("#info_has_child").val("N");
+        });
+
+        // parent info edit
+        $(document).on("click",".fn_edit_node",function (){
+            event.preventDefault();
+
+            $("#infoModalCenter").modal("show");
+            $("#fn_loading").removeClass("d-none");
+
+            let nowId = $(this).attr("fn_id");
+
+            $.ajax({
+                type:"POST",
+                url:"/getSubjectJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "cid":nowId
+                },
+                success:function (msg){
+                    //
+                    $("#fn_loading").addClass("d-none");
+                    $("#info_school_grade_id").val(msg.data.sg_id);
+                    $("#info_name").val(msg.data.sj_title);
+                    $("#info_desc").val(msg.data.sj_desc);
+                    $("#info_id").val(nowId);
+                    $("#info_parent").val(msg.data.parent_id);
+                    $("#info_depth").val(msg.data.depth);
+                    $("#info_has_child").val(msg.data.has_child);
+                    $("#info_score").val(msg.data.sj_max_score);
+                    $("#sjFrm").prop({"action":"/storeSubject"});
+                },
+                error:function(e1,e2,e3){
+                    $("#fn_loading").addClass("d-none");
+                    showAlert(e2);
+                    return;
+                }
+            })
+        });
+
+        // delete form
+        $(document).on("click",".fn_delete_node",function (){
+            event.preventDefault();
+            $("#confirmModalCenter").modal("show");
+            let delId = $(this).attr("fn_id");
+
+            $("#del_id").val(delId);
         });
 
         // 작은 버튼 안에서 클릭할 때.
@@ -298,6 +426,7 @@
 
         $(document).on("click","#btnDeleteDo",function (){
             event.preventDefault();
+            $("#fn_loading_del").removeClass("d-none");
             $("#delFrm").submit();
         });
 
@@ -359,6 +488,8 @@
                 showAlert("{{ __('strings.str_insert_max_score') }}");
                 return;
             }
+
+            $("#fn_loading").removeClass("d-none");
 
             $("#sjFrm").submit();
         });

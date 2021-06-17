@@ -38,4 +38,7 @@ class Configurations extends Model
     /* excel file upload ... in filesystems.php   name: excels */
     public static $EXCEL_FOLDER = "excels";
 
+    public static $TEST_FORM_IN_SUBJECT_PREFIX = "sj_";
+    public static $TEST_FORM_IN_SUBJECT_MAX = 20;
+
 }

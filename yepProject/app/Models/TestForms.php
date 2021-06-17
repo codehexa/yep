@@ -12,7 +12,9 @@ class TestForms extends Model
     protected $table = "test_forms";
     protected $fillable = [
         "writer_id","form_title","ac_id","grade_id","class_id","subjects_count",
-        "tf_desc"
+        "tf_desc",
+        "sj_0","sj_1","sj_2","sj_3","sj_4","sj_5","sj_6","sj_7","sj_8","sj_9",
+        "sj_10","sj_11","sj_12","sj_13","sj_14","sj_15","sj_16","sj_17","sj_18","sj_19"
     ];
 
     public function Grades(){

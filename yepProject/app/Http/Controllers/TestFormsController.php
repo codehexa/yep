@@ -110,16 +110,20 @@ class TestFormsController extends Controller
                 $newTest->save();
 
                 $newId = $newTest->id;
-                $insertData = [];
+                //$insertData = [];
                 $n = 0;
                 foreach ($subjects as $subject){
                     $nowSubject = Subjects::find($subject);
-                    $nowCurri = $nowSubject->curri_id;
-                    $insertData[] = ["tf_id"=>$newId,"curri_id"=>$nowCurri,"sj_id"=>$subject,"tf_index"=>$n];
+                    //$nowCurri = $nowSubject->curri_id;
+                    $subjectFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$n;
+                    $newTest->$subjectFieldName = $subject;
+                    //$insertData[] = ["tf_id"=>$newId,"curri_id"=>$nowCurri,"sj_id"=>$subject,"tf_index"=>$n];
                     $n++;
                 }
 
-                TestFormsItems::insert($insertData);
+                $newTest->save();
+
+                //TestFormsItems::insert($insertData);
 
                 $ltMode = "add";
                 $ltTarget = $newTest->id;
@@ -138,7 +142,19 @@ class TestFormsController extends Controller
         } else {
             // modify
             $savedForm = TestForms::find($infoId);
-            $savedSubjects = TestFormsItems::where('tf_id','=',$infoId);
+            $oldSubjectsCount = $savedForm->subjects_count;
+
+            // old subject id clear
+            for ($i=$oldSubjectsCount; $i < Configurations::$TEST_FORM_IN_SUBJECT_MAX; $i++){
+                $sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
+                $savedForm->$sjFieldName = 0;
+            }
+
+            for ($i=0; $i < sizeof($subjects); $i++){
+                $sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
+                $savedForm->$sjFieldName = $subjects[$i];
+            }
+            //$savedSubjects = TestFormsItems::where('tf_id','=',$infoId);
 
             $savedForm->writer_id = $user->id;
             $savedForm->form_title = $name;
@@ -150,17 +166,17 @@ class TestFormsController extends Controller
 
             try {
                 $savedForm->save();
+                /*
+                                $upSubjects = [];
+                                for ($i=0; $i < sizeof($subjects); $i++){
+                                    $upSubjects[] = $subjects[$i];
+                                }
 
-                $upSubjects = [];
-                for ($i=0; $i < sizeof($subjects); $i++){
-                    $upSubjects[] = $subjects[$i];
-                }
+                                $forCheckSubjects = [];
 
-                $forCheckSubjects = [];
-
-                foreach($savedSubjects as $savedSubject){
-                    $forCheckSubjects[] = $savedSubject->sj_id;
-                }
+                                foreach($savedSubjects as $savedSubject){
+                                    $forCheckSubjects[] = $savedSubject->sj_id;
+                                }
 
                 $forDeleteArray = array_diff($forCheckSubjects,$upSubjects);
                 $forInsertArray = array_diff($upSubjects,$forCheckSubjects);
@@ -179,6 +195,7 @@ class TestFormsController extends Controller
 
                     TestFormsItems::insert($insertData);
                 }
+                */
                 return redirect("/testForm");
             }catch (\Exception $exception){
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
@@ -192,8 +209,21 @@ class TestFormsController extends Controller
 
         $tfForm = TestForms::find($tfId);
         $tfFormSubjects = [];
-        $root = TestFormsItems::where('tf_id','=',$tfId)->orderBy('tf_index','asc')->get();
+        //$root = TestFormsItems::where('tf_id','=',$tfId)->orderBy('tf_index','asc')->get();
 
+        for ($i = 0; $i < $tfForm->subjects_count; $i++){
+            $fieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
+            $tfSubject = $tfForm->$fieldName;
+            $subject = Subjects::find($tfSubject);
+            $curri_id = $subject->curri_id;
+            $curri_name = "";
+            if ($curri_id != 0){
+                $curri = Curriculums::find($curri_id);
+                $curri_name = $curri->curri_name."_";
+            }
+            $tfFormSubjects[] = ["id"=>$tfSubject,"title"=>$curri_name.$subject->sj_title];
+        }
+/*
         foreach ($root as $r){
             $crId = $r->curri_id;
             $sjId = $r->sj_id;
@@ -205,7 +235,7 @@ class TestFormsController extends Controller
             }else{
                 $tfFormSubjects[] = ["id"=>$r->sj_id,"title"=>$subject->sj_title];
             }
-        }
+        }*/
 
         return response()->json(["tfData"=>$tfForm,"tfItems"=>$tfFormSubjects,"result"=>"true"]);
     }

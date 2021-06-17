@@ -94,6 +94,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/storeSubject",[\App\Http\Controllers\SubjectsController::class,"store"]);
     Route::post("/getSubjectJson",[\App\Http\Controllers\SubjectsController::class,"getSubjectJson"]);
     Route::post("/delSubject",[\App\Http\Controllers\SubjectsController::class,"deleteSubject"]);
+    Route::post("/updateOrderSubjects",[\App\Http\Controllers\SubjectsController::class, "updateOrderSubjects"]);
 
     /* 코멘트 관리 */
     Route::get("/comments/{grade?}/{sjId?}",[\App\Http\Controllers\CommentsController::class,"index"])->name("comments");
@@ -117,6 +118,12 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/getTestFormJson",[\App\Http\Controllers\TestFormsController::class, "getTestFormData"]);
     Route::post("/delTestForms",[\App\Http\Controllers\TestFormsController::class, "deleteForm"]);
 });
+
+/* SMS 업무 */
+Route::get("/SmsJob/{acId?}/{gradeId?}/{classId?}/{tfId?}/{year?}/{weeks?}",[\App\Http\Controllers\SmsJobController::class, "index"]);
+Route::post("/getFormsJson",[\App\Http\Controllers\SmsJobController::class, "getFormsJson"]);
+Route::post("/getClassesJson",[\App\Http\Controllers\SmsJobController::class, "getClassesJson"]);
+Route::post("/getTestFormsJson",[\App\Http\Controllers\SmsJobController::class, "getTestFormsJson"]);
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

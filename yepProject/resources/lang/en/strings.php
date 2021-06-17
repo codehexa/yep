@@ -68,9 +68,12 @@ return [
     "fn_information"    => "정보",
     "fn_select" => "조회",
     "fn_all"    => "전체에서",
+    "fn_select_item"    => "선택하세요",
     "fn_execute"    => "실행",
     "fn_load"   => "불러오기",
     "fn_upload" => "업로드",
+    "fn_load_form"  => "입력폼불러오기",
+    "fn_input"  => "입력하기",
 
     /* 학년 관리 */
     "lb_grade_manage"   => "학년관리",
@@ -160,6 +163,7 @@ return [
     "str_insert_max_score"  => "최대값을 입력하세요",
     "lb_no_subject_group"   => "소속 과목 그룹 없음",
     "lb_no_parent"  => "소속 과목 없음",
+    "str_confirm_delete_subjects"   => "만일 하위 과목이 있다면 하위 과목까지 삭제됩니다. 계속 진행하시겠습니까? <br/>진행하면 되돌릴 수 없습니다",
 
     "str_select_school_grade"   => "구분을 선택하세요",
     "str_insert_subject_desc"   => "부연 설명 입력하세요",
@@ -169,6 +173,9 @@ return [
     "lb_add_subject"    => "신규 과목",
     "lb_add_curriculum" => "신규 과목 영역",
     "str_insert_subject_group"  => "과목 영역을 입력하세요",
+    "lb_loading_update"    => "업데이트 중입니다",
+    "str_waiting_to_update" => "업데이트 중입니다. 잠시만 기다려 주세요",
+    "str_must_make_total"   => "하위 과목을 만들 경우, 반듯이 맨 마지막 항목은 Total 이 되게 해주세요.",
 
     /* 원생 관리 */
     "lb_student_manage" => "학생 관리",
@@ -201,7 +208,7 @@ return [
     "str_insert_school_grade"   => "학년을 입력하세요",
 
     /* 시험 입력 폼 관리 */
-    "lb_test_form_manage"   => "시험 입력 폼 관리",
+    "lb_test_form_manage"   => "시험 폼 관리",
     "lb_test_title" => "폼 이름",
     "lb_test_count" => "과목 수",
     "lb_test_desc"  => "간략 설명",
@@ -216,8 +223,17 @@ return [
 
     /* SMS 업무 */
     "lb_sms_work_manage" => "SMS 업무",
+    "lb_weeks"  => "주차",
+    "lb_input"  => "입력",
+    "lb_title"  => "이름",
+    "lb_subjects"   => "과목",
+    "lb_comment"    => "의견",
+    "str_select_forms"  => "입력 폼을 선택하세요",
+    "lb_sent"   => "전송완료",
+    "lb_save_and_send"  => "저장후전송",
+    "lb_total"  =>  "Total",
 
-    /* strings */
+    /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",
     "str_do_you_want_to_delete_cant_recover" => "삭제를 하시겠습니까? 진행하면 회복할 수 없습니다",
 

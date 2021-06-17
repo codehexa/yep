@@ -20,8 +20,7 @@ class CreateTestFormsTable extends Migration
             $table->string('form_title')->comment('form title');
             $table->bigInteger('ac_id')->unsigned()->default(0)->index()->comment('academy.id');
             $table->bigInteger('grade_id')->unsigned()->default(0)->index()->comment('school_grades.id');
-            $table->bigInteger('class_id')->unsigned()->default(0)->index()->comment('classes.id');
-            $table->integer('subjects_count')->unsigned()->default(0)->comment('subject children count');
+            $table->integer('items_count')->unsigned()->default(0)->comment('items count, with forms_items');
             $table->string('tf_desc')->nullable()->comment('description');
         });
     }

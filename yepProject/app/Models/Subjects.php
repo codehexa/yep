@@ -12,12 +12,8 @@ class Subjects extends Model
     protected $table = "subjects";
     protected $fillable = [
         "sj_title","sj_max_score","sj_desc",
-        "curri_id","sg_id"
+        "sg_id","parent_id","depth","has_child","sj_order"
     ];
-
-    public function Curriculum(){
-        return $this->belongsTo(Curriculums::class,"curri_id");
-    }
 
     public function SchoolGrade(){
         return $this->belongsTo(schoolGrades::class, "sg_id");

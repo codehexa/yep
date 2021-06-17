@@ -10,6 +10,7 @@ class CreateSubjectsTable extends Migration
      * Run the migrations.
      *
      * @return void
+     * curriculums table needless
      */
     public function up()
     {
@@ -19,8 +20,11 @@ class CreateSubjectsTable extends Migration
             $table->string("sj_title");
             $table->integer("sj_max_score");
             $table->string("sj_desc");
-            $table->bigInteger("curri_id")->unsigned()->default(0);
-            $table->bigInteger("sg_id")->unsigned()->default(0);
+            $table->bigInteger("sg_id")->unsigned()->default(0)->comment("school_grades.id");
+            $table->bigInteger('parent_id')->unsigned()->default(0);
+            $table->integer('depth')->unsigned()->default(0);
+            $table->enum('has_child',['Y','N'])->default('N');
+            $table->integer('sj_order')->unsigned()->default(0);
         });
     }
 
