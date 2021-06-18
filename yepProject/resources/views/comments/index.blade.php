@@ -47,14 +47,14 @@
             <label for="section_subject" class="form-label ml-3">{{ __('strings.lb_subject') }}</label>
             <select name="section_subject" id="section_subject" class="form-select ml-3">
                 <option value="">{{ __('strings.lb_select_subject') }}</option>
-                @foreach($subjects as $subject)
-                    <option value="{{ $subject->id }}"
-                        @if ($rSjId == $subject->id)
+                @for($i=0; $i < sizeof($subjects); $i++)
+                    <option value="{{ $subjects[$i]["id"] }}"
+                        @if ($rSjId == $subjects[$i]["id"])
                             selected
                         @endif
-                    >{{ $subject->curri_id == "0" ? "": $subject->Curriculum->curri_name."_" }}
-                    {{ $subject->sj_title }}</option>
-                @endforeach
+                    >
+                    {{ $subjects[$i]["title"] }}</option>
+                @endfor
             </select>
         </div>
     </div>
@@ -86,7 +86,6 @@
             <div class="text-secondary">{{ __('strings.str_there_is_no_data')}}</div>
         @endif
     </div>
-    {{ $data->links() }}
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">

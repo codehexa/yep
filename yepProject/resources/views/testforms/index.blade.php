@@ -74,7 +74,7 @@
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ is_null($datum->Grades) ? "":$datum->Grades->scg_name }}</td>
                     <td>{{ $datum->form_title }}</td>
-                    <td>{{ $datum->subjects_count }}</td>
+                    <td>{{ $datum->items_count }}</td>
                     <td>{{ $datum->tf_desc }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
@@ -181,6 +181,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <span id="fn_del_loader" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
                 <button type="button" class="btn btn-primary" id="btnDeleteDo"><i class="fa fa-check-circle"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
             </div>
@@ -196,7 +197,7 @@
             <div class="form-check">
                 <input type="checkbox" class="form-check-input fn_subjects" name="tfAllItems[]" id="tf_${Id}" value="${Id}" checked/>
                 <label for="tf_${Id}" class="form-check-label">
-                    ${Title}
+                    ${Title} ${Sub}
                 </label>
             </div>
         </div>
@@ -207,7 +208,7 @@
             <div class="form-check">
                 <input type="checkbox" class="form-check-input fn_saved" name="tfSavedItems[]" id="svtf_${Id}" value="${Id}" checked/>
                 <label for="svtf_${Id}" class="form-check-label">
-                    ${Title}
+                    ${Title} ${Sub}
                 </label>
             </div>
         </div>
@@ -243,8 +244,6 @@
             loadSubjects();
         });
 
-
-
         function loadSubjects(){
             let gradeId = $("#section_grade").val();
             $.ajax({
@@ -258,7 +257,7 @@
                 success:function (msg){
                     $("#fn_loading").addClass("d-none");
                     $.each(msg.data,function (i,obj){
-                        subjectDataSet.push({"Id":obj.id,"Title":obj.title});
+                        subjectDataSet.push({"Id":obj.id,"Title":obj.sj_title,"Sub":obj.children});
                     });
                     setTmpl();
                 },
@@ -347,8 +346,6 @@
 
             $("#up_ac_id").val($("#section_academy").val());
             $("#up_grade_id").val($("#section_grade").val());
-            $("#up_cl_id").val($("#section_class").val());
-
 
             $("#tfFrm").submit();
         });
@@ -398,12 +395,6 @@
                             $("#section_grade").val(msg.tfData.grade_id);
                         }
 
-                        if (msg.tfData.class_id === 0){
-                            $("#section_class")[0].selectedIndex = 0;
-                        }else{
-                            $("#section_class").val(msg.tfData.class_id);
-                        }
-
                         $.each(msg.tfItems,function (i,obj){
                             savedDataSet.push({"Id":obj.id,"Title":obj.title});
                         });
@@ -450,6 +441,7 @@
         });
 
         $(document).on("click","#btnDeleteDo",function (){
+            $("#fn_del_loader").removeClass("d-none");
             $("#delFrm").submit();
         });
 

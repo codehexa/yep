@@ -51,12 +51,15 @@
             @foreach ($data as $datum)
                 <li class="nav nav-pills flex-column mb-2 my-1" id="{{ $datum->id }}">
                     <div class="d-flex justify-content-between border p-2">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" checked/>
-                            <span class="form-check-label ml-2">
-                                {{ $datum->sj_title }} ({{$datum->sj_desc}})
-                            </span>
-                        </div>
+                        <h5>
+                            @if ($datum->sj_type == "N")
+                                <i class="fa fa-cube"></i>
+                            @else
+                                <i class="fa fa-sign-in-alt"></i>
+                            @endif
+                            {{ $datum->sj_title }} ({{$datum->sj_desc}})
+                        </h5>
+
                         <div class="d-flex">
                             <span class="badge badge-primary badge-pill align-self-center">
                                 {{ $datum->sj_max_score }}</span>
@@ -73,12 +76,14 @@
                             @foreach($datum->children as $child)
                                 <li class="nav-link ml-3 my-1 border" id="{{ $child->id }}">
                                     <div class="d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" checked/>
-                                            <span class="form-check-label ml-2">
-                                                {{ $child->sj_title }} ({{ $child->sj_desc }})
-                                            </span>
-                                        </div>
+                                        <h6>
+                                            @if ($child->sj_type == "N")
+                                                <i class="fa fa-cube"></i>
+                                            @else
+                                                <i class="fa fa-sign-in-alt"></i>
+                                            @endif
+                                            {{ $child->sj_title }} ({{ $child->sj_desc }})
+                                        </h6>
                                         <div class="d-flex">
                                             <span class="badge badge-primary badge-pill align-self-center ">{{ $child->sj_max_score }}</span>
                                             <div class="btn-group btn-group-sm ml-2">
@@ -137,6 +142,14 @@
                     <div class="form-group">
                         <label for="info_desc">{{ __('strings.lb_subject_desc') }}</label>
                         <input type="text" name="info_desc" id="info_desc" class="form-control" placeholder="{{ __('strings.str_insert_subject_desc') }}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="info_type">{{ __('strings.lb_total_type') }}</label>
+                        <select name="info_type" id="info_type" class="form-control">
+                            <option value="N">{{ __('strings.lb_normal_subject') }}</option>
+                            <option value="T">{{ __('strings.lb_total_subject') }}</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -303,6 +316,7 @@
             $("#info_parent").val("0");
             $("#info_depth").val("0");
             $("#info_has_child").val("N");
+            $("#info_type").val("N");
 
         });
 
@@ -323,6 +337,7 @@
             $("#info_parent").val(nowParentId);
             $("#info_depth").val("1");
             $("#info_has_child").val("N");
+            $("#info_type").prop("N");
         });
 
         // parent info edit
@@ -353,6 +368,7 @@
                     $("#info_depth").val(msg.data.depth);
                     $("#info_has_child").val(msg.data.has_child);
                     $("#info_score").val(msg.data.sj_max_score);
+                    $("#info_type").val(msg.data.sj_type);
                     $("#sjFrm").prop({"action":"/storeSubject"});
                 },
                 error:function(e1,e2,e3){
@@ -459,6 +475,7 @@
                         $("#info_curri_id").val(msg.data.curri_id);
                         $("#info_score").val(msg.data.sj_max_score);
                         $("#info_desc").val(msg.data.sj_desc);
+                        $("#info_type").val(msg.data.sj_type);
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");
                         return;

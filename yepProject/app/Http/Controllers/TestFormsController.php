@@ -11,6 +11,7 @@ use App\Models\Settings;
 use App\Models\Subjects;
 use App\Models\TestForms;
 use App\Models\TestFormsItems;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +24,9 @@ class TestFormsController extends Controller
         $this->middleware("auth");
     }
 
-    public function index($gradeId ='',$acId='',$clId=''){
+    public function index($gradeId ='',$acId=''){
         $academies = Academies::orderBy('ac_name','asc')->get();
         $scGrades = schoolGrades::orderBy('scg_index','asc')->get();
-        $classes = Classes::orderBy('class_name','asc')->get();
 
         $config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
         $limit = $config->set_value;
@@ -34,7 +34,6 @@ class TestFormsController extends Controller
         $wheres = [];
         if ($acId != "") $wheres[] = ["ac_id",'=',$acId];
         if ($gradeId != "") $wheres[] = ["grade_id","=",$gradeId];
-        if ($clId != "") $wheres[] = ['class_id','=',$clId];
 
         if (sizeof($wheres) > 0){
             $data = TestForms::where($wheres)->orderBy('form_title','asc')->paginate($limit);
@@ -45,8 +44,8 @@ class TestFormsController extends Controller
         return view('testforms.index',
             [
                 'data'=>$data,'academies'=>$academies,
-                'schoolGrades'=>$scGrades,'classes'=>$classes,
-                'rAcId'=>$acId,'rGradeId'=>$gradeId,'rClId'=>$clId
+                'schoolGrades'=>$scGrades,
+                'rAcId'=>$acId,'rGradeId'=>$gradeId
             ]
         );
     }
@@ -54,22 +53,27 @@ class TestFormsController extends Controller
     public function getSubjects(Request $request){
         $grade = $request->get("gradeId");
 
-        $root = DB::table('subjects')
-            ->select('subjects.id as sjid','subjects.sj_title as sjtitle','subjects.curri_id as curriid','curriculums.curri_name as curriname')
-            ->leftJoin('curriculums','subjects.curri_id','=','curriculums.id')
-            ->where('subjects.sg_id','=',$grade)
-            ->orderBy('subjects.curri_id','asc')
-            ->orderBy('subjects.sj_title','asc')
+        $root = Subjects::where('sg_id','=',$grade)
+            ->where('depth','=','0')
+            ->orderBy('sj_order','asc')
             ->get();
+
+        $subjCtrl = new SubjectsController();
 
         $data = [];
 
         foreach ($root as $r){
-            if ($r->curriid != 0){
-                $data[] = ["id"=>$r->sjid,"title"=>$r->curriname."_".$r->sjtitle];
+            if ($r->has_child == "Y"){
+                $children = $subjCtrl->getChildren($r->id);
+                $sub_subject = [];
+                foreach($children as $child){
+                    $sub_subject[] = $child->sj_title;
+                }
+                $r->setAttribute('children',"(".implode("/",$sub_subject).")");
             }else{
-                $data[] = ["id"=>$r->sjid,"title"=>$r->sjtitle];
+                $r->setAttribute('children','');
             }
+            $data[] = $r;
         }
 
         return response()->json(['data'=>$data]);
@@ -79,16 +83,14 @@ class TestFormsController extends Controller
         $infoId = $request->get("info_id");
         $acId = $request->get("up_ac_id");
         $gradeId = $request->get("up_grade_id");
-        $clId = $request->get("up_cl_id");
 
         $name = $request->get("info_name");
         $desc = $request->get("info_desc");
-        $subjects = $request->get("tfSavedItems");
+        $subjectIds = $request->get("tfSavedItems");
 
         $user = Auth::user();
 
         if ($acId == "") $acId = "0";
-        if ($clId == '') $clId = "0";
 
         if ($infoId == ""){
             //new
@@ -102,28 +104,58 @@ class TestFormsController extends Controller
             $newTest->form_title = $name;
             $newTest->ac_id = $acId;
             $newTest->grade_id = $gradeId;
-            $newTest->class_id = $clId;
-            $newTest->subjects_count = sizeof($subjects);
+            $newTest->items_count = sizeof($subjectIds);
             $newTest->tf_desc = $desc;
+
+            $subjectsCtrl = new SubjectsController();
 
             try {
                 $newTest->save();
 
-                $newId = $newTest->id;
-                //$insertData = [];
-                $n = 0;
-                foreach ($subjects as $subject){
-                    $nowSubject = Subjects::find($subject);
-                    //$nowCurri = $nowSubject->curri_id;
-                    $subjectFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$n;
-                    $newTest->$subjectFieldName = $subject;
-                    //$insertData[] = ["tf_id"=>$newId,"curri_id"=>$nowCurri,"sj_id"=>$subject,"tf_index"=>$n];
+                $newTfId = $newTest->id;
+
+                $n = 1;
+                foreach ($subjectIds as $subjectId){
+                    $nowSubject = Subjects::find($subjectId);
+                    $nowTestFormItem = new TestFormsItems();
+                    $nowTestFormItem->tf_id = $newTfId;
+                    $nowTestFormItem->sj_id = $subjectId;
+                    $nowTestFormItem->sj_index = $n;
+                    $nowTestFormItem->sj_title = $nowSubject->sj_title;
+                    $nowTestFormItem->sj_type = $nowSubject->sj_type;
+                    $nowTestFormItem->sj_max_score = $nowSubject->sj_max_score;
+                    $nowTestFormItem->sj_parent_id = $nowSubject->parent_id;
+                    $nowTestFormItem->sj_depth = $nowSubject->depth;
+                    $nowTestFormItem->sj_has_child = $nowSubject->has_child;
+
+                    $nowTestFormItem->save();
+
+                    if ($nowSubject->has_child == "Y"){
+                        $nowSubjectChildren = $subjectsCtrl->getChildren($nowSubject->id);
+                        $nowSubjectChildrenParentId = $nowTestFormItem->id; // 새로 만들어진 인덱스
+
+                        $n2 = $n+1;
+                        foreach ($nowSubjectChildren as $nowSubjectChild){
+                            $nowTestFormItem = new TestFormsItems();
+                            $nowTestFormItem->tf_id = $newTfId;
+                            $nowTestFormItem->sj_id = $nowSubjectChild->id;
+                            $nowTestFormItem->sj_index = $n2;
+                            $nowTestFormItem->sj_title = $nowSubjectChild->sj_title;
+                            $nowTestFormItem->sj_type = $nowSubjectChild->sj_type;
+                            $nowTestFormItem->sj_max_score = $nowSubjectChild->sj_max_score;
+                            $nowTestFormItem->sj_parent_id = $nowSubjectChildrenParentId;
+                            $nowTestFormItem->sj_depth = $nowSubjectChild->depth;
+                            $nowTestFormItem->sj_has_child = $nowSubjectChild->has_child;
+
+                            $nowTestFormItem->save();
+
+                            $n2++;
+                        }
+                        $n = $n2 -1;
+                    }
                     $n++;
                 }
 
-                $newTest->save();
-
-                //TestFormsItems::insert($insertData);
 
                 $ltMode = "add";
                 $ltTarget = $newTest->id;
@@ -150,9 +182,9 @@ class TestFormsController extends Controller
                 $savedForm->$sjFieldName = 0;
             }
 
-            for ($i=0; $i < sizeof($subjects); $i++){
+            for ($i=0; $i < sizeof($subjectIds); $i++){
                 $sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
-                $savedForm->$sjFieldName = $subjects[$i];
+                $savedForm->$sjFieldName = $subjectIds[$i];
             }
             //$savedSubjects = TestFormsItems::where('tf_id','=',$infoId);
 
@@ -160,42 +192,12 @@ class TestFormsController extends Controller
             $savedForm->form_title = $name;
             $savedForm->ac_id = $acId;
             $savedForm->grade_id = $gradeId;
-            $savedForm->class_id = $clId;
-            $savedForm->subjects_count = sizeof($subjects);
+            $savedForm->subjects_count = sizeof($subjectIds);
             $savedForm->tf_desc = $desc;
 
             try {
                 $savedForm->save();
-                /*
-                                $upSubjects = [];
-                                for ($i=0; $i < sizeof($subjects); $i++){
-                                    $upSubjects[] = $subjects[$i];
-                                }
 
-                                $forCheckSubjects = [];
-
-                                foreach($savedSubjects as $savedSubject){
-                                    $forCheckSubjects[] = $savedSubject->sj_id;
-                                }
-
-                $forDeleteArray = array_diff($forCheckSubjects,$upSubjects);
-                $forInsertArray = array_diff($upSubjects,$forCheckSubjects);
-
-                if (sizeof($forDeleteArray > 0)){
-                    TestFormsItems::where('tf_id','=',$infoId)->whereIn('sj_id',$forDeleteArray)->delete();
-                }
-
-                $insertData = [];
-                if (sizeof($forInsertArray)){
-                    for ($i=0; $i < sizeof($forInsertArray); $i++){
-                        $nowSubject = Subjects::find($forInsertArray[$i]);
-                        $nowCurri = $nowSubject->curri_id;
-                        $insertData[] = ["tf_id"=>$infoId,"curri_id"=>$nowCurri,"sj_id"=>$nowSubject,"tf_index"=>$i];
-                    }
-
-                    TestFormsItems::insert($insertData);
-                }
-                */
                 return redirect("/testForm");
             }catch (\Exception $exception){
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
@@ -208,36 +210,28 @@ class TestFormsController extends Controller
         $tfId = $request->get("tfId");
 
         $tfForm = TestForms::find($tfId);
-        $tfFormSubjects = [];
-        //$root = TestFormsItems::where('tf_id','=',$tfId)->orderBy('tf_index','asc')->get();
+        $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
 
-        for ($i = 0; $i < $tfForm->subjects_count; $i++){
-            $fieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
-            $tfSubject = $tfForm->$fieldName;
-            $subject = Subjects::find($tfSubject);
-            $curri_id = $subject->curri_id;
-            $curri_name = "";
-            if ($curri_id != 0){
-                $curri = Curriculums::find($curri_id);
-                $curri_name = $curri->curri_name."_";
-            }
-            $tfFormSubjects[] = ["id"=>$tfSubject,"title"=>$curri_name.$subject->sj_title];
-        }
-/*
-        foreach ($root as $r){
-            $crId = $r->curri_id;
-            $sjId = $r->sj_id;
-            $subject = Subjects::find($sjId);
-            if ($crId != 0){
-                $curri = Curriculums::find($crId);
-
-                $tfFormSubjects[] = ["id"=>$r->sj_id,"title"=>$curri->curri_name."_".$subject->sj_title];
+        $root = [];
+        foreach($tfFormSubjectsRoot as $tfFormSubject){
+            if ($tfFormSubject->sj_has_child == "Y"){
+                $children = $this->getTestFormItemChildren($tfFormSubject->id);
+                $titles = [];
+                foreach($children as $child){
+                    $titles[] = $child->sj_title;
+                }
+                $nowTitle = $tfFormSubject->sj_title." (".implode("/",$titles).")";
             }else{
-                $tfFormSubjects[] = ["id"=>$r->sj_id,"title"=>$subject->sj_title];
+                $nowTitle = $tfFormSubject->sj_title;
             }
-        }*/
+            $root[] = ["id"=>$tfFormSubject->id,"title"=>$nowTitle];
+        }
 
-        return response()->json(["tfData"=>$tfForm,"tfItems"=>$tfFormSubjects,"result"=>"true"]);
+        return response()->json(["tfData"=>$tfForm,"tfItems"=>$root,"result"=>"true"]);
+    }
+
+    public function getTestFormItemChildren($parent){
+        return TestFormsItems::where('sj_parent_id','=',$parent)->orderBy("sj_index","asc")->get();
     }
 
     /* Delete */

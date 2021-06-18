@@ -12,7 +12,7 @@ class Subjects extends Model
     protected $table = "subjects";
     protected $fillable = [
         "sj_title","sj_max_score","sj_desc",
-        "sg_id","parent_id","depth","has_child","sj_order"
+        "sg_id","parent_id","depth","has_child","sj_order","sj_type"
     ];
 
     public function SchoolGrade(){

@@ -25,6 +25,7 @@ class CreateSubjectsTable extends Migration
             $table->integer('depth')->unsigned()->default(0);
             $table->enum('has_child',['Y','N'])->default('N');
             $table->integer('sj_order')->unsigned()->default(0);
+            $table->enum('sj_type',['N','T'])->default('N');
         });
     }
 

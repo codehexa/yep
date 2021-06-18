@@ -25,15 +25,29 @@ class CommentsController extends Controller
         $config = Settings::where("set_code","=",Configurations::$SETTINGS_TEST_MAX_SCORE)->first();
         $maxScore = $config->set_value;
 
+        $subjectArray = [];
+
         if ($grade != ''){
-            $subjects = Subjects::where('sg_id','=',$grade)
-                ->orderBy('curri_id','asc')
-                ->orderBy('sj_title','asc')
+            $subjectRoot = Subjects::where('sg_id','=',$grade)
+                ->where('depth','=','0')
+                ->where('sj_type','=','N')
+                ->orderBy('sj_order','asc')
                 ->get();
-        }else{
-            $subjects = Subjects::orderBy('curri_id','asc')
-                ->orderBy('sj_title','asc')
-                ->get();
+
+            foreach ($subjectRoot as $subjectR){
+                $curParent = $subjectR->id;
+                $curhas = $subjectR->has_child;
+                if ($curhas == "Y"){
+                    $children = $this->getChildren($curParent);
+                    foreach($children as $child){
+                        $nowId = $child->id;
+                        $nowTitle = $subjectR->sj_title. "_" .$child->sj_title;
+                        $subjectArray[] = ["id"=>$nowId,"title"=>$nowTitle];
+                    }
+                }else{
+                    $subjectArray[] = ["id"=>$curParent,"title"=>$subjectR->sj_title];
+                }
+            }
         }
 
         if ($grade != '' && $sjId != ''){
@@ -44,10 +58,15 @@ class CommentsController extends Controller
         }
         return view("comments.index",[
             "grades"=>$sGrades,'rGrade'=>$grade,'rSjId'=>$sjId,
-            'subjects'=>$subjects,
+            'subjects'=>$subjectArray,
             'data'  => $data,
             "score" => $maxScore
         ]);
+    }
+
+    public function getChildren($parent){
+        return Subjects::where('parent_id','=',$parent)->where('sj_type','=','N')
+            ->orderBy('sj_order','asc')->get();
     }
 
     public function setGap(Request $request){
@@ -57,54 +76,37 @@ class CommentsController extends Controller
 
         $user = Auth::user();
 
-        $config = Settings::where("set_code","=",Configurations::$SETTINGS_TEST_MAX_SCORE)->first();
-
-        $maxScore = $config->set_value;
+        $subject = Subjects::find($sj_id);
+        $maxScore = $subject->sj_max_score;
 
         $check = Comments::where("scg_id","=",$sg_id)->where("sj_id","=",$sj_id)->count();
 
         if ($check > 0){
-            return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
+            return redirect()->back()->withErrors(["msg"=>"FAIL_ALREADY_HAS"]);
         }
 
-        $divided = ceil($maxScore/$gap);
-
-        $tmpGaps = [];
-        $tmpGaps[] = $maxScore;
-        $nowScore = $maxScore;
-        for($i=0; $i < $divided; $i++){
-            $nowScore = $nowScore - $gap;
-
-            if ($nowScore < 0) break;
-            $tmpGaps[] = $nowScore;
-        }
-
-        for ($i=0; $i < sizeof($tmpGaps) -1 ; $i++){
-            $max = $tmpGaps[$i];
-            $min = $tmpGaps[$i + 1];
+        $minScore = $maxScore;
+        while($minScore > 0){
+            $max = $minScore;
+            $minScore = $max - $gap;
+            $min = $minScore + 1;
+            if ($minScore < 0) {
+                $min = 0;
+                $minScore = 0;
+            }
             $newComment = new Comments();
-            $newComment->scg_id = $sg_id;
-            $newComment->sj_id = $sj_id;
-
-            if ($min < 0) $min = 0;
             $newComment->min_score = $min;
             $newComment->max_score = $max;
             $newComment->writer_id = $user->id;
-            $newComment->save();
-        }
-
-        /* 혹시 모를 최저 점수가 0 이 아닐 경우 처리하기 위함 */
-        if ($min > 0){
-            $newComment->min_score = 0;
-            $newComment->max_score = $min;
-            $newComment->writer_id = $user->id;
+            $newComment->sj_id = $sj_id;
+            $newComment->scg_id = $sg_id;
             $newComment->save();
         }
 
         $logMode = "new";
         $target_id = $sj_id;
         $oldVal = "";
-        $newVal = sizeof($tmpGaps);
+        $newVal = $maxScore . " / ".$gap;
         $field = "new_comments";
 
         $logCtrl = new LogCommentsController();

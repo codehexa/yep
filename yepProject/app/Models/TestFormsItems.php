@@ -11,6 +11,6 @@ class TestFormsItems extends Model
 
     protected $table = "test_forms_items";
     protected $fillable = [
-        "tf_id","curri_id","sj_id","tf_index"
+        "tf_id","sj_id","sj_index","sj_title","sj_parent_id","sj_depth","sj_has_child","sj_type","sj_max_score"
     ];
 }

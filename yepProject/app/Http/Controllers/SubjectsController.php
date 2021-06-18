@@ -52,6 +52,7 @@ class SubjectsController extends Controller
         $parent = $request->get("info_parent");
         $depth = $request->get("info_depth");
         $hasChild = $request->get("info_has_child");
+        $Type = $request->get("info_type");
 
         $check = Subjects::where('sg_id','=',$sgrade)
             ->where('sj_title','=',$name)
@@ -70,6 +71,7 @@ class SubjectsController extends Controller
             $subject->parent_id = $parent;
             $subject->depth = $depth;
             $subject->has_child = $hasChild;
+            $subject->sj_type = $Type;
 
             $indexing = $this->getChildrenIndex($parent,$sgrade);
             $indexing_val = $indexing + 1;
@@ -149,6 +151,7 @@ class SubjectsController extends Controller
         $infoSchoolId = $request->get("info_school_grade_id");
         $infoScore = $request->get("info_score");
         $infoDesc = $request->get("info_desc");
+        $infoType = $request->get("info_type");
 
         $old = Subjects::find($infoId);
 
@@ -158,6 +161,7 @@ class SubjectsController extends Controller
         $subject->sj_max_score = $infoScore;
         $subject->sj_desc = $infoDesc;
         $subject->sg_id = $infoSchoolId;
+        $subject->sj_type = $infoType;
 
         try {
             $subject->save();
@@ -198,6 +202,15 @@ class SubjectsController extends Controller
                 $logOld = $old->sg_id;
                 $logNew = $infoSchoolId;
                 $logField = "school_grade";
+
+                $logCtrl = new LogSubjectsController();
+                $logCtrl->addLog($logMode,$logTarget,$logOld,$logNew,$logField);
+            }
+
+            if ($old->sj_type != $infoType){
+                $logOld = $old->sj_type;
+                $logNew = $infoType;
+                $logField = "sj_type";
 
                 $logCtrl = new LogSubjectsController();
                 $logCtrl->addLog($logMode,$logTarget,$logOld,$logNew,$logField);
@@ -250,11 +263,12 @@ class SubjectsController extends Controller
     public function updateOrderSubjects(Request $request){
         $orders = $request->get("orders");
         $orderArray = explode(",",$orders);
-        $subjects = Subjects::whereIn('id',$orderArray)->get();
         $n = 1;
-        foreach($subjects as $subject){
-            $subject->sj_order = $n;
-            $subject->save();
+
+        for ($i=0; $i < sizeof($orderArray);$i++){
+            $nowSubject = Subjects::find($orderArray[$i]);
+            $nowSubject->sj_order = $n;
+            $nowSubject->save();
             $n++;
         }
 

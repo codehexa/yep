@@ -17,11 +17,14 @@ class CreateTestFormsItemsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger('tf_id')->unsigned()->default(0)->index()->comment('test_forms.id');
-            $table->bigInteger('curri_id')->unsigned()->default(0)->comment('curriculum.id');
-            $table->bigInteger('sj_id')->unsigned()->default(0)->comment('subjects.id');
-            $table->enum('sj_type',['S','C','T'])->default('S')->comment('S - Standalone, C - Child, T - Total');
+            $table->bigInteger('sj_id')->unsigned()->default(0)->index()->comment('subjects.id');
+            $table->integer('sj_index')->unsigned()->default(0)->comment('order');
+            $table->string('sj_title');
+            $table->enum('sj_type',['N','T'])->default('N')->comment('N - Normal, T - Total');
             $table->integer('sj_max_score')->unsigned()->default(0)->comment('Subject max score');
-            $table->integer('tf_index')->unsigned()->default(0)->comment('order');
+            $table->bigInteger('sj_parent_id')->unsigned()->default(0);
+            $table->integer('sj_depth')->unsigned()->default(0);
+            $table->enum('sj_has_child',["Y","N"])->default("N");
         });
     }
 
