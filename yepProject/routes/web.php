@@ -34,6 +34,13 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::post("/storeAcademy",[\App\Http\Controllers\AcademyController::class, 'store'])->name("storeAcademy");
     Route::post("/deleteCategory",[\App\Http\Controllers\AcademyController::class, 'delete'])->name('deleteCategory');
 
+    /* 학기 관리 */
+    Route::get("/hakgis",[\App\Http\Controllers\HakgiController::class, "index"])->name("hakgis");
+    Route::post("/addHakgi",[\App\Http\Controllers\HakgiController::class, "add"]);
+    Route::post("/hakgiInfoJson",[\App\Http\Controllers\HakgiController::class, "getInfo"]);
+    Route::post("/storeHakgi",[\App\Http\Controllers\HakgiController::class, "store"]);
+    Route::post("/delHakgi",[\App\Http\Controllers\HakgiController::class, "delete"]);
+
     /* 학년관리 */
     Route::get("/schoolGrades",[\App\Http\Controllers\schoolGradesController::class, 'index'])->name('schoolGrades');
     Route::post("/schoolGradePost",[\App\Http\Controllers\schoolGradesController::class, 'add']);
@@ -64,12 +71,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/setClassTeacher",[\App\Http\Controllers\ClassesController::class, "setClassTeacher"]);
     Route::post("/getTeachersJson",[\App\Http\Controllers\ClassesController::class, "getTeacher"]);
 
-    /* 학기 관리 */
-    Route::get("/hakgis",[\App\Http\Controllers\HakgiController::class, "index"])->name("hakgis");
-    Route::post("/addHakgi",[\App\Http\Controllers\HakgiController::class, "add"]);
-    Route::post("/hakgiInfoJson",[\App\Http\Controllers\HakgiController::class, "getInfo"]);
-    Route::post("/storeHakgi",[\App\Http\Controllers\HakgiController::class, "store"]);
-    Route::post("/delHakgi",[\App\Http\Controllers\HakgiController::class, "delete"]);
+
 
     /* 시험주 관리 */
     Route::get("/testWeeks/{year?}/{grade?}/{hakgi?}",[\App\Http\Controllers\TestWeeksController::class, "list"])->name("testweeks");
@@ -98,7 +100,7 @@ Route::group(['middleware' => ['managerPower']],function() {
 
     /* 코멘트 관리 */
     Route::get("/comments/{grade?}/{sjId?}",[\App\Http\Controllers\CommentsController::class,"index"])->name("comments");
-    Route::post("/setComments",[\App\Http\Controllers\CommentsController::class, "setGap"]);
+    Route::post("/setComments",[\App\Http\Controllers\CommentsController::class, "setComment"]);
     Route::post("/getCommentJson",[\App\Http\Controllers\CommentsController::class, "getInfoJson"]);
     Route::post("/storeComment",[\App\Http\Controllers\CommentsController::class, "storeComment"]);
     Route::post("/delComments",[\App\Http\Controllers\CommentsController::class, "delete"]);
@@ -124,6 +126,9 @@ Route::get("/SmsJob/{acId?}/{gradeId?}/{classId?}/{tfId?}/{year?}/{weeks?}",[\Ap
 Route::post("/getFormsJson",[\App\Http\Controllers\SmsJobController::class, "getFormsJson"]);
 Route::post("/getClassesJson",[\App\Http\Controllers\SmsJobController::class, "getClassesJson"]);
 Route::post("/getTestFormsJson",[\App\Http\Controllers\SmsJobController::class, "getTestFormsJson"]);
+Route::post("/sendSms",[\App\Http\Controllers\SmsJobController::class, "sendSms"]);
+Route::post("/saveOpinion",[\App\Http\Controllers\SmsJobController::class, "saveOpinion"]);
+Route::post("/saveSmsEach",[\App\Http\Controllers\SmsJobController::class, "saveSmsEach"]);
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

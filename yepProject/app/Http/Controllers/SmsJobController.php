@@ -11,6 +11,7 @@ use App\Models\SmsScores;
 use App\Models\Students;
 use App\Models\Subjects;
 use App\Models\TestForms;
+use App\Models\TestFormsItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,13 +27,10 @@ class SmsJobController extends Controller
 
         $user = Auth::user();
         $nowPower = $user->power;
-        $tbl_header_1 = $tbl_header_0 = [];
-        $tbl_context = [];
 
         $data = [];
+        $tItems = [];
         $testForms = [];
-
-        $tbl_pre_rows = 0;
 
         if ($nowPower != Configurations::$USER_POWER_ADMIN){
             $academies = Academies::where('id','=',$user->academy_id)->orderBy('ac_name','asc')->get();
@@ -57,12 +55,30 @@ class SmsJobController extends Controller
         }
 
         // 여기까지 기초 필드 항목 값들.
+        $hasDouble = "N";
 
         if ($acId != ""  && $gradeId != "" && $classId != "" && $tfId != "" && $year != "" && $weeks != ""){
-            $testForms = TestForms::where('ac_id','=',$acId)->where('grade_id','=',$gradeId)->orderBy('form_title','asc')->get();
+            $formCtrl = new TestFormsController();
+            $testForms = TestForms::where('grade_id','=',$gradeId)->orderBy('form_title','asc')->get();
             $testForm = TestForms::find($tfId);
-            $fieldsCount = $testForm->subjects_count;
+            $testFormItems = TestFormsItems::where('tf_id','=',$tfId)->where('sj_parent_id','=',0)->orderBy('sj_index','asc')->get();
+            $tItems = [];
+            foreach($testFormItems as $formItem){
+                if ($formItem->sj_has_child == "Y"){
+                    $hasDouble = "Y";
+                    $children = $formCtrl->getTestFormItemChildren($formItem->id);
+                    $formItem->setAttribute("child_size",sizeof($children));
+                    $tItems[] = $formItem;
+                    foreach($children as $child){
+                        $tItems[] = $child;
+                    }
+                }else{
+                    $tItems[] = $formItem;
+                }
+            }
+
             $students = Students::where("class_id","=",$classId)->get();
+
             foreach ($students as $student){
                 $stId = $student->id;
                 $checkScore = SmsScores::where('sg_id','=',$gradeId)
@@ -72,6 +88,7 @@ class SmsJobController extends Controller
                     ->where('st_id','=',$stId)
                     ->where('cl_id','=',$classId)
                     ->first();
+
                 if (is_null($checkScore)){
                     $newSmsScore = new SmsScores();
                     $newSmsScore->sg_id = $gradeId;
@@ -81,106 +98,35 @@ class SmsJobController extends Controller
                     $newSmsScore->tf_id = $tfId;
                     $newSmsScore->st_id = $stId;
                     $newSmsScore->cl_id = $classId;
-                    $newSmsScore->sj_count = $fieldsCount;
+                    $newSmsScore->opinion = "";
+                    $newSmsScore->sent = "N";
+                    $newSmsScore->score_count = sizeof($tItems);
+                    for($i=0; $i < sizeof($tItems); $i++){
+                        $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
+                        $newSmsScore->$fieldName = "0";
+                    }
 
                     $newSmsScore->save();
+                    $newSmsScore->setAttribute("studentItem",$student);
 
-                    $data[] = $newSmsScore;
+                    $data[] = $newSmsScore->toArray();
                 }else{
-                    $data[] = $checkScore;
+                    $checkScore->setAttribute("studentItem",$student);
+                    $data[] = $checkScore->toArray();
                 }
             }   // end for
 
-            /* html design */
-            $tbl_count = $testForm->subjects_count; // Total 항목을 제외한 갯수.
-            $tbl_subjects = [];
-            $tbl_saved_cuid = 0;
-            $tbl_colspan = 0;
-
-            $tbl_header_0 = []; // 상위 테이블 헤더 1.
-            $tbl_header_1 = []; // 하위 테이블 헤더 2.
-
-            for ($i=0; $i < $tbl_count; $i++){
-                $tbl_now_subject_field_name = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
-                $tbl_now_subject_id = $testForm->$tbl_now_subject_field_name;
-                $tbl_now_subject = Subjects::find($tbl_now_subject_id);
-                $tbl_now_subject_curri_id = $tbl_now_subject->curri_id;
-
-                if ($tbl_now_subject_curri_id > 0){
-                    $tbl_pre_rows = 2;  // 이전 필드의 rowspan 값.
-                    $nowCurri = Curriculums::find($tbl_now_subject_curri_id);
-                    $tbl_curri_name = $nowCurri->curri_name;
-                    if ($tbl_saved_cuid != $tbl_now_subject_curri_id){
-                        $tbl_colspan = 0;
-                        $tbl_colspan++;
-                        $tbl_header_0[] = ["cols"=>$tbl_colspan,"title"=>$tbl_curri_name];
-                        $tbl_saved_cuid = $tbl_now_subject_curri_id;
-                    }else{
-                        $tbl_colspan++;
-                        $tbl_header_0[sizeof($tbl_header_0) -1]["cols"]=$tbl_colspan;
-                        $tbl_header_0[sizeof($tbl_header_0) -1]["title"]=$tbl_curri_name;
-                    }
-                    $tbl_header_1[] = ["title"=>$tbl_now_subject->sj_title];
-                }else{
-                    $tbl_saved_cuid = 0;
-                    $tbl_colspan = 0;
-                    $tbl_header_0[] = ["cols"=>$tbl_colspan,"title"=>$tbl_now_subject->sj_title];
-                }
-                $tbl_context[] = ["sj_id"=>$tbl_now_subject_id,"cu_id"=>$tbl_now_subject_curri_id];
-            }   // end for
+            //dd($data);
         }else{
             $testForm = [];
         }
 
-        $header_total = ["title"=>"ToT"];
-        $n = 0;
-        for ($i=0; $i < sizeof($tbl_header_0); $i++){
-            if ($tbl_header_0[$i]['cols'] > 0){
-                $tbl_header_0[$i]['cols'] = $tbl_header_0[$i]['cols'] + 1;
-                $tbl_header_1 = $this->insert_array($tbl_header_1,$n,$header_total);
+        //dd($data);
 
-                $nCur = $tbl_header_0[$i]['cols'] + 1;
-
-                $n += $nCur;
-            }else{
-                $n++;
-            }
-        }
-
-        $returnsContext = [];
-        $savedCheck = 0;
-        $addTF = false;
-        for($i=0; $i < sizeof($tbl_context); $i++){
-            $curArray = $tbl_context[$i];
-            if ($curArray['cu_id'] == 0){
-                $returnsContext[] = $curArray;
-            }else{
-                if ($addTF == false && $savedCheck != $curArray['cu_id']){
-                    $addTF = true;
-                    $returnsContext[] = $curArray;
-                    $savedCheck = $curArray['cu_id'];
-                }elseif ($addTF == true && $savedCheck == $curArray['cu_id']){
-                    $returnsContext[] = $curArray;
-                }elseif ($addTF == true && $savedCheck != $curArray['cu_id']){
-                    $returnsContext[] = ["sj_id"=>"T","cu_id"=>$savedCheck];
-                    $returnsContext[] = $curArray;
-                    $addTF = false;
-                    $savedCheck = $curArray['cu_id'];
-                }else{
-                    $returnsContext[] = $curArray;
-                }
-            }
-        }
-        if ($savedCheck > 0){
-            $returnsContext[] = ["sj_id"=>"T","cu_id"=>$savedCheck];
-        }
-
-        return view("sms.index",["testForm"=>$testForm,"data"=>$data,
-            "academies"=>$academies, "schoolGrades"=>$schoolGrades, "classes"=>$classes, "testForms"=>$testForms,
+        return view("sms.index",["testForms"=>$testForms,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble,
+            "academies"=>$academies, "schoolGrades"=>$schoolGrades, "classes"=>$classes,
             "rAcId"=>$acId,"rGradeId"=>$gradeId,"rClId"=>$classId,"rTfId"=>$tfId,
-            "rY"=>$year,"rW"=>$weeks,
-            "header0"=>$tbl_header_0,"header1"=>$tbl_header_1,"prerow"=>$tbl_pre_rows,"context"=>$returnsContext,
-            "fieldName"=>Configurations::$TEST_FORM_IN_SUBJECT_PREFIX
+            "rY"=>$year,"rW"=>$weeks,"indexN"=>"0"
         ]);
     }
 
@@ -196,9 +142,8 @@ class SmsJobController extends Controller
         $gradeId = $request->get("section_grade");
         $classId = $request->get("section_class");
 
-        $data = TestForms::where('ac_id','=',$acId)
+        $data = TestForms::whereIn('ac_id',[$acId,'0'])
             ->where('grade_id','=',$gradeId)
-            ->where('class_id','=',$classId)
             ->orderBy('form_title','asc')
             ->get();
 
@@ -225,17 +170,62 @@ class SmsJobController extends Controller
         $gradeId = $request->get("section_grade");
 
         if ($gradeId != ""){
-            $data = TestForms::where('ac_id','=',$acId)
+            $data = TestForms::whereIn('ac_id',[$acId,'0'])
                 ->where('grade_id','=',$gradeId)
                 ->orderBy('form_title','asc')
                 ->get();
         }else{
-            $data = TestForms::where('ac_id','=',$acId)
+            $data = TestForms::whereIn('ac_id',[$acId,'0'])
                 ->orderBy('form_title','asc')
                 ->get();
         }
 
-
         return response()->json(['data'=>$data]);
+    }
+
+    public function saveOpinion(Request $request){
+        $nowId = $request->get("info_id");
+        $opinion = $request->get("info_name");
+
+        $result = "false";
+
+        $Score = SmsScores::find($nowId);
+
+        $Score->opinion = $opinion;
+
+        try {
+            $Score->save();
+            $result = "true";
+            return response()->json(["result"=>$result]);
+        }catch (\Exception $exception){
+            return response()->json(["result"=>$result]);
+        }
+    }
+
+    public function saveSmsEach(Request $request){
+        $scId = $request->get("scId");
+        $scores = $request->get("scores");
+        $opinion = $request->get("opinion");
+
+        $score = SmsScores::find($scId);
+        $score->opinion = $opinion;
+        $arr = explode(",",$scores);
+        for ($i=0; $i < sizeof($arr); $i++){
+            $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
+            $score->$fieldName = $arr[$i];
+        }
+
+        try {
+            $score->save();
+            $result = "true";
+        }catch (\Exception $exception){
+            $result = "false";
+        }
+
+        return response()->json(["result"=>$result]);
+    }
+
+    public function sendSms(Request $request){
+        dd($request);
     }
 }

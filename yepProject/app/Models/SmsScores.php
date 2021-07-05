@@ -12,9 +12,9 @@ class SmsScores extends Model
     protected $table = "smsscores";
     protected $fillable = [
         "sg_id","writer_id","year","week","tf_id","st_id","cl_id",
-        "sj_count",
-        "sj_0","sj_1","sj_2","sj_3","sj_4","sj_5","sj_6","sj_7","sj_8","sj_9",
-        "sj_10","sj_11","sj_12","sj_13","sj_14","sj_15","sj_16","sj_17","sj_18","sj_19",
+        "score_count",
+        "score_0","score_1","score_2","score_3","score_4","score_5","score_6","score_7","score_8","score_9",
+        "score_10","score_11","score_12","score_13","score_14","score_15","score_16","score_17","score_18","score_19",
         "opinion","sent","sent_date"
     ];
 

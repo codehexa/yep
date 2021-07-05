@@ -40,5 +40,6 @@ class Configurations extends Model
 
     public static $TEST_FORM_IN_SUBJECT_PREFIX = "sj_";
     public static $TEST_FORM_IN_SUBJECT_MAX = 20;
+    public static $TEST_SCORES_FIELD_PREFIX = "score_";
 
 }

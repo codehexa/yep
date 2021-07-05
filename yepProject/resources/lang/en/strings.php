@@ -74,6 +74,10 @@ return [
     "fn_upload" => "업로드",
     "fn_load_form"  => "입력폼불러오기",
     "fn_input"  => "입력하기",
+    "fn_all_send"   => "모두 보내기",
+    "fn_all_save"   => "모두 저장  ",
+    "fn_save"   => "저장",
+    "fn_send"   => "전송",
 
     /* 학년 관리 */
     "lb_grade_manage"   => "학년관리",
@@ -138,6 +142,9 @@ return [
     "lb_select_subject" => "과목을 선택하세요",
     "lb_comment_setting"    => "코멘트 셋팅",
     "lb_gap"    => "점수 간격",
+    "lb_insert_min_score"   => "최소 점수를 입력하세요",
+    "lb_insert_max_score"   => "최고 점수를 입력하세요",
+    "lb_insert_comments"   => "코멘트를 입력하세요",
     "lb_comment_opinion"    => "코멘트",
     "str_select_grade"  => "구분을 선택하세요",
     "str_select_subject"    => "과목 이름을 입력하세요",
@@ -235,6 +242,10 @@ return [
     "lb_sent"   => "전송완료",
     "lb_save_and_send"  => "저장후전송",
     "lb_total"  =>  "Total",
+    "str_cant_over_max" => "최대 값은 :MAX 점 입니다",
+    "str_cant_under_min"    => "최소 값은 :MIN 점 입니다",
+    "str_input_opinion" => "의견을 입력하세요",
+    "lb_opinion_write"  => "의견 입력",
 
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",

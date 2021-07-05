@@ -22,6 +22,7 @@ class CreateSmsscoresTable extends Migration
             $table->integer("week")->unsigned()->default(0)->comment("week");
             $table->bigInteger("tf_id")->unsigned()->index()->default(0)->comment("test_forms.id");
             $table->bigInteger("st_id")->unsigned()->index()->default(0)->comment("students.id");
+            $table->bigInteger("cl_id")->unsigned()->index()->default(0)->comment("classes.id");
             $table->integer("score_count")->unsigned()->default(0)->comment("include Total item");
             $table->integer("score_0")->unsigned()->default(0);
             $table->integer("score_1")->unsigned()->default(0);

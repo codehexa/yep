@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comments;
 use App\Models\Configurations;
+use App\Models\LogComments;
 use App\Models\schoolGrades;
 use App\Models\Settings;
 use App\Models\Subjects;
@@ -69,7 +70,42 @@ class CommentsController extends Controller
             ->orderBy('sj_order','asc')->get();
     }
 
-    public function setGap(Request $request){
+    public function setComment(Request $request){
+        $sjId = $request->get("sj_id");
+        $sgId = $request->get('sg_id');
+        $minScore = $request->get("up_min_score");
+        $maxScore = $request->get("up_max_score");
+        $comment = $request->get("up_comments");
+
+        $newComment = new Comments();
+        $newComment->scg_id = $sgId;
+        $newComment->sj_id = $sjId;
+        $newComment->min_score = $minScore;
+        $newComment->max_score = $maxScore;
+        $newComment->writer_id = Auth::user()->id;
+        $newComment->opinion = $comment;
+
+        try {
+            $newComment->save();
+
+            $newCommentId = $newComment->id;
+
+            $logMode = "new";
+            $target_id = $newCommentId;
+            $oldVal = "";
+            $newVal = $minScore . " / ".$maxScore."/".$comment;
+            $field = "new_comments";
+
+            $logCtrl = new LogCommentsController();
+            $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+
+            return redirect("/comments/".$sgId."/".$sjId);
+        }catch (\Exception $exception){
+            return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
+        }
+    }
+
+    public function setGap(Request $request){   // 사용하지 않음.
         $sj_id = $request->get("sj_id");
         $sg_id = $request->get("sg_id");
         $gap = $request->get("info_gap");
@@ -125,10 +161,12 @@ class CommentsController extends Controller
     }
 
     public function storeComment(Request  $request){
-        $cmid = $request->get("up_cm_id");
-        $sgid = $request->get("up_sg_id");
-        $sjid = $request->get("up_sj_id");
-        $opinion = $request->get("in_opinion");
+        $cmid = $request->get("cm_id");
+        $sgid = $request->get("sg_id");
+        $sjid = $request->get("sj_id");
+        $minScore = $request->get("up_min_score");
+        $maxScore = $request->get("up_max_score");
+        $opinion = $request->get("up_comments");
 
         $comment = Comments::find($cmid);
 
@@ -138,17 +176,42 @@ class CommentsController extends Controller
             return redirect()->back()->withErrors(["msg"=>"FAIL_TO_MODIFY"]);
         }else{
             $comment->opinion = $opinion;
+            $comment->min_score = $minScore;
+            $comment->max_score = $maxScore;
+            $comment->writer_id = Auth::user()->id;
+
             try {
                 $comment->save();
 
                 $logMode = "modify";
                 $target_id = $cmid;
-                $oldVal = $oldComment->opinion;
-                $newVal = $opinion;
-                $field = "opinion";
 
-                $logCtrl = new LogCommentsController();
-                $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+                if ($comment->min_score != $oldComment->min_score){
+                    $oldVal = $oldComment->min_score;
+                    $newVal = $comment->min_score;
+                    $field = "min score";
+
+                    $logCtrl = new LogCommentsController();
+                    $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+                }
+
+                if ($comment->max_score != $oldComment->max_score){
+                    $oldVal = $oldComment->max_score;
+                    $newVal = $comment->max_score;
+                    $field = "max score";
+
+                    $logCtrl = new LogCommentsController();
+                    $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+                }
+
+                if ($comment->opinion != $oldComment->opinion){
+                    $oldVal = $oldComment->opinion;
+                    $newVal = $comment->opinion;
+                    $field = "Opinion";
+
+                    $logCtrl = new LogCommentsController();
+                    $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
+                }
 
                 return redirect()->route("comments",["grade"=>$sgid,"sjId"=>$sjid]);
             }catch (\Exception $e){
@@ -158,27 +221,26 @@ class CommentsController extends Controller
     }
 
     public function delete(Request $request){
-        $sgId = $request->get("del_sgid");
-        $sjId = $request->get("del_sjid");
+        $delId = $request->get("del_id");
 
-        $check = Comments::where("scg_id","=",$sgId)
-            ->where("sj_id","=",$sjId)->count();
-        if ($check <= 0){
+        $check = Comments::find($delId);
+
+        if (is_null($check)){
             return redirect()->back()->withErrors(["msg"=>"NOTHING_TO_DELETE"]);
         }else{
             try {
-                Comments::where("scg_id","=",$sgId)->where("sj_id","=",$sjId)->delete();
+                Comments::find($delId)->delete();
 
                 $logMode = "delete";
-                $target_id = $sjId;
-                $oldVal = $sjId;
+                $target_id = $delId;
+                $oldVal = $delId;
                 $newVal = "";
                 $field = "all_data";
 
                 $logCtrl = new LogCommentsController();
                 $logCtrl->addLog($logMode,$target_id,$oldVal,$newVal,$field);
 
-                return redirect("/comments/".$sgId."/".$sjId);
+                return redirect("/comments/".$check->scg_id."/".$check->sj_id);
             }catch (\Exception $e){
                 return redirect()->back()->withErrors(["msg"=>"FAIL_TO_DELETE"]);
             }

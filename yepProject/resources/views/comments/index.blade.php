@@ -6,7 +6,6 @@
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
         <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</button>
-        <button id="btn_del" name="btn_del" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
     </div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -33,6 +32,7 @@
     <div class="mt-3 form-group border p-2 bg-primary">
         <div class="form-inline">
             <label for="section_grades" class="form-label">{{ __('strings.lb_section_grades') }}</label>
+            <span id="grade_loader" class="fa fa-spin fa-spinner d-none"></span>
             <select name="section_grades" id="section_grades" class="form-select ml-3">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach($grades as $grade)
@@ -45,6 +45,7 @@
             </select>
 
             <label for="section_subject" class="form-label ml-3">{{ __('strings.lb_subject') }}</label>
+            <span id="subject_loader" class="fa fa-spin fa-spinner d-none"></span>
             <select name="section_subject" id="section_subject" class="form-select ml-3">
                 <option value="">{{ __('strings.lb_select_subject') }}</option>
                 @for($i=0; $i < sizeof($subjects); $i++)
@@ -100,10 +101,20 @@
             <div class="modal-body">
                 <form name="cmFrm" id="cmFrm" method="post" action="/setComments">
                     @csrf
+                    <input type="hidden" name="cm_id" id="cm_id" value=""/>
                     <input type="hidden" name="sj_id" id="sj_id" value="{{ $rSjId }}"/>
                     <input type="hidden" name="sg_id" id="sg_id" value="{{ $rGrade }}"/>
-                    <div class="form-group d-flex">
-                        <input type="text" name="info_gap" id="info_gap" class="form-control" placeholder="{{ __('strings.str_insert_comment_gap') }}"/>
+                    <div class="form-group">
+                        <label for="up_min_score">{{ __('strings.lb_min_score_title') }}</label>
+                        <input type="number" name="up_min_score" id="up_min_score" class="form-control" placeholder="{{ __('strings.lb_insert_min_score') }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="up_min_score">{{ __('strings.lb_max_score_title') }}</label>
+                        <input type="number" name="up_max_score" id="up_max_score" class="form-control" placeholder="{{ __('strings.lb_insert_max_score') }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="up_min_score">{{ __('strings.lb_comment_context') }}</label>
+                        <textarea name="up_comments" id="up_comments" class="form-control" placeholder="{{ __('strings.lb_insert_comments') }}"></textarea>
                     </div>
                 </form>
             </div>
@@ -111,40 +122,12 @@
                 <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
                 <button type="button" class="btn btn-primary" id="btnCmSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+                <button type="button" class="btn btn-danger d-none" id="btnDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="opinionModalCenter" tabindex="-1" role="dialog" aria-labelledby="opinionModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="opinionModalLongTitle">{{ __('strings.lb_alert') }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form name="frmOpinion" id="frmOpinion" method="post" action="/storeComment">
-                    @csrf
-                    <input type="hidden" name="up_cm_id" id="up_cm_id"/>
-                    <input type="hidden" name="up_sg_id" id="up_sg_id" value="{{ $rGrade }}"/>
-                    <input type="hidden" name="up_sj_id" id="up_sj_id" value="{{ $rSjId }}"/>
-                    <div class="form-group">
-                        <label for="in_opinion">{{ __('strings.lb_comment_opinion') }}</label>
-                        <input type="text" name="in_opinion" id="in_opinion" class="form-control" placeholder="{{ __('strings.str_insert_opinion') }}"/>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <span id="opinion_spin" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
-                <button type="button" class="btn btn-primary" id="btn_store_opinion"><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="modal fade" id="alertModalCenter" tabindex="-1" role="dialog" aria-labelledby="alertModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
@@ -178,11 +161,11 @@
                 <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
                 <form name="delFrm" id="delFrm" method="post" action="/delComments">
                     @csrf
-                    <input type="hidden" name="del_sgid" id="del_sgid"/>
-                    <input type="hidden" name="del_sjid" id="del_sjid"/>
+                    <input type="hidden" name="del_id" id="del_id"/>
                 </form>
             </div>
             <div class="modal-footer">
+                <span id="confirm_spin" class="d-none"><i class="fa fa-spinner fa-spin"></i> </span>
                 <button type="button" class="btn btn-primary" id="btnDeleteDo"><i class="fa fa-check-circle"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
             </div>
@@ -198,6 +181,8 @@
         $(document).on("change","#section_grades",function (){
             let curVal = $(this).val();
 
+            $("#grade_loader").removeClass("d-none");
+
             if (curVal === ''){
                 location.href = "/comments";
             }else{
@@ -208,6 +193,8 @@
         $(document).on("change","#section_subject",function (){
             let curVal = $(this).val();
             let grade = $("#section_grades").val();
+
+            $("#subject_loader").removeClass("d-none");
 
             if (curVal === ''){
                 location.href = "/comments/" + grade;
@@ -230,6 +217,7 @@
             }
 
             $("#infoModalCenter").modal("show");
+            $("#btnDelete").addClass("d-none");
             $("#sjFrm").attr({"action":"/setComments"});
         });
 
@@ -237,15 +225,18 @@
         $(document).on("click","#btnCmSubmit",function (){
             event.preventDefault();
 
-            let inGap = $("#info_gap").val();
-
-            if (parseInt(inGap) <= 1){
-                showAlert("{{ __('strings.str_must_one_over') }}");
+            if ($("#up_min_score").val() === ""){
+                showAlert("{{ __('strings.lb_insert_min_score') }}");
                 return;
             }
 
-            if (parseInt($("#info_gap").val()) >= {{ $score }}){
-                showAlert("{{ __('strings.str_must_max_under',["MAX"=>$score]) }}");
+            if ($("#up_max_score").val() === ""){
+                showAlert("{{ __('strings.lb_insert_max_score') }}");
+                return;
+            }
+
+            if ($("#up_comments").val() === ""){
+                showAlert("{{ __('strings.str_insert_opinion') }}");
                 return;
             }
 
@@ -255,22 +246,23 @@
         });
 
 
-        $(document).on("click","#btnTaDelete",function (){
+        $(document).on("click","#btnDelete",function (){
             event.preventDefault();
+            $("#del_id").val($("#cm_id").val());
             $("#confirmModalCenter").modal("show");
         });
 
         $(document).on("click","#btnDeleteDo",function (){
             event.preventDefault();
             $("#delFrm").submit();
+            $("#confirm_spin").removeClass("d-none");
         });
 
         $(document).on("click",".fn_item",function (){
             event.preventDefault();
-            $("#opinionModalCenter").modal("show");
-            $("#btnCmDelete").removeClass("d-none");
-            $("#opinion_spin").removeClass("d-none");
-            $("#frmOpinion").attr({"action":"/storeComment"});
+            $("#infoModalCenter").modal("show");
+            $("#btnDelete").removeClass("d-none");
+            $("#fn_loading").removeClass("d-none");
 
             let clId = $(this).attr("fn_id");
             $("#up_cm_id").val(clId);
@@ -287,49 +279,28 @@
                 },
                 success:function (msg){
                     if (msg.result === "true"){
-                        $("#in_opinion").val(msg.data.opinion);
+                        $("#cm_id").val(msg.data.id);
+                        $("#sj_id").val(msg.data.sj_id);
+                        $("#sg_id").val(msg.data.scg_id);
+                        $("#up_min_score").val(msg.data.min_score);
+                        $("#up_max_score").val(msg.data.max_score);
+                        $("#up_comments").val(msg.data.opinion);
+
+                        $("#cmFrm").prop({"action":"/storeComment"});
+
+                        $("#fn_loading").addClass("d-none");
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");
+                        $("#fn_loading").addClass("d-none");
                         return;
                     }
-                    $("#opinion_spin").addClass("d-none");
+                    //$("#opinion_spin").addClass("d-none");
                 },
                 error:function(e1,e2,e3){
                     showAlert(e2);
                 }
             })
         });
-
-
-        $(document).on("click","#btn_store_opinion",function (){
-            event.preventDefault();
-            if ($("#in_opinion").val() === ""){
-                showAlert("{{ __('strings.str_insert_opinion') }}");
-                return;
-            }
-
-            $("#frmOpinion").submit();
-        });
-
-        $(document).on("click","#btn_del",function (){
-            event.preventDefault();
-
-            if ($("#section_grades").val() === ""){
-                showAlert("{{ __('strings.str_select_grade') }}");
-                return;
-            }
-
-            if ($("#section_subject").val() === ""){
-                showAlert("{{ __('strings.str_select_subject') }}");
-                return;
-            }
-
-            $("#confirmModalCenter").modal("show");
-            $("#del_sgid").val($("#section_grades").val());
-            $("#del_sjid").val($("#section_subject").val());
-        });
-
-
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

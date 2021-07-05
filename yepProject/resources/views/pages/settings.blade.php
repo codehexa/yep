@@ -28,6 +28,12 @@
                 </div>
                 <p>본 원에서 운영하는 각 학원 (관) 을 관리하는 기능.</p>
             </a>
+            <a href="{{ route('hakgis') }}" class="list-group-item list-group-item-action d-flex justify-content-between">
+                <div class="btn btn-primary">
+                    <i class="fa fa-calendar-alt"></i> {{ __('strings.lb_hakgi_manage') }}
+                </div>
+                <p>학기를 관리하는 기능.</p>
+            </a>
             <a href="{{ route('schoolGrades') }}" class="list-group-item list-group-item-action d-flex justify-content-between">
                 <div class="btn btn-primary">
                     <i class="fa fa-graduation-cap"></i> {{ __('strings.lb_grade_manage') }}
