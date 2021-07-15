@@ -28,6 +28,7 @@ return [
     "lb_mode"   => "모드",
     "lb_target" => "대상",
     "lb_show"   => "보이기",
+    "lb_loading"    => "Loading...",
 
     /* 운영자 관리 */
     "lb_user_view"  => "사용자 보기",
@@ -132,6 +133,7 @@ return [
     "lb_insert_context" => "내용을 입력하세요",
     "str_select_hakyon" => "학년을 선택하세요",
     "str_select_hakgi"  => "학기를 선택하세요",
+    "str_select_year"   => "년도를 선택하세요",
 
 
     /* 코멘트 관리 */
@@ -172,7 +174,7 @@ return [
     "lb_no_parent"  => "소속 과목 없음",
     "str_confirm_delete_subjects"   => "만일 하위 과목이 있다면 하위 과목까지 삭제됩니다. 계속 진행하시겠습니까? <br/>진행하면 되돌릴 수 없습니다",
 
-    "str_select_school_grade"   => "구분을 선택하세요",
+    "str_select_school_grade"   => "학년을 선택하세요",
     "str_insert_subject_desc"   => "부연 설명 입력하세요",
     "str_insert_score"  => "최대 점수를 입력하세요",
 
@@ -188,6 +190,7 @@ return [
     "lb_total_subject"  => "Total",
 
     /* 원생 관리 */
+    "lb_sms_manage" => "SMS 페이지 관리",
     "lb_student_manage" => "학생 관리",
     "lb_year"   => "년도",
     "lb_tel"    => "전화번호",
@@ -218,22 +221,25 @@ return [
     "str_insert_school_grade"   => "학년을 입력하세요",
 
     /* 시험 입력 폼 관리 */
-    "lb_test_form_manage"   => "시험 폼 관리",
-    "lb_test_title" => "폼 이름",
+    "lb_test_form_manage"   => "시험 관리",
+    "lb_test_title" => "시험 이름",
     "lb_test_count" => "과목 수",
     "lb_test_desc"  => "간략 설명",
     "lb_test_grade" => "구분",
-    "lb_test_form_info" => "시험 입력 폼 정보",
-    "str_insert_form_title" => "폼 이름을 입력하세요",
+    "lb_test_form_info" => "시험 입력 정보",
+    "str_insert_form_title" => "시험 이름을 입력하세요",
     "str_insert_form_desc"  => "간략한 설명을 입력하세요",
     "lb_has_items"  => "배정할 과목",
     "lb_all_items"  => "학년 과목 전체",
     "str_select_saved_subjects" => "배정할 과목을 적어도 1개는 선택하세요",
+    "lb_practice_exam"  => "모의고사",
 
 
     /* SMS 업무 */
     "lb_sms_work_manage" => "SMS 업무",
+    "lb_sms_work_input" => "SMS 내용 입력",
     "lb_weeks"  => "주차",
+    "lb_week"   => "주",
     "lb_input"  => "입력",
     "lb_title"  => "이름",
     "lb_subjects"   => "과목",
@@ -241,15 +247,52 @@ return [
     "str_select_forms"  => "입력 폼을 선택하세요",
     "lb_sent"   => "전송완료",
     "lb_save_and_send"  => "저장후전송",
+    "lb_add_paper"  => "시험추가",
+    "lb_select_test_to_add" => "추가할 시험을 선택하세요",
     "lb_total"  =>  "Total",
     "str_cant_over_max" => "최대 값은 :MAX 점 입니다",
     "str_cant_under_min"    => "최소 값은 :MIN 점 입니다",
     "str_input_opinion" => "의견을 입력하세요",
     "lb_opinion_write"  => "의견 입력",
+    "lb_get_test_forms"   => "시험 폼 매칭하기",
+    "lb_test_forms_match" => "시험 폼 매칭",
+    "str_select_week"   => "주차를 선택하세요",
+    "lb_sms_paper_ready"    => "대기",
+    "lb_sms_paper_saving"    => "저장중",
+    "lb_sms_paper_sent"    => "전송됨",
+    "lb_sms_paper_able" => "전송가능",
+    "lb_year_string"  => ":YEAR 년도 ",
+    "lb_week_string"    => ":WEEK 주차",
+    "lb_class"  => "반",
+    "lb_save_all"   => "전체 저장",
+    "lb_set_done"   => "전송 준비 완료",
+    "str_sms_send_confirm"  => "본 내용을 전송합니다.",
+    "lb_sms_send_now"   => "본 내용을 전송 하겠습니까?",
+    "str_sms_send_unable"   => "연결된 시험이 완료되지 않아 진행할 수 없습니다.",
+    "lb_save_send_set"  => "저장 후 전송 준비 완료",
+    "lb_greetings"  => "안내문",
+    "lb_input_greetings"    => "안내문을 입력하세요",
+    "lb_result_url" => "성적 URL",
+    "lb_blog_url"   => "블로그 URL",
+    "lb_teacher_say"    => "선생님 말씀 제목",
+    "lb_input_result_url"   => "성적 URL 을 입력하세요",
+    "lb_input_blog_url" => "블로그 URL 을 입력하세요",
+    "lb_input_teacher_say"  => "선생님 말씀 제목을 입력하세요",
+    "lb_sms_text_title"   => "SMS 에 표시되는 내용",
+    "lb_input_sms_text_title"   => "SMS 에 표시되는 내용을 입력하세요",
+    "lb_sms_define_name"    => "학생이름 위치는 '학생이름' 이라 적힌 위치에 표시됩니다. 예: '학생이름' 성적표입니다.",
+    "str_total_sent"    => "전체 :TOTAL 건을 발송 예약했습니다. 순서에 따라 순차 발송 됩니다.",
+    "lb_weekly_test_paper" => "주간 성적표",
+    "lb_test_paper_title" => "성적표 이름",
+
+    "lb_input_parent_tel"   => "확인을 위해서는 부모님의 휴대전화 번호를 입력하세요",
+    "lb_authorization"  => "보호자 인증",
+    "lb_authorization_to_page"  => "성적표 확인을 위한 보호자 인증",
 
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",
     "str_do_you_want_to_delete_cant_recover" => "삭제를 하시겠습니까? 진행하면 회복할 수 없습니다",
+    "use_hyphen"    => "'-' 포함 (예: 010-1234-5678)",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",
@@ -266,5 +309,11 @@ return [
     "err_fail_to_delete"    => "삭제하는데 실패했습니다",
     "err_nothing_to_delete" => "삭제할 대상이 없습니다",
     "err_call_to_dev"   => "개발자에게 문의하세요.(CODE: :CODE)",
+    "err_cannot_saving" => "진행 중이라 더 이상 진행할 수 없습니다",
+    "err_cannot_sent"   => "이미 완료된 단계라서 더 이상 진행할 수 없습니다",
+    "err_add_test_in_sms_paper" => "시험을 추가하는데 실패했습니다",
+    "err_set_sms_paper_done"    => "전송 준비 완료하는데 실패했습니다.",
+    "err_cant_use_it"   => "잘못된 경로로 접속하여 더 이상 진행할 수 없습니다. 정상적인 방법으로 접속하여 주세요",
+    "err_no_student"    => "매칭되는 자료가 없습니다",
 
 ];

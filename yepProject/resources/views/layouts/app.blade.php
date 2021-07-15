@@ -57,7 +57,7 @@
                                 <a href="/testForm" class="btn btn-link text-warning">{{ __('strings.lb_test_form_manage') }}</a>
                                 <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
                             @endif
-                                <a href="/SmsJob" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
+                                <a href="/SmsFront" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
                         @endauth
                     </ul>
 

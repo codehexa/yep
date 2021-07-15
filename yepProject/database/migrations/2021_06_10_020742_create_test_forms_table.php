@@ -22,6 +22,7 @@ class CreateTestFormsTable extends Migration
             $table->bigInteger('grade_id')->unsigned()->default(0)->index()->comment('school_grades.id');
             $table->integer('items_count')->unsigned()->default(0)->comment('items count, with forms_items');
             $table->string('tf_desc')->nullable()->comment('description');
+            $table->enum('exam',['Y','N'])->default('N')->comment('practice exam');
         });
     }
 

@@ -20,6 +20,7 @@ class CreateHakgiTable extends Migration
             $table->string('hakgi_name')->comment('name');
             $table->bigInteger('school_grade')->unsigned()->default(0)->comment('school_grades.id');
             $table->enum('show',["Y","N"])->default("Y")->comment('show or hidden');
+            $table->integer('weeks')->unsigned()->default(0)->comment('set max weeks');
         });
     }
 

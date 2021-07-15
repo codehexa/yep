@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Settings;
+use App\Models\SmsPageSettings;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -50,9 +51,37 @@ class SettingsController extends Controller
         }
 
         return redirect()->route("options");
+    }
 
+    public function SmsPageSet(){
+        $data = SmsPageSettings::orderBy('id','asc')->first();
 
+        return view("pages.smsPage",["data"=>$data]);
+    }
 
+    public function SmsPageSetSave(Request $request){
+        $greetings = $request->get("up_greetings");
+        $resultUrl = $request->get("up_result_url");
+        $blogUrl = $request->get("up_blog_url");
+        $teacherSay = $request->get("up_teacher_say");
+        $opt1 = $request->get("up_sps_opt_1");
 
+        $data = SmsPageSettings::orderBy('id','asc')->first();
+        if (is_null($data)){
+            $data = new SmsPageSettings();
+        }
+        $data->greetings = $greetings;
+        $data->result_link_url = $resultUrl;
+        $data->blog_link_url = $blogUrl;
+        $data->teacher_title = $teacherSay;
+        $data->sps_opt_1 = $opt1;
+
+        try {
+            $data->save();
+
+            return redirect("/smsPageSet");
+        }catch (\Exception $exception){
+            return redirect()->back()->withErrors(['msg'=>'FAIL_TO_UPDATE']);
+        }
     }
 }

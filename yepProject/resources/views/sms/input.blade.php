@@ -5,6 +5,7 @@
     <h5>{{ __('strings.lb_sms_work_manage') }} </h5>
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
+        <a href="{{ url()->previous() }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-backward"></i> {{ __('strings.fn_backward') }} </a>
 <!--        <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-file-excel"></i> {{ __('strings.fn_add') }}</button>-->
     </div>
     @if ($errors->any())
@@ -25,137 +26,31 @@
                 @case ("CALL_TO_DEV")
                 <h4 class="text-center text-danger"> {{ __('strings.err_call_to_dev',["CODE"=>"FILE_EXCEL_FAIL"]) }}</h4>
                 @break
+                @case ("CANT_SET_DONE")
+                <h4 class="text-center text-danger"> {{ __('strings.err_set_sms_paper_done') }}</h4>
+                @break
             @endswitch
         @endforeach
     @endif
 
-    <div class="mt-3 form-group">
-        <div class="form-inline">
-            <div class="form-group">
-                <label for="section_academy" class="form-label">{{ __('strings.lb_academy_label') }}</label>
-                <select name="section_academy" id="section_academy" class="form-select ml-1">
-                    <option value="">{{ __('strings.fn_all') }}</option>
-                    @foreach ($academies as $academy)
-                        <option value="{{ $academy->id }}"
-                                @if ($rAcId != '' && $rAcId == $academy->id)
-                                selected
-                            @endif
-                        >{{ $academy->ac_name }}</option>
-                    @endforeach
-                </select>
-            </div>
+    <h6 class="mt-3">{{ __('strings.lb_sms_work_input') }} <i class="fa fa-chevron-right"></i> {{ $paperInfo->ClassObj->class_name }} {{ __('strings.lb_class') }}
+        {{ __('strings.lb_year_string',["YEAR"=>$paperInfo->year]) }}
+        {{ $paperInfo->Hakgi->hakgi_name }}
+        {{ __('strings.lb_week_string',["WEEK"=>$paperInfo->week]) }}
+        <i class="fa fa-chevron-right"></i>
+        {{ $paperInfo->TestForm->form_title }}
+    </h6>
 
-            <div class="form-group">
-                <label for="section_grade" class="form-label ml-3">{{ __('strings.lb_grade_title') }}</label>
-                <select name="section_grade" id="section_grade" class="form-select ml-1">
-                    <option value="">{{ __('strings.fn_all') }}</option>
-                    @foreach ($schoolGrades as $schoolGrade)
-                        <option value="{{ $schoolGrade->id }}"
-                                @if ($rGradeId != '' && $rGradeId == $schoolGrade->id)
-                                selected
-                            @endif
-                        >{{ $schoolGrade->scg_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <span id="fn_class_loader" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
-
-            <div class="form-group">
-                <label for="section_class" class="form-label ml-3">{{ __('strings.lb_class_name') }}</label>
-                <select name="section_class" id="section_class" class="form-select ml-1">
-                    <option value="">{{ __('strings.fn_all') }}</option>
-                    @foreach ($classes as $class)
-                        <option value="{{ $class->id }}"
-                                @if ($rClId != '' && $rClId == $class->id)
-                                selected
-                            @endif
-                        >{{ $class->class_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="section_forms" class="form-label ml-3">{{ __('strings.lb_test_title') }}</label>
-                <select name="section_forms" id="section_forms" class="form-select ml-1">
-                    <option value="">{{ __('strings.fn_all') }}</option>
-                    @foreach($testForms as $tf)
-                        <option value="{{ $tf->id }}"
-                                @if ($rTfId != "" && $rTfId == $tf->id)
-                                selected
-                            @endif
-                        >{{ $tf->form_title }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="section_year" class="form-label ml-3">{{ __('strings.lb_year') }}</label>
-                <select name="section_year" id="section_year" class="form-select ml-1">
-                    @for ($y = date("Y"); $y > date("Y") -5; $y--)
-                        <option value="{{ $y }}"
-                                @if ($rY != '' && $rY == $y)
-                                selected
-                            @endif
-                        >{{ $y }}</option>
-                    @endfor
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="section_hakgi" class="form-label ml-3">{{ __('strings.lb_hakgi') }}</label>
-                <select name="section_hakgi" id="section_hakgi" class="form-select ml-1">
-                    <option value="">{{ __('strings.fn_select_item') }}</option>
-                    @if (sizeof($hakgis) > 0)
-                        @foreach ($hakgis as $hk)
-                            <option value="{{ $hk->id }}"
-                            @if ($hk->id == $rHakgi)
-                                selected
-                            @endif
-                            >{{ $hk->hakgi_name }}</option>
-                        @endforeach
-                    @endif
-
-                </select>
-            </div>
-
-
-            <div class="form-group">
-                <label for="section_weeks" class="form-label ml-3">{{ __('strings.lb_weeks') }}</label>
-                <select name="section_weeks" id="section_weeks" class="form-select ml-1">
-                    <option value="">{{ __('strings.fn_select_item') }}</option>
-                    @if ($maxHakgi > 0)
-                        @for ($i = 0; $i < $maxHakgi; $i++)
-                            <option value="{{ $i + 1 }}"
-                                    @if ($i + 1 == $rW)
-                                        selected
-                                    @endif
-                            >{{ $i + 1 }} {{ __('strings.lb_weeks') }}</option>
-                        @endfor
-                    @endif
-                </select>
-            </div>
-
-        </div>
-
-        <div class="btn-group mt-2">
-            <button class="btn btn-primary btn-sm" id="btnLoad"><i class="fa fa-arrow-alt-circle-down"></i>
-                {{ __('strings.fn_load') }}
-            </button>
-            <button class="btn btn-outline-primary btn-sm" id="btnAllSave"><i class="fa fa-save"></i>
-                {{ __('strings.fn_all_save') }}
-            </button>
-            <button class="btn btn-info btn-sm" id="btnAllSend"><i class="fa fa-paper-plane"></i>
-                {{ __('strings.fn_all_send') }}
-            </button>
-        </div>
-
+    <div class="mt-3 btn-group">
+        <button id="btnAllSave" class="btn btn-primary"><i class="fa fa-spinner fa-spin d-none" id="fn_loading_save"></i> <i class="fa fa-save"></i> {{ __('strings.lb_save_all') }}</button>
+        <button id="btnSetDone" class="btn btn-warning"><i class="fa fa-spinner fa-spin d-none" id="fn_loading_set_done"></i> <i class="fa fa-clipboard-check"></i> {{ __('strings.lb_set_done') }}</button>
+        <button id="btnSetDoneSave" class="btn btn-outline-primary"><i class="fa fa-spinner fa-spin d-none" id="fn_loading_set_save_done"></i> <i class="fa fa-arrow-circle-up"></i> {{ __('strings.lb_save_send_set') }}</button>
     </div>
     <div class="mt-3">
-        <form name="smsFrm" id="smsFrm" method="post" action="/sendSms">
+        <form name="smsFrm" id="smsFrm" method="post" action="/SmsJobSave">
             @csrf
-            <input type="hidden" name="saved_tf_id" id="saved_tf_id" value="{{ $rTfId }}"/>
-            <input type="hidden" name="saved_sg_id" id="saved_sg_id" value="{{ $rGradeId }}"/>
+            <input type="hidden" name="saved_sp_id" id="saved_sp_id" value="{{ $spId }}"/>
+            <input type="hidden" name="saved_auto" id="saved_auto" value="N"/>
             <table class="mt-3 table table-striped table-bordered">
                 <thead>
                     @if (is_null($testForm))
@@ -206,6 +101,7 @@
                             <div class="form-check align-self-center">
 <!--                                <input type="checkbox" name="ss_id[]" id="ss_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["id"] }}" class="form-check-input" checked/>-->
                                 {{ $i + 1 }}
+                                <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]['id'] }}" value="{{ $data[$i]['id'] }}"/>
                             </div>
                         </th>
                         <td class="text-center">{{ $data[$i]["studentItem"]->student_name }}</td>
@@ -239,9 +135,7 @@
                                 <div class="btn-group-sm btn-group">
                                     <a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $data[$i]["id"] }}" fn_item_row="{{ $i }}">
                                         <span class="fa fa-spin fa-spinner fn_fa_{{ $i }} d-none"></span> {{ __('strings.fn_save') }}</a>
-                                    <a href="#" class="btn btn-outline-primary btn-sm fn_item_send" fn_id="{{ $data[$i]["id"] }}">{{ __('strings.fn_send') }}</a>
                                 </div>
-
                             @else
                                 <span class="btn btn-secondary btn-sm">{{ __('strings.lb_sent') }}</span>
                             @endif
@@ -252,7 +146,6 @@
             </table>
         </form>
     </div>
-
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
@@ -333,7 +226,24 @@
 @section('scripts')
 
     <script type="text/javascript">
-        //
+        // 저장 후 전송 준비 완료 클릭 시
+        $(document).on("click","#btnSetDoneSave",function (){
+            event.preventDefault();
+            $("#fn_loading_set_save_done").removeClass("d-none");
+            $("#saved_auto").val("Y");
+            $("#smsFrm").submit();
+        });
+
+        // 전송 준비 완료 클릭 시
+        $(document).on("click","#btnSetDone",function (){
+            event.preventDefault();
+            $("#fn_loading_set_done").removeClass("d-none");
+            $("#saved_auto").val("N");
+            $("#smsFrm").attr({"action":"/SmsPaperSetDone"}).submit();
+        });
+
+        // 전송 준비 저장 완료
+
         let hakgiData = [];
         let selInput;
         $(document).on("keyup",".fn_input",function (){
@@ -345,12 +255,14 @@
             let maxScore = $(this).attr("max");
             let minScore = $(this).attr("min");
 
-            if ($(this).val() > $(this).attr("max")){
+            console.log('now val : ' + $(this).val() + ", now max : " + $(this).attr("max"));
+            if (parseInt($(this).val()) > parseInt($(this).attr("max"))){
                 $(this).val(maxScore);
+                console.log("max score");
                 return;
             }
 
-            if ($(this).val() < $(this).attr("min")){
+            if (parseInt($(this).val()) < parseInt($(this).attr("min"))){
                 $(this).val(minScore);
                 return;
             }
@@ -415,8 +327,10 @@
         });
 
 
-        $(document).on("click","#btnAllSend",function (){
+        $(document).on("click","#btnAllSave",function (){
             event.preventDefault();
+            $("#fn_loading_save").removeClass("d-none");
+            $("#saved_auto").val("N");
             $("#smsFrm").submit();
         });
 

@@ -59,6 +59,10 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::get("/logs",[\App\Http\Controllers\LogsViewController::class, 'all'])->name('logsView');
     Route::get("/logsAcademy",[\App\Http\Controllers\LogsViewController::class, 'academy'])->name('logsAcademy');
     Route::get("/logsUsers",[\App\Http\Controllers\LogsViewController::class, 'users'])->name('logsUsers');
+
+    /* SMS Page */
+    Route::get("/smsPageSet",[\App\Http\Controllers\SettingsController::class,"SmsPageSet"])->name("smsPageSet");
+    Route::post("/smsPageSetSave",[\App\Http\Controllers\SettingsController::class,"SmsPageSetSave"]);
 });
 
 /* Manager Power */
@@ -118,17 +122,33 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/testFormSubjectsJson",[\App\Http\Controllers\TestFormsController::class, "getSubjects"]);
     Route::post("/storeTestForm",[\App\Http\Controllers\TestFormsController::class, "store"]);
     Route::post("/getTestFormJson",[\App\Http\Controllers\TestFormsController::class, "getTestFormData"]);
+    Route::post("/getTestFormsJson",[\App\Http\Controllers\TestFormsController::class, "getTestForms"]);
     Route::post("/delTestForms",[\App\Http\Controllers\TestFormsController::class, "deleteForm"]);
 });
 
 /* SMS 업무 */
-Route::get("/SmsJob/{acId?}/{gradeId?}/{classId?}/{tfId?}/{year?}/{weeks?}",[\App\Http\Controllers\SmsJobController::class, "index"]);
+Route::get("/SmsFront/{acId?}/{gradeId?}/{clid?}/{year?}/{hakgi?}/{week?}",[\App\Http\Controllers\SmsJobController::class,"front"]);
+Route::get("/SmsJob/{acId?}/{gradeId?}/{classId?}/{tfId?}/{year?}/{hakgi?}/{weeks?}",[\App\Http\Controllers\SmsJobController::class, "index"]);
+Route::get("/SmsJobInput/{spId}",[\App\Http\Controllers\SmsJobController::class,"SmsJobInput"]);
+Route::post("/SmsJobSave",[\App\Http\Controllers\SmsJobController::class, "saveSmsJob"]);
+Route::post("/SmsPaperSetDone",[\App\Http\Controllers\SmsPapersController::class, "SmsPaperSetDone"]);
+Route::post("/SmsCheckToSend",[\App\Http\Controllers\SmsPapersController::class, "SmsCheckToSend"]);
+Route::post("/getHakgisAllJson",[\App\Http\Controllers\SmsJobController::class,"getHakgisHandler"]);
 Route::post("/getFormsJson",[\App\Http\Controllers\SmsJobController::class, "getFormsJson"]);
 Route::post("/getClassesJson",[\App\Http\Controllers\SmsJobController::class, "getClassesJson"]);
-Route::post("/getTestFormsJson",[\App\Http\Controllers\SmsJobController::class, "getTestFormsJson"]);
+Route::post("/getTestFormsInSmsJson",[\App\Http\Controllers\SmsJobController::class, "getTestFormsJson"]);
 Route::post("/sendSms",[\App\Http\Controllers\SmsJobController::class, "sendSms"]);
 Route::post("/saveOpinion",[\App\Http\Controllers\SmsJobController::class, "saveOpinion"]);
 Route::post("/saveSmsEach",[\App\Http\Controllers\SmsJobController::class, "saveSmsEach"]);
+Route::post("/saveMatching",[\App\Http\Controllers\SmsJobController::class, "saveMatch"]);
+Route::post("/delSmsFront",[\App\Http\Controllers\SmsPapersController::class, "delSmsFront"]);
+Route::post("/getTestPapersJson",[\App\Http\Controllers\SmsPapersController::class,"getTestPapers"]);
+Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "addSmsPapers"]);
+
+
+/* SMS 외부에서 확인하는 라우트 */
+Route::get("/sms/viewpage/{code?}",[\App\Http\Controllers\SmsViewController::class, "smsView"]);
+Route::post("/sms/views",[\App\Http\Controllers\SmsViewController::class, "viewDetail"]);
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

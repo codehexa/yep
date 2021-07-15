@@ -35,11 +35,28 @@ class Configurations extends Model
         ["name"=>"대학(교)","value"=>"U"],
     ];
 
+
     /* excel file upload ... in filesystems.php   name: excels */
     public static $EXCEL_FOLDER = "excels";
 
     public static $TEST_FORM_IN_SUBJECT_PREFIX = "sj_";
     public static $TEST_FORM_IN_SUBJECT_MAX = 20;
     public static $TEST_SCORES_FIELD_PREFIX = "score_";
+
+    // SMS _paper status
+    public static $SMS_STATUS_SAVING    = "SAVING";
+    public static $SMS_STATUS_SENT  = "SENT";
+    public static $SMS_STATUS_READY = "READY";
+    public static $SMS_STATUS_ABLE = "ABLE";
+
+    // SMS_SEND_Results status
+    public static $SMS_SEND_RESULTS_READY   = "READY";
+    public static $SMS_SEND_RESULTS_SENDING   = "SENDING";
+    public static $SMS_SEND_RESULTS_SENT   = "SENT";
+    public static $SMS_SEND_VIEW_Y  = "Y";
+    public static $SMS_SEND_VIEW_N  = "N";
+
+    public static $SMS_REPLACE_NAME = "'학생이름'";
+    public static $SMS_PAGE_URL = "http://yep.localhost/sms/viewpage/";
 
 }

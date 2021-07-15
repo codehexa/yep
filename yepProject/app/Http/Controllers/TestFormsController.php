@@ -86,7 +86,10 @@ class TestFormsController extends Controller
 
         $name = $request->get("info_name");
         $desc = $request->get("info_desc");
+        $exam = $request->get("info_exam");
         $subjectIds = $request->get("tfSavedItems");
+
+        if (is_null($exam)) $exam = "N";
 
         $user = Auth::user();
 
@@ -106,6 +109,7 @@ class TestFormsController extends Controller
             $newTest->grade_id = $gradeId;
             $newTest->items_count = sizeof($subjectIds);
             $newTest->tf_desc = $desc;
+            $newTest->exam = $exam;
 
             $subjectsCtrl = new SubjectsController();
 
@@ -194,6 +198,7 @@ class TestFormsController extends Controller
             $savedForm->grade_id = $gradeId;
             $savedForm->subjects_count = sizeof($subjectIds);
             $savedForm->tf_desc = $desc;
+            $savedForm->exam = $exam;
 
             try {
                 $savedForm->save();
@@ -269,5 +274,13 @@ class TestFormsController extends Controller
         }catch (\Exception $exception){
             return redirect()->back()->withErrors(['msg'=>'FAIL_TO_DELETE']);
         }
+    }
+
+    public function getTestFormsJson(Request $request){
+        $grade = $request->get("up_grade_id");
+
+        $data = TestForms::where('grade_id','=',$grade)->orderBy('form_title','asc')->get();
+
+        return response()->json(['data'=>$data]);
     }
 }

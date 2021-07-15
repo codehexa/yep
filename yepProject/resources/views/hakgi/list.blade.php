@@ -31,6 +31,7 @@
                     <th scope="col">{{ __('strings.lb_year_name') }}</th>
                     <th scope="col">{{ __('strings.lb_interdisciplinary') }}</th>
                     <th scope="col">{{ __('strings.lb_hakgi_name') }}</th>
+                    <th scope="col">{{ __('strings.lb_week') }}</th>
                     <th scope="col">{{ __('strings.lb_show') }}</th>
                     <th scope="col">{{ __('strings.lb_function') }}</th>
                 </tr>
@@ -42,6 +43,7 @@
                     <td>{{ $datum->year }}</td>
                     <td>{{ $datum->SchoolGrades->scg_name }}</td>
                     <td>{{ $datum->hakgi_name }}</td>
+                    <td>{{ $datum->weeks }}</td>
                     <td>{{ $datum->show }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
@@ -88,16 +90,21 @@
                             @endforeach
                         </select>
                     </div>
-
+<!--
                     <div class="form-check">
                         <input type="checkbox" name="up_common" id="up_common" class="form-check-input" value="Y" />
                         <label for="up_common" class="form-check-label">{{ __('strings.lb_common_insert') }}</label>
 
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                         <label for="up_name">{{ __('strings.lb_name') }}</label>
                         <input type="text" name="up_name" id="up_name" class="form-control" placeholder="{{ __('strings.str_insert_class_name') }}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="up_weeks">{{ __('strings.lb_week') }}</label>
+                        <input type="text" name="up_weeks" id="up_weeks" class="form-control" placeholder="{{ __('strings.str_insert_class_name') }}"/>
                     </div>
 
                     <div class="form-group">
@@ -210,6 +217,7 @@
                         $("#up_school_grade").val(msg.data.school_grade);
                         $("#up_name").val(msg.data.hakgi_name);
                         $("#up_show").val(msg.data.show);
+                        $("#up_weeks").val(msg.data.weeks);
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");
                         return;
@@ -229,6 +237,8 @@
                 showAlert("{{ __('strings.str_insert_hakgi_name') }}");
                 return;
             }
+
+            $("#fn_loading").removeClass("d-none");
 
             $("#hakgiFrm").submit();
         });

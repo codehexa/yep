@@ -25,11 +25,29 @@ class HakgiController extends Controller
         $schoolGrade = $request->get("up_school_grade");
         $hName = $request->get("up_name");
         $upShow = $request->get("up_show");
-        $upCommon = $request->get("up_common");
+        //$upCommon = $request->get("up_common");
+        $upWeek = $request->get("up_weeks");
 
         $check = Hakgi::where('year','=',$year)->where('hakgi_name','=',$hName)->where('school_grade','=',$schoolGrade)->count();
+        if ($check > 0){
+            return redirect()->back()->withErrors(['msg'=>'FAIL_ALREADY_HAS']);
+        }else{
+            $hakgi = new Hakgi();
+            $hakgi->year = $year;
+            $hakgi->school_grade = $schoolGrade;
+            $hakgi->hakgi_name = $hName;
+            $hakgi->show = $upShow;
+            $hakgi->weeks = $upWeek;
 
-        if (is_null($upCommon)){
+            try {
+                $hakgi->save();
+                return redirect()->route("hakgis");
+            }catch (\Exception $exception){
+                return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
+            }
+        }
+
+        /*if (is_null($upCommon)){
             if ($check > 0){
                 return redirect()->back()->withErrors(['msg'=>'FAIL_ALREADY_HAS']);
             }else{
@@ -64,6 +82,7 @@ class HakgiController extends Controller
             }
             return redirect()->route('hakgis');
         }
+        */
     }
 
     public function getInfo(Request $request){
@@ -79,12 +98,14 @@ class HakgiController extends Controller
         $upYear = $request->get("up_year");
         $schoolGrade = $request->get("up_school_grade");
         $upName = $request->get("up_name");
+        $upWeek = $request->get("up_weeks");
         $upShow = $request->get("up_show");
 
         $root = Hakgi::find($upId);
         $root->year = $upYear;
         $root->hakgi_name = $upName;
         $root->school_grade = $schoolGrade;
+        $root->weeks = $upWeek;
         $root->show = $upShow;
 
         try {

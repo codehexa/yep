@@ -6,8 +6,13 @@ use App\Models\Academies;
 use App\Models\Classes;
 use App\Models\Configurations;
 use App\Models\Curriculums;
+use App\Models\Hakgi;
 use App\Models\schoolGrades;
+use App\Models\Settings;
+use App\Models\SmsPageSettings;
+use App\Models\SmsPapers;
 use App\Models\SmsScores;
+use App\Models\SmsSendResults;
 use App\Models\Students;
 use App\Models\Subjects;
 use App\Models\TestForms;
@@ -23,7 +28,79 @@ class SmsJobController extends Controller
         $this->middleware("auth");
     }
 
-    public function index($acId='',$gradeId='',$classId='',$tfId='',$year='',$weeks=''){
+    public function front($acId='',$gradeId='',$clId='',$year='',$hakgi='',$week=''){
+        $user = Auth::user();
+        $nowPower = $user->power;
+
+        //dd("acid :".$acId." / grade : {$gradeId} / clID : {$clId} / year: {$year} / hakgi : {$hakgi} / week : {$week}");
+
+        if ($nowPower != Configurations::$USER_POWER_ADMIN){
+            $academies = Academies::where('id','=',$user->academy_id)->orderBy('ac_name','asc')->get();
+        }else{
+            $academies = Academies::orderBy('ac_name','asc')->get();
+        }
+
+        $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
+
+        if ($acId != "" && $gradeId != ""){
+            $classes = Classes::where('ac_id','=',$acId)
+                ->where('sg_id','=',$gradeId)
+                ->where('show','=','Y')
+                ->orderBy('class_name','asc')->get();
+        }elseif ($acId != "" && $gradeId == "") {
+            $classes = Classes::where('ac_id','=',$acId)
+                ->where('sg_id','=',$gradeId)
+                ->where('show','=','Y')
+                ->orderBy('class_name','asc')->get();
+        }else{
+            $classes = Classes::where('show','=','Y')->orderBy('class_name','asc')->get();
+        }
+
+        $dataWhere = [];
+        if ($acId != "") {
+            $dataWhere[] = ["ac_id","=",$acId];
+        }
+        if ($gradeId != ""){
+            $dataWhere[] = ["sg_id","=",$gradeId];
+        }
+        if ($clId != "") {
+            $dataWhere[] = ["cl_id",'=',$clId];
+        }
+        if ($year != ""){
+            $dataWhere[] = ["year",'=',$year];
+        }
+        if ($hakgi != ""){
+            $dataWhere[] = ["hg_id",'=',$hakgi];
+        }
+        if ($week != ""){
+            $dataWhere[] = ["week","=",$week];
+        }
+
+        $settings = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $limit = $settings->set_value;
+
+        $data = SmsPapers::where($dataWhere)->paginate($limit);
+
+        $RHakgis = [];
+
+        if ($year != "" && $gradeId != ""){
+            $RHakgis = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)->where('show','=','Y')->orderBy('hakgi_name','asc')->get();
+        }
+
+        $MaxWeeks = 0;
+        if ($hakgi != ""){
+            $hakgiWeeks = Hakgi::find($hakgi);
+            $MaxWeeks = $hakgiWeeks->weeks;
+        }
+
+        return view("sms.front",["data"=>$data,
+            "academies"=>$academies,"schoolGrades"=>$schoolGrades,"classes"=>$classes,
+            "RacId"=>$acId,"RsgId"=>$gradeId,"RclId"=>$clId,"RhgId"=>$hakgi,"Ryear"=>$year,"Rweek"=>$week,
+            "RHakgis"=>$RHakgis,"MaxWeeks"=>$MaxWeeks
+        ]);
+    }
+
+    public function index($acId='',$gradeId='',$classId='',$tfId='',$year='',$hakgi='',$weeks=''){
 
         $user = Auth::user();
         $nowPower = $user->power;
@@ -31,6 +108,8 @@ class SmsJobController extends Controller
         $data = [];
         $tItems = [];
         $testForms = [];
+        $hakgiMax = 0;
+        $hakgiData = [];
 
         if ($nowPower != Configurations::$USER_POWER_ADMIN){
             $academies = Academies::where('id','=',$user->academy_id)->orderBy('ac_name','asc')->get();
@@ -57,7 +136,7 @@ class SmsJobController extends Controller
         // 여기까지 기초 필드 항목 값들.
         $hasDouble = "N";
 
-        if ($acId != ""  && $gradeId != "" && $classId != "" && $tfId != "" && $year != "" && $weeks != ""){
+        if ($acId != ""  && $gradeId != "" && $classId != "" && $tfId != "" && $year != "" && $hakgi != "" &&  $weeks != ""){
             $formCtrl = new TestFormsController();
             $testForms = TestForms::where('grade_id','=',$gradeId)->orderBy('form_title','asc')->get();
             $testForm = TestForms::find($tfId);
@@ -77,6 +156,11 @@ class SmsJobController extends Controller
                 }
             }
 
+            $hakgiData = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)
+                ->where('show','=','Y')->orderBy('hakgi_name','asc')->get();
+            $hakgiDatum = Hakgi::find($hakgi);
+            $hakgiMax = $hakgiDatum->weeks;
+
             $students = Students::where("class_id","=",$classId)->get();
 
             foreach ($students as $student){
@@ -87,6 +171,7 @@ class SmsJobController extends Controller
                     ->where('tf_id','=',$tfId)
                     ->where('st_id','=',$stId)
                     ->where('cl_id','=',$classId)
+                    ->where('hg_id','=',$hakgi)
                     ->first();
 
                 if (is_null($checkScore)){
@@ -98,6 +183,7 @@ class SmsJobController extends Controller
                     $newSmsScore->tf_id = $tfId;
                     $newSmsScore->st_id = $stId;
                     $newSmsScore->cl_id = $classId;
+                    $newSmsScore->hg_id = $hakgi;
                     $newSmsScore->opinion = "";
                     $newSmsScore->sent = "N";
                     $newSmsScore->score_count = sizeof($tItems);
@@ -122,11 +208,13 @@ class SmsJobController extends Controller
         }
 
         //dd($data);
+        //dd($hakgiData);
 
         return view("sms.index",["testForms"=>$testForms,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble,
             "academies"=>$academies, "schoolGrades"=>$schoolGrades, "classes"=>$classes,
             "rAcId"=>$acId,"rGradeId"=>$gradeId,"rClId"=>$classId,"rTfId"=>$tfId,
-            "rY"=>$year,"rW"=>$weeks,"indexN"=>"0"
+            "rY"=>$year,"indexN"=>"0",
+            "hakgis"=>$hakgiData,"rHakgi"=>$hakgi,"maxHakgi"=>$hakgiMax,"rW"=>$weeks,
         ]);
     }
 
@@ -153,6 +241,7 @@ class SmsJobController extends Controller
     public function getClassesJson(Request $request){
         $acId = $request->get("section_academy");
         $gradeId = $request->get("section_grade");
+        $year = $request->get("section_year");
 
         if ($gradeId != ""){
             $data = Classes::where('ac_id','=',$acId)
@@ -162,25 +251,48 @@ class SmsJobController extends Controller
             $data = Classes::where('ac_id','=',$acId)->orderBy('class_name','asc')->get();
         }
 
-        return response()->json(['data'=>$data]);
+        $hakgi = new \stdClass();
+
+        if ($year != ""){
+            $hakgi = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)
+                ->where('show','=','Y')
+                ->orderBy('hakgi_name','asc')->get();
+        }
+
+
+        return response()->json(['data'=>$data,'hakgi'=>$hakgi]);
     }
 
     public function getTestFormsJson(Request $request){
         $acId = $request->get("section_academy");
         $gradeId = $request->get("section_grade");
 
+        if (is_null($acId)) $acId = 0;
+
+        $data = [];
+
         if ($gradeId != ""){
-            $data = TestForms::whereIn('ac_id',[$acId,'0'])
-                ->where('grade_id','=',$gradeId)
+            $root = TestForms::where('grade_id','=',$gradeId)
                 ->orderBy('form_title','asc')
                 ->get();
+            // whereIn('ac_id',[$acId,'0'])
         }else{
-            $data = TestForms::whereIn('ac_id',[$acId,'0'])
-                ->orderBy('form_title','asc')
+            $root = TestForms::orderBy('form_title','asc')
                 ->get();
         }
 
+        foreach ($root as $r){
+            $rid = $r->id;
+            $children = $this->getChildrenTest($rid);
+            $r->subjects = $children;
+            $data[] = $r;
+        }
+
         return response()->json(['data'=>$data]);
+    }
+
+    public function getChildrenTest($id){
+        return TestFormsItems::where('tf_id','=',$id)->where('sj_depth','=',0)->orderBy("sj_index","asc")->get();
     }
 
     public function saveOpinion(Request $request){
@@ -226,6 +338,259 @@ class SmsJobController extends Controller
     }
 
     public function sendSms(Request $request){
-        dd($request);
+        //dd($request);
+        /*
+         * code making. 000 + code + 0000
+         */
+        $spCode = $request->get("up_sp_code");
+        $sendSpCode = rand(100,999).$spCode.rand(1000,9999);
+        $sendHexCode = bin2hex($sendSpCode);
+
+        $smsPageSetting = SmsPageSettings::orderBy('id','asc')->first();
+        $smsMsg = $smsPageSetting->sps_opt_1;
+        $smsURL = Configurations::$SMS_PAGE_URL.$sendHexCode;
+
+        $spPapers = SmsPapers::where('sp_code','=',$spCode)->where('sp_status','=',Configurations::$SMS_STATUS_ABLE)->get();
+
+        $send_N = 0;
+        foreach($spPapers as $spPaper){
+            $classId = $spPaper->cl_id;
+
+            $students = Students::where('class_id','=',$classId)->get();
+            foreach ($students as $student){
+                $smsReMsg = str_replace(Configurations::$SMS_REPLACE_NAME,$student->student_name,$smsMsg);
+                $smsReMsg .= $smsURL;
+                $newSmsSend = new SmsSendResults();
+                $newSmsSend->student_id = $student->id;
+                $newSmsSend->class_id = $classId;
+                $newSmsSend->sms_paper_code = $spCode;
+                $newSmsSend->sms_msg = $smsReMsg;
+                $newSmsSend->ssr_status = Configurations::$SMS_SEND_RESULTS_READY;
+                $newSmsSend->sms_tel_no = $student->parent_hp;
+                $newSmsSend->ssr_view = Configurations::$SMS_SEND_VIEW_N;
+                $newSmsSend->save();
+                $send_N++;
+            }
+            $spPaper->sp_status = Configurations::$SMS_STATUS_SENT;
+            $spPaper->sent_date = now();
+            $spPaper->save();
+        }
+
+        return view('sms.send_result',['total'=>$send_N]);
+    }
+
+    public function getHakgisHandler(Request $request){
+        $gradeId = $request->get("grade_id");
+        $year = $request->get("year");
+
+        $data = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)
+            ->where('show','=','Y')
+            ->orderBy('hakgi_name','asc')
+            ->get();
+
+        return response()->json(['data'=>$data]);
+    }
+
+    public function saveMatch(Request $request){
+        //dd($request);
+        $acId = $request->get("up_academy");
+        $clId = $request->get("up_class");
+        $sgId = $request->get("up_grade");
+        $hgId = $request->get("up_hakgi");
+        $year = $request->get("up_year");
+        $week = $request->get("up_week");
+        $tfIds = $request->get("tf_ids");   // array
+        $tfIdsString = implode(",",$tfIds);
+
+        // check
+        $wheres = [
+            ["ac_id",'=',$acId],
+            ["cl_id",'=',$clId],
+            ["sg_id",'=',$sgId],
+            ["hg_id",'=',$hgId],
+            ["year",'=',$year],
+            ["week",'=',$week]
+        ];
+        $oldValues = SmsPapers::where($wheres)->whereIn('tf_id',[$tfIdsString])->get();
+        if (sizeof($oldValues) > 0){
+            $saved_tf_ids = [];
+            $savedSpCode = "";
+            $sentValue = "";
+            foreach($oldValues as $preDatum){
+                $saved_tf_ids[] = $preDatum->tf_id;
+                $savedSpCode = $preDatum->sp_code;
+                $sentValue = $preDatum->sp_status;
+            }
+
+            if ($sentValue != Configurations::$SMS_STATUS_READY){
+                if ($sentValue == Configurations::$SMS_STATUS_SAVING){
+                    return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SAVING"]);
+                }
+                if ($sentValue == Configurations::$SMS_STATUS_SENT){
+                    return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SENT"]);
+                }
+            }
+            $compares = array_diff($tfIds,$saved_tf_ids);   // $tfIds 에 있는 요소만 남는다. 삭제할 요소
+            $add_compares = array_diff($saved_tf_ids,$tfIds);   // 입력해야할 요소.
+            // 삭제할 것.
+            for($i=0; $i < sizeof($compares); $i++){
+                SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
+            }
+            for ($i=0; $i < sizeof($add_compares); $i++){
+                $newItem = new SmsPapers();
+                $newItem->writer_id = Auth::user()->id;
+                $newItem->ac_id = $acId;
+                $newItem->cl_id = $clId;
+                $newItem->sg_id = $sgId;
+                $newItem->hg_id = $hgId;
+                $newItem->year = $year;
+                $newItem->week = $week;
+                $newItem->tf_id = $add_compares[$i];
+                $newItem->sp_code = $savedSpCode;
+                $newItem->sp_status = Configurations::$SMS_STATUS_READY;
+            }
+        }else{
+            // new insert
+            $spCode = $this->getSmsPaperCode();
+            for ($i=0; $i < sizeof($tfIds); $i++){
+                $newAdd = new SmsPapers();
+                $newAdd->writer_id = Auth::user()->id;
+                $newAdd->ac_id = $acId;
+                $newAdd->cl_id = $clId;
+                $newAdd->sg_id = $sgId;
+                $newAdd->hg_id = $hgId;
+                $newAdd->year = $year;
+                $newAdd->week = $week;
+                $newAdd->tf_id = $tfIds[$i];
+                $newAdd->sp_code = $spCode;
+                $newAdd->sp_status = Configurations::$SMS_STATUS_READY;
+                $newAdd->save();
+            }
+        }
+        return redirect("/SmsFront/{$acId}/{$sgId}/{$clId}/{$year}/{$hgId}/{$week}");
+    }
+
+    public function getSmsPaperCode(){
+        return substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyz", 10)), 0, 10);
+    }
+
+
+    public function SmsJobInput($spId){
+        $smsPaper = SmsPapers::find($spId);
+        $acId = $smsPaper->ac_id;
+        $clId = $smsPaper->cl_id;
+        $sgId = $smsPaper->sg_id;
+        $hgId = $smsPaper->hg_id;
+        $year = $smsPaper->year;
+        $week = $smsPaper->week;
+        $tfId = $smsPaper->tf_id;
+
+        $hasDouble = "N";
+        $data = [];
+
+        $formCtrl = new TestFormsController();
+        $testForm = TestForms::find($tfId);
+        $testFormItems = TestFormsItems::where('tf_id','=',$tfId)->where('sj_parent_id','=',0)->orderBy('sj_index','asc')->get();
+        $tItems = [];
+        foreach($testFormItems as $formItem){
+            if ($formItem->sj_has_child == "Y"){
+                $hasDouble = "Y";
+                $children = $formCtrl->getTestFormItemChildren($formItem->id);
+                $formItem->setAttribute("child_size",sizeof($children));
+                $tItems[] = $formItem;
+                foreach($children as $child){
+                    $tItems[] = $child;
+                }
+            }else{
+                $tItems[] = $formItem;
+            }
+        }
+
+        $students = Students::where("class_id","=",$clId)->orderBy('student_name','asc')->get();
+
+        foreach ($students as $student){
+            $stId = $student->id;
+            $checkScore = SmsScores::where('sg_id','=',$sgId)
+                ->where('year','=',$year)
+                ->where('week','=',$week)
+                ->where('tf_id','=',$tfId)
+                ->where('st_id','=',$stId)
+                ->where('cl_id','=',$clId)
+                ->where('hg_id','=',$hgId)
+                ->first();
+
+            if (is_null($checkScore)){
+                $newSmsScore = new SmsScores();
+                $newSmsScore->sg_id = $sgId;
+                $newSmsScore->writer_id = Auth::user()->id;
+                $newSmsScore->year = $year;
+                $newSmsScore->week = $week;
+                $newSmsScore->tf_id = $tfId;
+                $newSmsScore->st_id = $stId;
+                $newSmsScore->cl_id = $clId;
+                $newSmsScore->hg_id = $hgId;
+                $newSmsScore->opinion = "";
+                $newSmsScore->sent = "N";
+                $newSmsScore->score_count = sizeof($tItems);
+                for ($i=0; $i < sizeof($tItems); $i++){
+                    $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
+                    $newSmsScore->$fieldName = "0";
+                }
+
+                $newSmsScore->save();
+                $newSmsScore->setAttribute("studentItem",$student);
+
+                $data[] = $newSmsScore->toArray();
+            }else{
+                $checkScore->setAttribute("studentItem",$student);
+                $data[] = $checkScore->toArray();
+            }
+        }
+        return view("sms.input",["paperInfo"=>$smsPaper,"spId"=>$spId,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble]);
+    }
+
+    public function saveSmsJob(Request $request){
+        // smsjobinput all save click/
+        //dd($request);
+        $smsPaper = SmsPapers::find($request->get("saved_sp_id"));
+        $autoSave = $request->get("saved_auto");
+
+        $ssIds = $request->get("ss_id");
+
+        $testFormItemsCount = TestFormsItems::where('tf_id','=',$smsPaper->tf_id)->where('sj_has_child','=','N')->count();
+        //dd($testFormItemsCount); 9
+        $opinionVals = $request->get("ss_opinion");
+
+        for($i=0; $i < sizeof($ssIds); $i++){   // $ssId smsscores.id
+            //dd($ssIds[$i]);
+            $nowSmsScore = SmsScores::find($ssIds[$i]);
+
+
+            for ($j=0; $j < $testFormItemsCount; $j++){
+                $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$j;
+                $nowRequest = $request->get($fieldName);
+                //dd($nowRequest[$i]);
+                $nowScore = $nowRequest[$i];
+                //dd($nowScore);
+                $nowSmsScore->$fieldName = $nowScore;
+            }
+
+            $nowSmsScore->opinion = $opinionVals[$i];
+            $nowSmsScore->save();
+        }
+        if ($autoSave == "Y"){
+            $smsPaper->sp_status = Configurations::$SMS_STATUS_ABLE;
+        }else{
+            $smsPaper->sp_status = Configurations::$SMS_STATUS_SAVING;
+        }
+
+
+        try {
+            $smsPaper->save();
+
+            return redirect("/SmsFront");
+        }catch (\Exception $exception){
+            return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
+        }
     }
 }

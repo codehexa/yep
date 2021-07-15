@@ -23,6 +23,7 @@ class CreateSmsscoresTable extends Migration
             $table->bigInteger("tf_id")->unsigned()->index()->default(0)->comment("test_forms.id");
             $table->bigInteger("st_id")->unsigned()->index()->default(0)->comment("students.id");
             $table->bigInteger("cl_id")->unsigned()->index()->default(0)->comment("classes.id");
+            $table->bigInteger("hg_id")->unsigned()->index()->default(0)->comment("hakgi.id");
             $table->integer("score_count")->unsigned()->default(0)->comment("include Total item");
             $table->integer("score_0")->unsigned()->default(0);
             $table->integer("score_1")->unsigned()->default(0);
@@ -47,6 +48,7 @@ class CreateSmsscoresTable extends Migration
             $table->text("opinion")->nullable();
             $table->enum("sent",["Y","N"])->default("N")->nullable();
             $table->timestamp("sent_date")->nullable();
+            $table->enum("saved_check",["Y","N"])->default("N");
         });
     }
 

@@ -105,6 +105,10 @@
                     <input type="hidden" name="info_id" id="info_id"/>
                     <input type="hidden" name="up_ac_id" id="up_ac_id"/>
                     <input type="hidden" name="up_grade_id" id="up_grade_id"/>
+                    <div class="form-check">
+                        <input type="checkbox" name="info_exam" id="info_exam" class="form-check-input" value="Y"/>
+                        <label for="info_exam" class="form-check-label">{{ __('strings.lb_practice_exam') }}</label>
+                    </div>
                     <div class="form-group">
                         <label for="info_name">{{ __('strings.lb_test_title') }}</label>
                         <input type="text" name="info_name" id="info_name" placeholder="{{ __('strings.str_insert_form_title') }}" class="form-control"/>
@@ -282,18 +286,18 @@
             event.preventDefault();
             let items = $("#tf_all_items").find(".fn_subjects");
             let forDels = [];
-            for (var i=0; i < items.length; i++){
+            for (let i=0; i < items.length; i++){
                 if (items.eq(i).prop("checked") === true){
                     let selObj = subjectDataSet[i];
-                    if (!checkHasIndex(savedDataSet, selObj.Id)){
+                    if (!checkHasIndex(savedDataSet, selObj.Id)){   // 과목의 아이디 값을 저장한다.
                         savedDataSet.push(selObj);
+                        forDels.push(i);
                     }
-                    forDels.push(i);
                 }
             }
 
             for (let j=forDels.length -1; j >= 0; j--){
-                subjectDataSet.splice(j,1);
+                subjectDataSet.splice(forDels[j],1);
             }
             setTmpl();
         });
@@ -315,7 +319,7 @@
             }
 
             for (let j=forDels.length -1; j >= 0; j--){
-                savedDataSet.splice(j,1);
+                savedDataSet.splice(forDels[j],1);
             }
 
             setTmpl();
@@ -377,6 +381,11 @@
                         $("#info_name").val(msg.tfData.form_title);
                         $("#info_count").val(msg.tfData.subjects_count);
                         $("#info_desc").val(msg.tfData.tf_desc);
+                        if (msg.tfData.exam === "Y"){
+                            $("#info_exam").prop("checked",true);
+                        }else{
+                            $("#info_exam").prop("checked",false);
+                        }
 
                         $("#tf_has_items").empty();
                         $("#tf_all_items").empty();

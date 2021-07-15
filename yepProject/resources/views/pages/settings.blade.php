@@ -52,6 +52,12 @@
                 </div>
                 <p>전체 로그를 확인할 수 있습니다.</p>
             </a>
+            <a href="{{ route('smsPageSet') }}" class="list-group-item list-group-item-action d-flex justify-content-between">
+                <div class="btn btn-primary">
+                    <i class="fa fa-sms"></i> {{ __('strings.lb_sms_manage') }}
+                </div>
+                <p>학생의 성적 페이지에 나타나는 화면의 문구를 설정합니다.</p>
+            </a>
         </div>
 
     </div>
