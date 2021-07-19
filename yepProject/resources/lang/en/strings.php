@@ -284,10 +284,13 @@ return [
     "str_total_sent"    => "전체 :TOTAL 건을 발송 예약했습니다. 순서에 따라 순차 발송 됩니다.",
     "lb_weekly_test_paper" => "주간 성적표",
     "lb_test_paper_title" => "성적표 이름",
+    "lb_test_analysis"  => "성적 분석 의견",
 
     "lb_input_parent_tel"   => "확인을 위해서는 부모님의 휴대전화 번호를 입력하세요",
     "lb_authorization"  => "보호자 인증",
     "lb_authorization_to_page"  => "성적표 확인을 위한 보호자 인증",
+    "lb_sms_page_bottom"    => "SMS 결과 페이지 하단 내용",
+    "lb_input_sms_bottom"   => "SMS 결과 페이지 하단 내용을 입력하세요",
 
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",

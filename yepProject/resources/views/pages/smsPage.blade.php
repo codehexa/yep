@@ -47,6 +47,10 @@
                     <input type="text" name="up_sps_opt_1" id="up_sps_opt_1" class="form-control" placeholder="{{ __('strings.lb_input_sms_text_title') }}" value="{{ $data->sps_opt_1 }}"/>
                     <small>{{ __('strings.lb_sms_define_name') }}</small>
                 </div>
+                <div class="list-group-item">
+                    <label for="up_teacher_say">{{ __('strings.lb_sms_page_bottom') }}</label>
+                    <input type="text" name="up_sps_opt_2" id="up_sps_opt_2" class="form-control" placeholder="{{ __('strings.lb_input_sms_bottom') }}" value="{{ $data->sps_opt_2 }}"/>
+                </div>
             </div>
         </form>
         <div class="mt-3">

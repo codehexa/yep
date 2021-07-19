@@ -37,7 +37,8 @@
 
         <script src="{{ asset('js/jquery.js') }}"></script>
 
-        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     </head>
     <body class="antialiased" >
         <div id="app" class="relative items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:pt-0">
@@ -99,23 +100,125 @@
 <!--                <div id="chartContainer" style="height: 370px; width:100%"></div>-->
 
                 <div class="mt-3">
-                    @for($i=0; $i < sizeof($testForms); $i++)
-                        <div class="border">
-                            <h6>{{ $testForms[$i]['form_title'] }}</h6>
-                            @foreach ($subjects[$i] as $subject)
-                                @if ($subject->sj_has_child == "N" && $subject->sj_type != "T")
-                                {{ $subject->sj_title }}
+                    @for($i=0; $i < sizeof($dataSet); $i++)
+                        <div class="mt-2">
+                            <h5>
+                                @if($dataSet[$i]["exam"] == "Y")
+                                    [{{ __("strings.lb_practice_exam") }}]
                                 @endif
-                            @endforeach
-                            {{ $scores[$i]["nowScore"]['score_0'] }}
+                                    {{ $dataSet[$i]['testTitle'] }}
+                            </h5>
+                            <div class="d-flex justify-content-center">
+                                <canvas id="chart_{{ $i }}" style="width: 40rem; height:20rem" role="img"></canvas>
+                            </div>
+
                         </div>
                     @endfor
                 </div>
 
+                <!-- 성적표 내용 표시하기 -->
+
+                <h5 class="mt-3">{{ __('strings.lb_test_analysis') }}</h5>
+
+                @for($i=0; $i < sizeof($scoreAnalysis); $i++)
+                    <h6 class="mt-2">{{ $dataSet[$i]['testTitle'] }}</h6>
+
+                    <div class="list-group">
+                        @for ($j=0; $j < sizeof($scoreAnalysis[$i]); $j++)
+                            <div class="list-group-item">
+                                [{{ $scoreAnalysis[$i][$j]['subject'] }}]
+                                {{ $scoreAnalysis[$i][$j]['opinion'] }}
+                            </div>
+                        @endfor
+                    </div>
+                @endfor
+
+                <!-- 선생님 내용 표시하기 -->
+                <h5 class="mt-3">{{ $settings->teacher_title }} </h5>
+                <div class="list-group">
+                    @foreach($teacherSays as $teacherSay)
+                        <div class="list-group-item"> {{ $teacherSay }}</div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="mt-5 bg-dark container-fluid p-4">
+                <h6 class="text-white text-center">{{ $settings->sps_opt_2 }}</h6>
             </div>
         </div>
         <script type="text/javascript">
+            $(document).ready(function (){
+                printChart();
+            });
 
+            function printChart(){
+                @for($i=0; $i < sizeof($jsData); $i++){
+                    let ctx = document.getElementById('chart_{{ $i }}');
+
+                    let myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [
+                                '이전 주','이번 주'
+                            ],
+                            datasets: [
+                                @for($j = 0; $j < sizeof($jsData[$i]); $j++)
+                                {
+                                    label: '{{ $jsData[$i][$j]['labels'] }}',
+                                    data: [{{ $jsData[$i][$j]['scores'] }}],
+                                    backgroundColor: getRandomeColor({{ $jsData[$i][$j]['stack'] }}),
+                                    borderColor: 'rgba(0, 0, 0, 0.2)',
+                                    borderWidth: 1,
+                                    stack: 'Stack {{ $jsData[$i][$j]['stack'] }}',
+                                },
+                                @endfor
+                            ]
+                        },
+                        options: {
+                            responsive: false,
+                            scales: {
+                                x: {
+                                    stacked: true,
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    stacked: true
+                                }
+                            },
+                            plugins: {
+                                datalabels: {
+                                    //color: 'white',
+                                    labels: {
+                                        title: {
+                                            font: {
+                                                weight: 'bold',
+                                            }
+                                        },
+                                        value: {
+                                            color: 'green'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                @endfor
+
+            }
+
+            function getRandomeColor(index){
+                let colors = [
+                    'rgb(255, 99, 132, 0.2)',
+                    'rgb(255, 159, 64, 0.2)',
+                    'rgb(255, 205, 86, 0.2)',
+                    'rgb(75, 192, 192, 0.2)',
+                    'rgb(54, 162, 235, 0.2)',
+                    'rgb(153, 102, 255, 0.2)',
+                    'rgb(201, 203, 207, 0.2)'
+                    ];
+                return colors[index];
+            }
         </script>
     </body>
 </html>

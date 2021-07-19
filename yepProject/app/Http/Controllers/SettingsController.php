@@ -65,6 +65,7 @@ class SettingsController extends Controller
         $blogUrl = $request->get("up_blog_url");
         $teacherSay = $request->get("up_teacher_say");
         $opt1 = $request->get("up_sps_opt_1");
+        $opt2 = $request->get("up_sps_opt_2");
 
         $data = SmsPageSettings::orderBy('id','asc')->first();
         if (is_null($data)){
@@ -75,6 +76,7 @@ class SettingsController extends Controller
         $data->blog_link_url = $blogUrl;
         $data->teacher_title = $teacherSay;
         $data->sps_opt_1 = $opt1;
+        $data->sps_opt_2 = $opt2;
 
         try {
             $data->save();
