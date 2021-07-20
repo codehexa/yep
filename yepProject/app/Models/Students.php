@@ -18,6 +18,6 @@ class Students extends Model
     ];
 
     public function ClassObj(){
-        return $this->belongsTo(Classes::class, "class_id");
+        return $this->hasOne(Classes::class,"id", "class_id");
     }
 }

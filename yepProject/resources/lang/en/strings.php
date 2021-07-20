@@ -30,6 +30,14 @@ return [
     "lb_show"   => "보이기",
     "lb_loading"    => "Loading...",
 
+    /* Password reset */
+    "lb_password_reset" => "비밀번호 재설정",
+    "str_new_password_send" => "임의의 비밀번호를 만들어서 등록된 이메일 주소로 전송됩니다",
+    "str_password_change_done"  => "임의의 비밀번호를 만들어서 등록된 전자우편 주소로 전송하였습니다",
+    "str_password_email_title"  => "비밀번호가 변경 되었습니다.",
+    "str_password_email_text"   => "안녕하세요.<br/>귀하께서는 비밀번호를 재설정 요청하였습니다. <br/><br/>변경된 비밀번호는  \"  :PASSWD   \" 입니다.",
+
+
     /* Register */
     "lb_register"   => "운영자 등록",
     "lb_password_2" => "비밀번호 확인",
@@ -58,7 +66,7 @@ return [
     "str_insert_re_password"    => "변경할 비밀번호를 다시 확인하세요",
 
     /* 학원 관리 */
-    "lb_academy_manage" => "학원관리",
+    "lb_academy_manage" => "학원 관리",
     "lb_insert_academy_name"    => "학원 이름을 입력하세요",
 
 
@@ -95,7 +103,7 @@ return [
     "fn_send"   => "전송",
 
     /* 학년 관리 */
-    "lb_grade_manage"   => "학년관리",
+    "lb_grade_manage"   => "학년 관리",
     "lb_grade_title"    => "구분",
     "lb_grade_name" => "학년",
     "lb_index"  => "순서",
@@ -104,7 +112,7 @@ return [
     "lb_insert_grade"   => "학년을 입력하세요",
 
     /* options */
-    "lb_options_manage"  => "옵션관리",
+    "lb_options_manage"  => "옵션 관리",
     "lb_code"   => "코드",
     "lb_value"   => "값",
     "lb_desc"   => "요약 설명",
@@ -113,7 +121,7 @@ return [
     "lb_option_log" => "옵션 로그 리스트",
 
     /* 로그 관리 */
-    "lb_logs_manage"    => "로그관리",
+    "lb_logs_manage"    => "로그 관리",
     "lb_logs_users" => "사용자 정보 로그",
     "lb_logs_academy"   => "학원정보 로그",
     "lb_logs_options"   => "옵션 로그",

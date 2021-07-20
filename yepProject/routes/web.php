@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::get("/reg",[\App\Http\Controllers\MyRegisterController::class, "register"]);
 Route::post("/regDo",[\App\Http\Controllers\MyRegisterController::class, "regDo"]);
 Route::get("/regDone",[\App\Http\Controllers\MyRegisterController::class, "regDone"]);
+Route::get("/passwdReset",[\App\Http\Controllers\MyRegisterController::class, "passwdReset"]);
+Route::post("/passwdResetDo",[\App\Http\Controllers\MyRegisterController::class, "passwdResetDo"]);
 Auth::routes();
 
 Route::group(['middleware' => ['adminPower']],function() {

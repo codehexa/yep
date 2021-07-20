@@ -50,4 +50,62 @@ class MyRegisterController extends Controller
     public function regDone(){
         return view('/myRegDone');
     }
+
+    public function passwdReset(){
+        return view('/passwdReset');
+    }
+
+    public function passwdResetDo(Request $request){
+        $email = $request->get("email");
+        $name = $request->get("usname");
+
+        $check = User::where('email','=',$email)->where('name','=',$name)->first();
+        if (!is_null($check)){
+            $newPasswd = $this->makeNewPw();
+            try {
+                $check->update(['password'=>Hash::make($newPasswd)]);
+
+                $this->sendEmail($email,$newPasswd);
+
+                $logUserCtrl = new LogUsersController();
+                $logUserCtrl->addLog($check->id,$check->id,'password','LOSE','비밀번호변경');
+
+                return view("passwdResetDone");
+
+            }catch (\Exception $exception){
+                return redirect()->back()->withErrors(['msg'=>'FAIL_TO_UPDATE']);
+            }
+        }
+        return redirect()->back()->withErrors(['msg'=>'NO_MATCH_DATA']);
+    }
+
+    public function sendEmail($email,$pw){
+        $to = $email;
+        $subject = trans('strings.str_password_email_title');
+        $message = trans('strings.str_password_email_text',["PASSWD"=>$pw]);
+        $from = Configurations::$EMAIL_SENDER;
+        $headers = "MIME-Version: 1.0"."\r\n";
+        $headers .= "Content-type: text/html; charset=iso-8859-1"."\r\n";
+        $headers .= "From: {$from}\r\n".
+            "Reply-To: {$from}\r\n".
+            "X-Mailer: PHP/".phpversion();
+
+        $messages = "<html><body>".$message."</body></html>";
+
+        if (mail($to,$subject,$messages,$headers)){
+
+        }
+
+    }
+
+    public function makeNewPw(){
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        $length = 8;
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
 }

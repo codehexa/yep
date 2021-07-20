@@ -35,6 +35,8 @@ class Configurations extends Model
         ["name"=>"대학(교)","value"=>"U"],
     ];
 
+    public static $EMAIL_SENDER = "noreply@yep.org";
+
 
     /* excel file upload ... in filesystems.php   name: excels */
     public static $EXCEL_FOLDER = "excels";

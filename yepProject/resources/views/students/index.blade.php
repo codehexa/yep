@@ -86,7 +86,12 @@
                     <td>{{ $datum->parent_hp }}</td>
                     <td>{{ $datum->school_name }}</td>
                     <td>{{ $datum->school_grade }}</td>
-                    <td>{{ $datum->ClassObj->class_name }}</td>
+                    <td>@if (is_null($datum->ClassObj))
+                            <span class="text-danger">{{ ('미지정')  }}</span>
+                        @else
+                            {{ $datum->ClassObj->class_name }}
+                        @endif
+                    </td>
                     <td>{{ $datum->teacher_name }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
