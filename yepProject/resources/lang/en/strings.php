@@ -30,6 +30,20 @@ return [
     "lb_show"   => "보이기",
     "lb_loading"    => "Loading...",
 
+    /* Register */
+    "lb_register"   => "운영자 등록",
+    "lb_password_2" => "비밀번호 확인",
+    "str_register_complete" => "운영자 등록 정보 저장 완료. <br/> 최고 관리자가 승인할 때 까지 사용할 수 없습니다.<br/>최고 관리자의 별도 승인이 있을 때 까지 기다려 주십시오",
+
+
+    /* Home */
+    "lb_home_dashboard" => "로그인 정보",
+    "lb_administrator"  => "최고 관리자",
+    "lb_manager"    => "운영자",
+    "lb_teacher"    => "선생님",
+    "lb_show_manual"    => "메뉴얼 확인",
+    "lb_download"   => "다운로드",
+
     /* 운영자 관리 */
     "lb_user_view"  => "사용자 보기",
     "lb_user_modify"  => "사용자 편집",

@@ -17,6 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name("/");
 
+Route::get("/reg",[\App\Http\Controllers\MyRegisterController::class, "register"]);
+Route::post("/regDo",[\App\Http\Controllers\MyRegisterController::class, "regDo"]);
+Route::get("/regDone",[\App\Http\Controllers\MyRegisterController::class, "regDone"]);
 Auth::routes();
 
 Route::group(['middleware' => ['adminPower']],function() {
@@ -146,10 +149,14 @@ Route::post("/getTestPapersJson",[\App\Http\Controllers\SmsPapersController::cla
 Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "addSmsPapers"]);
 
 
+
 /* SMS 외부에서 확인하는 라우트 */
 Route::get("/sms/viewpage/{code?}",[\App\Http\Controllers\SmsViewController::class, "smsView"]);
 Route::post("/sms/views",[\App\Http\Controllers\SmsViewController::class, "viewDetail"]);
 
+
+/* Manuals */
+Route::get("/manuals/show_manual/{n}",[\App\Http\Controllers\ManualsController::class, "showDown"]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
