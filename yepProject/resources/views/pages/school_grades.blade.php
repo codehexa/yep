@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <h5>{{ __('strings.lb_settings') }} &gt; {{ __('strings.lb_grade_manage') }}</h5>
     <div class="mt-3 btn-group">
-        <a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_backward") }}</a>
+        <a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left"></i> {{ __("strings.fn_backward") }}</a>
         <a href="#" id="btn_new" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-square"></i> {{ __("strings.fn_add") }}</a>
     </div>
 
@@ -65,7 +65,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h4>{{ __('strings.lb_new_school_grade') }}</h4>
+                <h4 id="functionModalTitle">{{ __('strings.lb_new_school_grade') }}</h4>
                 <form name="newFrm" id="newFrm" method="post" action="/schoolGradePost">
                     <input type="hidden" name="ed_id" id="ed_id"/>
                     @csrf
@@ -155,6 +155,7 @@
 
             $("#functionModalCenter").modal("show");
             $("#up_new_name").val("");
+            $("#functionModalTitle").html("{{ __('strings.lb_new_school_grade') }}");
             $("#newFrm").attr({"action":"/schoolGradePost"});
         });
 
@@ -192,6 +193,7 @@
             let did = $(this).attr("fnid");
 
             $("#functionModalCenter").modal("show");
+            $("#functionModalTitle").html("{{ __('strings.lb_edit_school_grade') }}");
 
             $.ajax({
                 type:"POST",

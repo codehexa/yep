@@ -12,7 +12,7 @@ class HakgiController extends Controller
 {
     //
     public function index(){
-        $data = Hakgi::orderBy('year','asc')
+        $data = Hakgi::orderBy('year','desc')
         ->orderBy('school_grade','asc')->orderBy('hakgi_name')->get();
 
         $grades = schoolGrades::orderBy('scg_index','asc')->get();

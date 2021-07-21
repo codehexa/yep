@@ -54,7 +54,7 @@ class StudentsController extends Controller
             foreach($clsArray as $cls){
                 $clsArrayVal[] = $cls->id;
             }
-            $data = Students::whereIn("class_id",$$clsArrayVal)->orderBy('student_name','asc')->paginate($pageLimit);
+            $data = Students::whereIn("class_id",$clsArrayVal)->orderBy('student_name','asc')->paginate($pageLimit);
         }else {
             $data = Students::orderBy('student_name','asc')->paginate($pageLimit);
         }
@@ -456,5 +456,13 @@ class StudentsController extends Controller
                 );
             }
         }
+    }
+
+    public function getClasses(Request $request){
+        $acid = $request->get("acId");
+
+        $data = Classes::where('ac_id','=',$acid)->orderBy('class_name','asc')->get();
+
+        return response()->json(['data'=>$data]);
     }
 }

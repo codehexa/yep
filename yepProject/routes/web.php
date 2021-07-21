@@ -28,12 +28,13 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::get("/settings",[\App\Http\Controllers\SettingsController::class, 'index']);
     /* user */
     Route::get("/userView/{id}",[\App\Http\Controllers\UsersController::class,'show'])->name('userView');
-    Route::get("/userManage",[\App\Http\Controllers\UsersController::class, 'index'])->name('userManage');
+    Route::get("/userManage/{name?}",[\App\Http\Controllers\UsersController::class, 'index'])->name('userManage');
     Route::get("/userModify/{id}",[\App\Http\Controllers\UsersController::class, 'modify']);
     Route::post("/userUpdate",[\App\Http\Controllers\UsersController::class, 'store']);
     Route::post("/userPasswordChange",[\App\Http\Controllers\UsersController::class, 'changePw']);
+    Route::post("/userAdd",[\App\Http\Controllers\UsersController::class, 'addUser']);
     /* academy */
-    Route::get("/academyManage",[\App\Http\Controllers\AcademyController::class, 'index'])->name('academyManage');
+    Route::get("/academyManage/{name?}",[\App\Http\Controllers\AcademyController::class, 'index'])->name('academyManage');
     Route::post("/addAcademy",[\App\Http\Controllers\AcademyController::class, 'add'])->name("addAcademy");
     Route::post("/getAcademyInfoJson",[\App\Http\Controllers\AcademyController::class, 'infoJson'])->name('getAcademyInfoJson');
     Route::post("/storeAcademy",[\App\Http\Controllers\AcademyController::class, 'store'])->name("storeAcademy");
@@ -79,7 +80,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/storeClass",[\App\Http\Controllers\ClassesController::class, "store"]);
     Route::post("/setClassTeacher",[\App\Http\Controllers\ClassesController::class, "setClassTeacher"]);
     Route::post("/getTeachersJson",[\App\Http\Controllers\ClassesController::class, "getTeacher"]);
-
+    Route::post("/delClass",[\App\Http\Controllers\ClassesController::class, 'delete']);
 
 
     /* 시험주 관리 */
@@ -121,6 +122,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::get("/testExcel",[\App\Http\Controllers\StudentsController::class, "testExcel"]);
     Route::post("/getStudentInfoJson",[\App\Http\Controllers\StudentsController::class, "getStudentJson"]);
     Route::post("/storeStudent",[\App\Http\Controllers\StudentsController::class, "store"]);
+    Route::post("/getClassesJsonInStudent",[\App\Http\Controllers\StudentsController::class, "getClasses"]);
 
     /* 시험 폼 관리 */
     Route::get("/testForm/{grade?}/{acId?}",[\App\Http\Controllers\TestFormsController::class, "index"]);

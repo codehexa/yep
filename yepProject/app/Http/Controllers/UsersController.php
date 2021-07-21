@@ -18,13 +18,17 @@ class UsersController extends Controller
         $this->middleware('adminPower');
     }
 
-    public function index(){
+    public function index($name=''){
         $optValues = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
         $limitCount = $optValues->set_value;
 
-        $users = User::orderBy('name','asc')->paginate($limitCount);
+        if ($name != ''){
+            $users = User::where('name','like','%'.$name.'%')->orderBy('name','asc')->paginate($limitCount);
+        }else{
+            $users = User::orderBy('name','asc')->paginate($limitCount);
+        }
 
-        return view('pages.users',['data'=>$users]);
+        return view('pages.users',['data'=>$users,'name'=>$name]);
     }
 
     public function show($id){
@@ -139,6 +143,33 @@ class UsersController extends Controller
             return redirect()->route('userView',['id'=>$upId]);
         }catch (\Exception $e){
             return redirect()->back()->withErrors(['msg'=>'NOT_CHANGE_PASSWORD']);
+        }
+    }
+
+    public function addUser(Request $request){
+        $email = $request->get("up_email");
+        $name = $request->get("up_usname");
+        $passwd = $request->get("up_password");
+
+        $check = User::where('email','=',$email)->count();
+
+        if ($check > 0){
+            return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE_DUP']);
+        }
+
+        $addUser = new User();
+        $addUser->name = $name;
+        $addUser->uid = $email;
+        $addUser->email = $email;
+        $addUser->password = Hash::make($passwd);
+        $addUser->power = Configurations::$USER_POWER_TEACHER;
+        $addUser->live = "N";
+
+        try {
+            $addUser->save();
+            return redirect("/userManage");
+        }catch (\Exception $exception){
+            return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
         }
     }
 }

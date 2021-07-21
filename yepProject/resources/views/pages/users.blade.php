@@ -7,8 +7,11 @@
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
-                @case ("NO_HAS_POWER_ADMIN")
-                <h4 class="text-center text-danger"> {{ __('strings.err_need_admin_power') }}</h4>
+                @case ("FAIL_TO_SAVE_DUP")
+                <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_new_add_dup') }}</h4>
+                @break
+                @case ("FAIL_TO_SAVE")
+                <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_save') }}</h4>
                 @break
             @endswitch
         @endforeach
@@ -20,7 +23,7 @@
             <div class="form-inline">
                 <div class="form-group">
                     <label for="up_key">{{ __('strings.lb_search_key') }}</label>
-                    <input type="text" name="up_key" id="up_key" class="form-control form-control-sm ml-3" placeholder="{{ __('strings.lb_insert_user_name') }}">
+                    <input type="text" name="up_key" id="up_key" class="form-control form-control-sm ml-3" value="{{ $name }}" placeholder="{{ __('strings.lb_insert_user_name') }}">
                 </div>
                 <button id="btn_search" name="btn_search" class="btn btn-sm btn-primary ml-3">{{ __('strings.fn_search') }}</button>
                 <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary ml-3">{{ __('strings.fn_add') }}</button>
@@ -90,6 +93,48 @@
 </div>
 
 
+
+<div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.fn_add') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="frmUser" id="frmUser" method="post" action="/userAdd">
+                    @csrf
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <label for="up_usname">{{ __('strings.lb_name') }}</label>
+                            <input type="text" name="up_usname" id="up_usname" class="form-control" placeholder="{{ __('strings.str_insert_class_name') }}"/>
+                        </div>
+                        <div class="list-group-item">
+                            <label for="up_email">{{ __('strings.lb_email') }}</label>
+                            <input type="email" name="up_email" id="up_email" class="form-control" placeholder="{{ __('strings.str_insert_email') }}"/>
+                        </div>
+                        <div class="list-group-item">
+                            <label for="up_password">{{ __('strings.lb_password') }}</label>
+                            <input type="password" name="up_password" id="up_password" class="form-control" placeholder="{{ __('strings.str_insert_password') }}"/>
+                        </div>
+                        <div class="list-group-item">
+                            <label for="up_password_2">{{ __('strings.lb_password_2') }}</label>
+                            <input type="password" name="up_password_2" id="up_password_2" class="form-control" placeholder="{{ __('strings.str_insert_password_2') }}"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="fn_loader" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
+                <button type="button" class="btn btn-primary" id="btnSave"><i class="fa fa-check-circle"></i> {{ __('strings.fn_okay') }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_okay') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="functionModalCenter" tabindex="-1" role="dialog" aria-labelledby="functionModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
@@ -133,6 +178,50 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // search
+        $(document).on("click","#btn_search",function (){
+            event.preventDefault();
+            if ($("#up_key").val() === ""){
+                location.href = "/userManage";
+            }else{
+                location.href = "/userManage/" + encodeURIComponent($("#up_key").val());
+            }
+        });
+        // 신규 등록 클릭 시
+        $(document).on("click","#btn_add",function (){
+            event.preventDefault();
+            $("#infoModalCenter").modal("show");
+            $("#frmUser").reset();
+
+            $("#fn_loader").addClass("d-none");
+        });
+
+        // btnSave click
+        $(document).on("click","#btnSave",function (){
+            if ($("#up_usname").val() === ""){
+                showAlert("{{ __('strings.str_insert_class_name') }}");
+                return;
+            }
+
+            if ($("#up_email").val() === ""){
+                showAlert("{{ __('strings.str_insert_email') }}");
+                return;
+            }
+
+            if ($("#up_password").val() === ""){
+                showAlert("{{ __('strings.str_insert_password') }}");
+                return;
+            }
+
+            if ($("#up_password").val() !== $("#up_password_2").val()){
+                showAlert("{{ __('strings.str_insert_password_2') }}");
+                return;
+            }
+
+            $("#fn_loader").removeClass("d-none");
+            $("#frmUser").submit();
+        });
+
         // show
         $(document).on("click",".fn_c_show",function (){
             let uid = $(this).attr("fn_c_id");

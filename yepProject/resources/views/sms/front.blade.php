@@ -180,18 +180,18 @@
                             @switch($datum->sp_status)
                                 @case(\App\Models\Configurations::$SMS_STATUS_READY)
                                 {{ __('strings.lb_sms_paper_ready') }}
-                                <a href="/SmsJobInput/{{ $datum->id }}" class="btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
+                                <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SENT)
-                                <span class="text-danger"> {{ __('strings.lb_sms_paper_sent') }}</span>
+                                <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SAVING)
                                 <span class="text-primary"> {{ __('strings.lb_sms_paper_saving') }} </span>
-                                <a href="/SmsJobInput/{{ $datum->id }}" class="btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
+                                <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_ABLE)
                                 <button class="btn btn-primary btn-sm fn_item" fn_code="{{ $datum->sp_code }}"><i class="fa fa-paper-plane"></i> {{ __('strings.lb_sms_paper_able') }} </button>
-                                <a href="/SmsJobInput/{{ $datum->id }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
+                                <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-outline-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
                                 @break
                             @endswitch
                             <button class="btn btn-info btn-sm fn_add_item" fn_code="{{ $datum->id }}"><i class="fa fa-plus-circle"></i> {{ __('strings.lb_add_paper') }}</button>
@@ -206,7 +206,7 @@
         @if (sizeof($data) <= 0)
             <h5 class="text-dark mt-3">{{ __('strings.str_there_is_no_data') }}</h5>
         @endif
-        <div class="mt-3">{{ $data->links() }}</div>
+        <div class="mt-3">{{ $data->links('pagination::bootstrap-4') }}</div>
     </div>
 
 </div>

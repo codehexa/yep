@@ -191,5 +191,27 @@ class ClassesController extends Controller
         }
     }
 
+    public function delete(Request $request){
+        $delId = $request->get("del_id");
 
+        $root = Classes::find($delId);
+
+        if (!is_null($root)){
+            try {
+                $root->delete();
+
+                $classCtrl = new LogClassesController();
+                $logCategory = "id";
+                $logMode = "delete";
+                $targetId = $delId;
+                $logDesc = "id: {$delId} name : '{$root->class_name}' 삭제 됨.";
+                $classCtrl->addLog($logCategory,$logMode,$targetId,$logDesc);
+
+                return redirect("/classes");
+            }
+            catch (\Exception $exception){
+                return redirect()->back()->withErrors(['msgs'=>'FAIL_TO_DELETE']);
+            }
+        }
+    }
 }

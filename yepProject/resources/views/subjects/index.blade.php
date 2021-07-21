@@ -33,7 +33,7 @@
     <div class="mt-3 form-group">
         <div class="form-inline">
             <label for="section_grades" class="form-label">{{ __('strings.lb_section_grades') }}</label>
-            <select name="section_grades" id="section_grades" class="form-select ml-3">
+            <select name="section_grades" id="section_grades" class="form-select ml-3 form-control">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach($grades as $grade)
                     <option value="{{ $grade->id }}"

@@ -13,10 +13,14 @@ class AcademyController extends Controller
     private $logTarget;
     private $logDesc;
 
-    public function index(){
-        $data = Academies::orderBy('ac_name','asc')->get();
+    public function index($name=''){
+        if (is_null($name)){
+            $data = Academies::orderBy('ac_name','asc')->get();
+        }else{
+            $data = Academies::where('ac_name','like','%'.$name.'%')->orderBy('ac_name','asc')->get();
+        }
 
-        return view('pages.academies',["data"=>$data]);
+        return view('pages.academies',["data"=>$data,'name'=>$name]);
     }
 
     // add academy

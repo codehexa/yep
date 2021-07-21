@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <h5>{{ __('strings.lb_settings') }} &gt; {{ __('strings.lb_user_manage') }} &gt; {{ __('strings.lb_user_view') }}</h5>
-    <div class="mt-3"><a href="/userManage" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_list") }}</a></div>
+    <div class="mt-3"><a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_list") }}</a></div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)

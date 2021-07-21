@@ -26,10 +26,10 @@
             <div class="form-inline">
                 <div class="form-group">
                     <label for="up_key">{{ __('strings.lb_search_key') }}</label>
-                    <input type="text" name="up_key" id="up_key" class="form-control form-control-sm ml-3" placeholder="{{ __('strings.lb_insert_academy_name') }}">
+                    <input type="text" name="up_key" id="up_key" class="form-control form-control-sm ml-3" value="{{ $name }}" placeholder="{{ __('strings.lb_insert_academy_name') }}">
                 </div>
-                <button id="btn_search" name="btn_search" class="btn btn-sm btn-primary ml-3">{{ __('strings.fn_search') }}</button>
-                <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary ml-3">{{ __('strings.fn_add') }}</button>
+                <button id="btn_search" name="btn_search" class="btn btn-sm btn-primary ml-3"><i class="fa fa-search"></i> {{ __('strings.fn_search') }}</button>
+                <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary ml-3"><i class="fa fa-plus-circle"></i> {{ __('strings.fn_add') }}</button>
             </div>
         </form>
 
@@ -77,7 +77,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <i id="fn_loading" class="fa fa-spin fa-spinner mr-3"></i>
+                <i id="fn_loading" class="d-none fa fa-spin fa-spinner mr-3"></i>
                 <button type="button" class="btn btn-primary" id="btnSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
                 <button type="button" class="btn btn-danger" id="btnDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
@@ -133,13 +133,25 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // 검색
+        $(document).on("click","#btn_search",function (){
+            event.preventDefault();
+
+            if ($("#up_key").val() === ""){
+                location.href = "/academyManage";
+            }else{
+                location.href = "/academyManage/" + encodeURIComponent($("#up_key").val());
+            }
+        });
+
+
         $(document).on("click",".fn_item",function (){
             event.preventDefault();
             let acId = $(this).attr("fn_id");
 
             $("#infoModalCenter").modal("show");
 
-            $("#fn_loading").show();
+            $("#fn_loading").removeClass("d-none");
 
             $.ajax({
                 url:"{{ route('getAcademyInfoJson') }}",
@@ -155,11 +167,11 @@
                         $("#up_id").val(acId);
                         $("#up_name").val(msg.data.ac_name);
                         $("#acFrm").attr({"action":"{{ route('storeAcademy') }}"});
-                        $("#fn_loading").hide();
+                        $("#fn_loading").addClass("d-none");
                         $("#del_id").val(acId);
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");
-                        $("#fn_loading").hide();
+                        $("#fn_loading").addClass("d-none");
                     }
                 },
                 error:function (e1,e2,e3){
@@ -190,6 +202,8 @@
                 showAlert("{{ __('strings.lb_insert_academy_name') }}");
                 return;
             }
+
+            $("#fn_loading").removeClass("d-none");
 
             $("#acFrm").submit();
         });

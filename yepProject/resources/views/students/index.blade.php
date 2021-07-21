@@ -32,7 +32,7 @@
     <div class="mt-3 form-group">
         <div class="form-inline">
             <label for="section_academy" class="form-label">{{ __('strings.lb_academy_label') }}</label>
-            <select name="section_academy" id="section_academy" class="form-select ml-1">
+            <select name="section_academy" id="section_academy" class="form-select ml-1 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($academies as $academy)
                     <option value="{{ $academy->id }}"
@@ -42,8 +42,9 @@
                     >{{ $academy->ac_name }}</option>
                 @endforeach
             </select>
+            <i class="fa fa-spinner fa-spin d-none ml-1" id="cls_loader"></i>
             <label for="section_class" class="form-label ml-3">{{ __('strings.lb_class_name') }}</label>
-            <select name="section_class" id="section_class" class="form-select ml-1">
+            <select name="section_class" id="section_class" class="form-select ml-1 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($classes as $class)
                     <option value="{{ $class->id }}"
@@ -256,6 +257,31 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // 관 선택을 변경했을 때 이벤트
+        $(document).on("change","#section_academy",function (){
+            //
+            if ($(this).val() !== ""){
+                $("#cls_loader").removeClass("d-none");
+                let acId = $(this).val();
+                $.ajax({
+                    type:"POST",
+                    url:"/getClassesJsonInStudent",
+                    dataType:"json",
+                    data:{
+                        "_token":$("input[name='_token']").val(),
+                        "acId":acId
+                    },
+                    success:function (msg){
+                        $("#section_class").empty();
+                        $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($("#section_class"));
+                        $.each(msg.data,function(i,obj){
+                            $("<option value='" + obj.id + "'>" + obj.class_name + "</option>").appendTo($("#section_class"));
+                        });
+                        $("#cls_loader").addClass("d-none");
+                    }
+                })
+            }
+        });
 
         $(document).on("click","#btn_add_excel",function (){
             event.preventDefault();

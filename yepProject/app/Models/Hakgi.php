@@ -15,6 +15,6 @@ class Hakgi extends Model
     ];
 
     public function SchoolGrades(){
-        return $this->belongsTo(schoolGrades::class,"school_grade");
+        return $this->hasOne(schoolGrades::class,"id","school_grade");
     }
 }

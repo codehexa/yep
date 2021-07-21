@@ -195,7 +195,7 @@
             </div>
             <div class="modal-body">
                 <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
-                <form name="delFrm" id="delFrm" method="post" action="{{ route('deleteCategory') }}">
+                <form name="delFrm" id="delFrm" method="post" action="/delClass">
                     @csrf
                     <input type="hidden" name="del_id" id="del_id"/>
                 </form>
@@ -252,6 +252,7 @@
                 success:function(msg){
                     //
                     $("#fn_set_spinner").addClass("d-none");
+                    $("#up_user_id").empty();
                     $("<option value=''>{{ __('strings.lb_select') }}</option>").appendTo($("#up_user_id"));
 
                     $.each(msg.data,function (i,obj){
@@ -273,16 +274,22 @@
             event.preventDefault();
             $("#infoModalCenter").modal("show");
             $("#classFrm").attr({"action":"/addClass"});
+            $("#up_ac_id").val("");
+            $("#up_scg_id").val("");
+            $("#up_name").val("");
+            $("#up_show").val("N");
+            $("#up_desc").val("");
             $("#btnClassDelete").addClass("d-none");
         });
 
-        $(document).on("click","#btnDelete",function (){
-            /*event.preventDefault();
-            $("#confirmModalCenter").modal("show");*/
+        $(document).on("click","#btnClassDelete",function (){
+            event.preventDefault();
+            $("#confirmModalCenter").modal("show");
         });
 
         $(document).on("click","#btnDeleteDo",function (){
-            //$("#delFrm").submit();
+            event.preventDefault();
+            $("#delFrm").submit();
         });
 
         $(document).on("click",".fn_item",function (){
@@ -293,6 +300,8 @@
             $("#classFrm").attr({"action":"/storeClass"});
 
             let clId = $(this).attr("fn_id");
+
+            $("#del_id").val(clId);
 
             $.ajax({
                 type:"POST",

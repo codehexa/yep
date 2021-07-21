@@ -42,7 +42,9 @@ return [
     "lb_register"   => "운영자 등록",
     "lb_password_2" => "비밀번호 확인",
     "str_register_complete" => "운영자 등록 정보 저장 완료. <br/> 최고 관리자가 승인할 때 까지 사용할 수 없습니다.<br/>최고 관리자의 별도 승인이 있을 때 까지 기다려 주십시오",
-
+    "str_insert_password"   => "비밀번호를 입력하세요",
+    "str_insert_password_2" => "비밀번호를 다시 확인하세요",
+    "str_insert_email"  => "E-mail Address 를 입력하세요",
 
     /* Home */
     "lb_home_dashboard" => "로그인 정보",
@@ -110,6 +112,7 @@ return [
     "lb_new_school_grade"   => "신규 학년을 등록합니다",
     "lb_select" => "선택하세요",
     "lb_insert_grade"   => "학년을 입력하세요",
+    "lb_edit_school_grade"  => "수정할 학년 이름을 입력하세요",
 
     /* options */
     "lb_options_manage"  => "옵션 관리",
@@ -129,7 +132,7 @@ return [
 
     /* 반 관리 */
     "lb_ban_manage" => "반 관리",
-    "lb_interdisciplinary"  => "학제",
+    "lb_interdisciplinary"  => "학년",
     "str_insert_class_name" => "이름을 입력하세요",
     "str_insert_class_desc" => "요약 설명을 입력하세요",
     "str_select_academy"    => "학원을 선택하세요",
@@ -180,7 +183,7 @@ return [
 
     /* 시험->과목 관리 */
     "lb_test_manage" => "과목 관리",
-    "lb_section_grades" => "구분",
+    "lb_section_grades" => "학년",
     "lb_parent_subject" => "과목 영역",
     "lb_test_code"  => "코드",
     "lb_subject"    => "과목 이름",
@@ -340,5 +343,6 @@ return [
     "err_set_sms_paper_done"    => "전송 준비 완료하는데 실패했습니다.",
     "err_cant_use_it"   => "잘못된 경로로 접속하여 더 이상 진행할 수 없습니다. 정상적인 방법으로 접속하여 주세요",
     "err_no_student"    => "매칭되는 자료가 없습니다",
+    "err_fail_to_new_add_dup"   => "기존 등록된 E-Mail 이 있습니다",
 
 ];

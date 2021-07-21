@@ -33,7 +33,7 @@
         <div class="form-inline">
             <label for="section_grades" class="form-label">{{ __('strings.lb_section_grades') }}</label>
             <span id="grade_loader" class="fa fa-spin fa-spinner d-none"></span>
-            <select name="section_grades" id="section_grades" class="form-select ml-3">
+            <select name="section_grades" id="section_grades" class="form-select ml-3 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach($grades as $grade)
                     <option value="{{ $grade->id }}"
@@ -46,7 +46,7 @@
 
             <label for="section_subject" class="form-label ml-3">{{ __('strings.lb_subject') }}</label>
             <span id="subject_loader" class="fa fa-spin fa-spinner d-none"></span>
-            <select name="section_subject" id="section_subject" class="form-select ml-3">
+            <select name="section_subject" id="section_subject" class="form-select ml-3 form-control form-control-sm">
                 <option value="">{{ __('strings.lb_select_subject') }}</option>
                 @for($i=0; $i < sizeof($subjects); $i++)
                     <option value="{{ $subjects[$i]["id"] }}"

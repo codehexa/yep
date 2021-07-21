@@ -32,7 +32,7 @@
     <div class="mt-3 form-group">
         <div class="form-inline">
             <label for="section_academy" class="form-label">{{ __('strings.lb_academy_label') }}</label>
-            <select name="section_academy" id="section_academy" class="form-select ml-1">
+            <select name="section_academy" id="section_academy" class="form-select ml-1 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($academies as $academy)
                     <option value="{{ $academy->id }}"
@@ -42,8 +42,8 @@
                     >{{ $academy->ac_name }}</option>
                 @endforeach
             </select>
-            <label for="section_grade" class="form-label ml-3">{{ __('strings.lb_grade_title') }}</label>
-            <select name="section_grade" id="section_grade" class="form-select ml-1">
+            <label for="section_grade" class="form-label ml-3">{{ __('strings.lb_section_grades') }}</label>
+            <select name="section_grade" id="section_grade" class="form-select ml-1 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($schoolGrades as $schoolGrade)
                     <option value="{{ $schoolGrade->id }}"
@@ -53,6 +53,7 @@
                     >{{ $schoolGrade->scg_name }}</option>
                 @endforeach
             </select>
+            <button id="btnLoad" class="btn btn-primary btn-sm ml-1"><i class="fa fa-search"></i> {{ __('strings.fn_search') }}</button>
         </div>
     </div>
 
@@ -61,7 +62,7 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">#</th>
-                    <th scope="col">{{ __('strings.lb_test_grade') }}</th>
+                    <th scope="col">{{ __('strings.lb_section_grades') }}</th>
                     <th scope="col">{{ __('strings.lb_test_title') }}</th>
                     <th scope="col">{{ __('strings.lb_test_count') }}</th>
                     <th scope="col">{{ __('strings.lb_test_desc') }}</th>
@@ -219,6 +220,20 @@
     </script>
 
     <script type="text/javascript">
+        // load
+        $(document).on("click","#btnLoad",function (){
+            event.preventDefault();
+
+            if ($("#section_grade").val() !== "" && $("#section_academy").val() === "") {
+                location.href = "/testForm/" + $("#section_grade").val();
+            }else if ($("#section_grade").val() !== "" && $("#section_academy").val() !== "") {
+                location.href = "/testForm/" + $("#section_grade").val() + "/" + $("#section_academy").val();
+            }else{
+                location.href = "/testForm";
+            }
+        });
+
+
         let subjectDataSet = [];
         let savedDataSet = [];
 

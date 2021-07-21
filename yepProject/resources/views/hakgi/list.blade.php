@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <h5>{{ __('strings.lb_hakgi_manage') }} </h5>
     <div class="mt-3 btn-group">
-        <a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-cog"></i> {{ __("strings.lb_settings") }}</a>
+        <a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left"></i> {{ __("strings.fn_backward") }}</a>
         <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</button>
     </div>
     @if ($errors->any())
@@ -98,7 +98,7 @@
                     </div>-->
 
                     <div class="form-group">
-                        <label for="up_name">{{ __('strings.lb_name') }}</label>
+                        <label for="up_name">{{ __('strings.lb_hakgi_name') }}</label>
                         <input type="text" name="up_name" id="up_name" class="form-control" placeholder="{{ __('strings.str_insert_class_name') }}"/>
                     </div>
 
