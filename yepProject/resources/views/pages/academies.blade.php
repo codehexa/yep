@@ -38,6 +38,7 @@
                 <tr class="text-center">
                     <th scope="col">#</th>
                     <th scope="col">{{ __('strings.lb_academy_name') }}</th>
+                    <th scope="col">{{ __('strings.lb_tel') }}</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -46,6 +47,7 @@
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ $datum->ac_name }}</td>
+                    <td>{{ $datum->ac_tel }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
             @endforeach
@@ -73,6 +75,10 @@
                     <div class="form-group">
                         <label for="up_name">{{ __('strings.lb_academy_name') }}</label>
                         <input type="text" name="up_name" id="up_name" class="form-control" placeholder="{{ __('strings.lb_insert_academy_name') }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="up_tel">{{ __('strings.lb_tel') }}</label>
+                        <input type="text" name="up_tel" id="up_tel" class="form-control" placeholder="{{ __('strings.str_insert_tel') }}"/>
                     </div>
                 </form>
             </div>
@@ -166,6 +172,7 @@
                     if (msg.result === "true"){
                         $("#up_id").val(acId);
                         $("#up_name").val(msg.data.ac_name);
+                        $("#up_tel").val(msg.data.ac_tel);
                         $("#acFrm").attr({"action":"{{ route('storeAcademy') }}"});
                         $("#fn_loading").addClass("d-none");
                         $("#del_id").val(acId);
@@ -194,12 +201,18 @@
             $("#infoModalCenter").modal("show");
             $("#acFrm").attr({"action":"{{ route('addAcademy') }}"});
             $("#up_name").val("");
+            $("#up_tel").val("");
         });
 
         $(document).on("click","#btnSubmit",function (){
             event.preventDefault();
             if ($("#up_name").val() === ""){
                 showAlert("{{ __('strings.lb_insert_academy_name') }}");
+                return;
+            }
+
+            if ($("#up_tel").val() === ""){
+                showAlert("{{ __('strings.str_insert_tel') }}");
                 return;
             }
 

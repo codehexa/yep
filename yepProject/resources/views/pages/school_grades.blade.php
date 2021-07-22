@@ -5,7 +5,7 @@
     <h5>{{ __('strings.lb_settings') }} &gt; {{ __('strings.lb_grade_manage') }}</h5>
     <div class="mt-3 btn-group">
         <a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left"></i> {{ __("strings.fn_backward") }}</a>
-        <a href="#" id="btn_new" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-square"></i> {{ __("strings.fn_add") }}</a>
+        <a href="#" id="btn_new" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> {{ __("strings.fn_add") }}</a>
     </div>
 
 

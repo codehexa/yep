@@ -282,6 +282,7 @@ return [
     "lb_get_test_forms"   => "시험 폼 매칭하기",
     "lb_test_forms_match" => "시험 폼 매칭",
     "str_select_week"   => "주차를 선택하세요",
+    "str_insert_weeks"  => "주차를 입력하세요",
     "lb_sms_paper_ready"    => "대기",
     "lb_sms_paper_saving"    => "저장중",
     "lb_sms_paper_sent"    => "전송됨",
@@ -316,6 +317,9 @@ return [
     "lb_authorization_to_page"  => "성적표 확인을 위한 보호자 인증",
     "lb_sms_page_bottom"    => "SMS 결과 페이지 하단 내용",
     "lb_input_sms_bottom"   => "SMS 결과 페이지 하단 내용을 입력하세요",
+
+    /* BMS */
+    "lb_bms_title"  => "BMS",
 
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",

@@ -16,6 +16,8 @@ class Configurations extends Model
     public static $SETTINGS_PAGE_LIMIT_CODE = "PAGE_CODE";
     public static $SETTINGS_TEST_MAX_SCORE  = "MAX_SCORE_CODE";
 
+    public static $ACADEMY_PRESIDENT_TEL    = "1544-0709";
+
     public static $SCHOOL_PRE_GRADE_KINDER  = "K";
     public static $SCHOOL_PRE_GRADE_ELEMENT  = "E";
     public static $SCHOOL_PRE_GRADE_MIDDLE  = "M";
@@ -66,5 +68,11 @@ class Configurations extends Model
     public static $MANUAL_MANAGER = "storage/manuals/manual_manager.pdf";
     public static $MANUAL_TEACHER = "storage/manuals/manual_teacher.pdf";
 
-
+    // BMS
+    // 수업 종류
+    public static $STUDY_TYPES  = [
+        ["title"=>"Zoom 온라인 수업","value"=>"0"],
+        ["title"=>"대면수업","value"=>"1"],
+        ["title"=>"수업","value"=>"2"]
+    ];
 }

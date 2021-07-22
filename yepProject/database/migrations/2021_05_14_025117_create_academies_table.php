@@ -17,6 +17,7 @@ class CreateAcademiesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string("ac_name");
+            $table->string("ac_tel")->nullable();
         });
     }
 

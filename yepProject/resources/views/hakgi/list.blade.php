@@ -85,6 +85,7 @@
                     <div class="form-group">
                         <label for="up_school_grade">{{ __('strings.lb_interdisciplinary') }}</label>
                         <select name="up_school_grade" id="up_school_grade" class="form-control">
+                            <option value="">{{ __('strings.fn_select_item') }}</option>
                             @foreach ($grades as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->scg_name }}</option>
                             @endforeach
@@ -104,7 +105,7 @@
 
                     <div class="form-group">
                         <label for="up_weeks">{{ __('strings.lb_week') }}</label>
-                        <input type="text" name="up_weeks" id="up_weeks" class="form-control" placeholder="{{ __('strings.str_insert_class_name') }}"/>
+                        <input type="text" name="up_weeks" id="up_weeks" class="form-control" placeholder="{{ __('strings.str_insert_weeks') }}"/>
                     </div>
 
                     <div class="form-group">
@@ -179,6 +180,13 @@
             $("#infoModalCenter").modal("show");
             $("#hakgiFrm").attr({"action":"/addHakgi"});
             $("#btnHakgiDelete").addClass("d-none");
+
+            $("#up_id").val("");
+            $("#up_year").val(new Date().getFullYear());
+            $("#up_school_grade").val("");
+            $("#up_name").val("");
+            $("#up_weeks").val("");
+            $("#up_show").val("N");
         });
 
         $(document).on("click","#btnHakgiDelete",function (){

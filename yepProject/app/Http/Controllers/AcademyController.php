@@ -26,12 +26,14 @@ class AcademyController extends Controller
     // add academy
     public function add(Request $request){
         $upName = $request->get("up_name");
+        $upTel = $request->get("up_tel");
 
         $academy = Academies::where("ac_name","=",$upName)->first();
 
         if (is_null($academy)){
             $academy = new Academies();
             $academy->ac_name = $upName;
+            $academy->ac_tel = $upTel;
         }else{
             return redirect()->back()->withErrors(['msg'=>'ALREADY_HAS']);
         }
@@ -68,12 +70,15 @@ class AcademyController extends Controller
     public function store(Request $request){
         $id = $request->get("up_id");
         $name = $request->get("up_name");
+        $tel = $request->get("up_tel");
 
         $academy = Academies::find($id);
 
         $old_name = $academy->ac_name;
+        $old_tel = $academy->ac_tel;
 
         $academy->ac_name = $name;
+        $academy->ac_tel    = $tel;
 
         try {
             $academy->save();
