@@ -32,7 +32,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand text-white" href="{{ url('/home') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="121.3" height="23" viewBox="0 0 1213 230">
@@ -47,29 +47,15 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @auth
-                            @if (\Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
-                                <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
-<!--                                <a href="/hakgis" class="btn btn-link text-warning">{{ __('strings.lb_hakgi_manage') }}</a>-->
-<!--                                <a href="/testWeeks" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>-->
-                                <a href="/subjects" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
-                                <a href="/comments" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
-                                <a href="/testForm" class="btn btn-link text-warning">{{ __('strings.lb_test_form_manage') }}</a>
-                                <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
-                            @endif
-                                <a href="/SmsFront" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
-
-                                <a href="/bms/front" class="btn btn-primary"><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }}</a>
+                            <div class="btn-group btn-group-sm">
+                                <a href="/bms/editor" class="btn btn-outline-primary"><i class="fa fa-newspaper"></i> {{ __('strings.lb_editor') }}</a>
+                                <a href="/bms/settings" class="btn btn-outline-primary"><i class="fa fa-cog"></i> {{ __('strings.lb_bms_setting') }}</a>
+                            </div>
                         @endauth
                     </ul>
 
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        @if (\App\Models\Configurations::$USER_POWER_ADMIN == \Illuminate\Support\Facades\Auth::user()->power)
-                        <li class="nav-item mr-2">
-                            <a href="/settings" class="btn btn-primary btn-sm mt-1"><i class="fa fa-cog"></i> {{ __('strings.lb_settings') }}</a>
-                        </li>
-                        @endif
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -84,6 +70,9 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item mt-1 mr-2">
+                                <a href="/SmsFront" class="btn btn-dark btn-sm"><i class="fa fa-sms"></i> {{ __('strings.lb_sms_work_manage') }}</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-secondary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}

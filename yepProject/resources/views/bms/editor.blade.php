@@ -2,11 +2,8 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} </h5>
-    <div class="mt-3 btn-group">
-        <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
-        <button id="btn_add" name="btn_add" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</button>
-    </div>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_editor') }}</h5>
+
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
@@ -29,13 +26,11 @@
         @endforeach
     @endif
 
-    <div class="mt-3 form-group border p-2 bg-primary">
-
-    </div>
-
     <div class="mt-3">
+        <h6>{{ __('strings.lb_study') }}</h6>
 
     </div>
+
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
@@ -125,130 +120,6 @@
 
 @section('scripts')
     <script type="text/javascript">
-
-        $(document).on("change","#section_grades",function (){
-            let curVal = $(this).val();
-
-            $("#grade_loader").removeClass("d-none");
-
-            if (curVal === ''){
-                location.href = "/comments";
-            }else{
-                location.href = "/comments/" + curVal;
-            }
-        });
-
-        $(document).on("change","#section_subject",function (){
-            let curVal = $(this).val();
-            let grade = $("#section_grades").val();
-
-            $("#subject_loader").removeClass("d-none");
-
-            if (curVal === ''){
-                location.href = "/comments/" + grade;
-            }else{
-                location.href = "/comments/" + grade + "/" + curVal;
-            }
-        });
-
-        $(document).on("click","#btn_add",function (){
-            event.preventDefault();
-
-            if ($("#section_grades").val() === ""){
-                showAlert("{{ __('strings.str_select_grade') }}");
-                return;
-            }
-
-            if ($("#section_subject").val() === ""){
-                showAlert("{{ __('strings.str_select_subject') }}");
-                return;
-            }
-
-            $("#infoModalCenter").modal("show");
-            $("#btnDelete").addClass("d-none");
-            $("#sjFrm").attr({"action":"/setComments"});
-        });
-
-        // pre code
-        $(document).on("click","#btnCmSubmit",function (){
-            event.preventDefault();
-
-            if ($("#up_min_score").val() === ""){
-                showAlert("{{ __('strings.lb_insert_min_score') }}");
-                return;
-            }
-
-            if ($("#up_max_score").val() === ""){
-                showAlert("{{ __('strings.lb_insert_max_score') }}");
-                return;
-            }
-
-            if ($("#up_comments").val() === ""){
-                showAlert("{{ __('strings.str_insert_opinion') }}");
-                return;
-            }
-
-            $("#fn_loading").removeClass("d-none");
-
-            $("#cmFrm").submit();
-        });
-
-
-        $(document).on("click","#btnDelete",function (){
-            event.preventDefault();
-            $("#del_id").val($("#cm_id").val());
-            $("#confirmModalCenter").modal("show");
-        });
-
-        $(document).on("click","#btnDeleteDo",function (){
-            event.preventDefault();
-            $("#delFrm").submit();
-            $("#confirm_spin").removeClass("d-none");
-        });
-
-        $(document).on("click",".fn_item",function (){
-            event.preventDefault();
-            $("#infoModalCenter").modal("show");
-            $("#btnDelete").removeClass("d-none");
-            $("#fn_loading").removeClass("d-none");
-
-            let clId = $(this).attr("fn_id");
-            $("#up_cm_id").val(clId);
-
-            // 여기까지 작업 중.
-
-            $.ajax({
-                type:"POST",
-                url:"/getCommentJson",
-                dataType:"json",
-                data:{
-                    "_token":$("input[name='_token']").val(),
-                    "cid":clId
-                },
-                success:function (msg){
-                    if (msg.result === "true"){
-                        $("#cm_id").val(msg.data.id);
-                        $("#sj_id").val(msg.data.sj_id);
-                        $("#sg_id").val(msg.data.scg_id);
-                        $("#up_min_score").val(msg.data.min_score);
-                        $("#up_max_score").val(msg.data.max_score);
-                        $("#up_comments").val(msg.data.opinion);
-
-                        $("#cmFrm").prop({"action":"/storeComment"});
-
-                        $("#fn_loading").addClass("d-none");
-                    }else{
-                        showAlert("{{ __('strings.err_get_info') }}");
-                        $("#fn_loading").addClass("d-none");
-                        return;
-                    }
-                    //$("#opinion_spin").addClass("d-none");
-                },
-                error:function(e1,e2,e3){
-                    showAlert(e2);
-                }
-            })
-        });
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

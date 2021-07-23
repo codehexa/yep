@@ -153,6 +153,20 @@ Route::post("/getTestPapersJson",[\App\Http\Controllers\SmsPapersController::cla
 Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "addSmsPapers"]);
 
 
+Route::prefix('bms')->group(function(){
+    Route::get("/front",[\App\Http\Controllers\BmsController::class, "index"]);
+    Route::get("/settings",[\App\Http\Controllers\BmsController::class, "settings"]);
+    Route::post("/addStudyTypesJs",[\App\Http\Controllers\BmsController::class, "addStudyTypesJs"]);
+    Route::post("/saveSortStudyTypes",[\App\Http\Controllers\BmsController::class, "saveSortStudyTypes"]);
+    Route::post("/saveStudyTypeJs",[\App\Http\Controllers\BmsController::class, "saveStudyTypeJs"]);
+    Route::post("/addStudyDayJs",[\App\Http\Controllers\BmsController::class, "addStudyDayJs"]);
+    Route::post("/saveSortStudyDaysJs",[\App\Http\Controllers\BmsController::class, "saveSortStudyDaysJs"]);
+    Route::post("/saveStudyDayJs",[\App\Http\Controllers\BmsController::class, "saveStudyDayJs"]);
+    Route::post("/addStudyTimeJs", [\App\Http\Controllers\BmsController::class, "addStudyTimeJs"]);
+    Route::post("/saveStudyTimeJs", [\App\Http\Controllers\BmsController::class, "saveStudyTimeJs"]);
+    Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
+    Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
+});
 
 /* SMS 외부에서 확인하는 라우트 */
 Route::get("/sms/viewpage/{code?}",[\App\Http\Controllers\SmsViewController::class, "smsView"]);
@@ -164,4 +178,3 @@ Route::get("/manuals/show_manual/{n}",[\App\Http\Controllers\ManualsController::
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/s',[\App\Http\Controllers\TempController::class, 'tmp']);
