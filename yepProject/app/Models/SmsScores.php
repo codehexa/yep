@@ -15,7 +15,7 @@ class SmsScores extends Model
         "score_count",
         "score_0","score_1","score_2","score_3","score_4","score_5","score_6","score_7","score_8","score_9",
         "score_10","score_11","score_12","score_13","score_14","score_15","score_16","score_17","score_18","score_19",
-        "opinion","sent","sent_date","saved_check"
+        "opinion","wordian","sent","sent_date","saved_check"
     ];
 
     public function Student(){

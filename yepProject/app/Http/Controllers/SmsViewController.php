@@ -60,6 +60,7 @@ class SmsViewController extends Controller
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
 
             $teacherSays = [];
+            $wordians = [];
 
             $jsData = [];
 
@@ -77,6 +78,7 @@ class SmsViewController extends Controller
                     ->first();
 
                 $teacherSays[] = $studentNowScore->opinion;
+                $wordians[] = $studentNowScore->wordian;
 
                 $studentPreScore = null;
                 if ($week > 1){
@@ -189,7 +191,8 @@ class SmsViewController extends Controller
                 'jsData'=>$jsData,
                 'dataSet'=>$dataSet,
                 'scoreAnalysis' => $opinionsAll,
-                'teacherSays'=>$teacherSays
+                'teacherSays'=>$teacherSays,
+                "wordians"=>$wordians
             ]);
         }
     }

@@ -46,6 +46,7 @@ class CreateSmsscoresTable extends Migration
             $table->integer("score_18")->unsigned()->default(0);
             $table->integer("score_19")->unsigned()->default(0);
             $table->text("opinion")->nullable();
+            $table->text("wordian")->nullable();
             $table->enum("sent",["Y","N"])->default("N")->nullable();
             $table->timestamp("sent_date")->nullable();
             $table->enum("saved_check",["Y","N"])->default("N");

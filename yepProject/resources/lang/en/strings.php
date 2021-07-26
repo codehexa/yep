@@ -37,7 +37,6 @@ return [
     "str_password_email_title"  => "비밀번호가 변경 되었습니다.",
     "str_password_email_text"   => "안녕하세요.<br/>귀하께서는 비밀번호를 재설정 요청하였습니다. <br/><br/>변경된 비밀번호는  \"  :PASSWD   \" 입니다.",
 
-
     /* Register */
     "lb_register"   => "운영자 등록",
     "lb_password_2" => "비밀번호 확인",
@@ -70,8 +69,6 @@ return [
     /* 학원 관리 */
     "lb_academy_manage" => "학원 관리",
     "lb_insert_academy_name"    => "학원 이름을 입력하세요",
-
-
 
     /* 학년 관리 */
     "lb_grade_manage"   => "학년 관리",
@@ -128,7 +125,6 @@ return [
     "str_select_hakyon" => "학년을 선택하세요",
     "str_select_hakgi"  => "학기를 선택하세요",
     "str_select_year"   => "년도를 선택하세요",
-
 
     /* 코멘트 관리 */
     "lb_comment_manage" => "코멘트 관리",
@@ -230,6 +226,7 @@ return [
 
 
     /* SMS 업무 */
+    "lb_sms_work_menu"  => "문자편지",
     "lb_sms_work_manage" => "SMS 업무",
     "lb_sms_work_input" => "SMS 내용 입력",
     "lb_weeks"  => "주차",
@@ -280,6 +277,12 @@ return [
     "lb_weekly_test_paper" => "주간 성적표",
     "lb_test_paper_title" => "성적표 이름",
     "lb_test_analysis"  => "성적 분석 의견",
+    "lb_wordian"    => "Wordian",
+    "lb_wordian_title"  => "Wordian",
+    "lb_max_100points"  => "100점 환산 점수 제 적용",
+    "lb_you_input_over_point"   => "입력 최고 점수를 초과하여 최고 점수로 자동 입력되었습니다.",
+    "lb_you_input_under_point"   => "입력 최저 점수를 미달하여 최저 점수로 자동 입력되었습니다.",
+    "lb_if_you_use_100" => "각 입력 항목에서 100점 기준으로 입력하신 후 엔터(Enter)키를 눌러 주세요.",
 
     "lb_input_parent_tel"   => "확인을 위해서는 부모님의 휴대전화 번호를 입력하세요",
     "lb_authorization"  => "보호자 인증",
@@ -288,19 +291,37 @@ return [
     "lb_input_sms_bottom"   => "SMS 결과 페이지 하단 내용을 입력하세요",
 
     /* BMS */
-    "lb_bms_title"  => "BMS",
+    "lb_bms_title"  => "수업공지",
     "lb_bms_setting"    => "Setting",
     "lb_study"  => "수업",
     "lb_study_days"   => "수업 요일",
     "lb_study_times"    => "수업 시간",
     "lb_save_sort"  => "순서 저장 완료",
     "lb_editor" => "에디터",
+    "lb_semester"   => "Semester",
+    "lb_bms_sheets_list"    => "에디터 시트 리스트",
+    "lb_bms_sending"    => "BMS 전송",
+    "lb_bms_hworks" => "과제",
+    "lb_bms_hworks_manage"  => "과제 관리",
+    "lb_bms_hworks_information" => "과제 정보",
+    "lb_bms_hworks_type"    => "구분",
+    "lb_bms_high_school"    => "고등부 수업과목",
+    "lb_bms_class"  => "수업내용",
+    "lb_bms_dt" => "DT 범위",
+    "lb_bms_books"  => "교재과제",
+    "lb_bms_output_first"   => "제출과제(첫수업)",
+    "lb_bms_output_second"  => "제출과제(두번쨰수업)",
+    "lb_insert_high_school" => "고등부 수업과목을 입력하세요",
+    "lb_insert_class"   => "수업내용을 입력하세요",
+    "lb_insert_dt"  => "DT 범위를 입력하세요",
+    "lb_insert_books"   => "교재과제를 입력하세요",
+    "lb_insert_output_first"    => "제출과제(첫수업) 을 입력하세요",
+    "lb_insert_output_second"   => "제출과제(두번째 수업)을 입력하세요",
 
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",
     "str_do_you_want_to_delete_cant_recover" => "삭제를 하시겠습니까? 진행하면 회복할 수 없습니다",
     "use_hyphen"    => "'-' 포함 (예: 010-1234-5678)",
-
 
     /* functions */
     "fn_home"   => "HOME",

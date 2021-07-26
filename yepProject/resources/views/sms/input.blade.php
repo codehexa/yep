@@ -45,6 +45,11 @@
         <button id="btnAllSave" class="btn btn-primary"><i class="fa fa-spinner fa-spin d-none" id="fn_loading_save"></i> <i class="fa fa-save"></i> {{ __('strings.lb_save_all') }}</button>
         <button id="btnSetDone" class="btn btn-warning"><i class="fa fa-spinner fa-spin d-none" id="fn_loading_set_done"></i> <i class="fa fa-clipboard-check"></i> {{ __('strings.lb_set_done') }}</button>
         <button id="btnSetDoneSave" class="btn btn-outline-primary"><i class="fa fa-spinner fa-spin d-none" id="fn_loading_set_save_done"></i> <i class="fa fa-arrow-circle-up"></i> {{ __('strings.lb_save_send_set') }}</button>
+        <div class="form-check form-switch ml-2 mt-2">
+            <input type="checkbox" name="chk_max" id="chk_max" class="form-check-input"/>
+            <label for="chk_max" class="form-check-label">{{ __('strings.lb_max_100points') }}</label>
+        </div>
+        <span class="d-none text-danger mt-2 ml-2" id="guide_100">{{ __('strings.lb_if_you_use_100') }}</span>
     </div>
     <div class="mt-3">
         <form name="smsFrm" id="smsFrm" method="post" action="/SmsJobSave">
@@ -62,6 +67,7 @@
                             <th scope="col">{{ __('strings.lb_teacher_name') }}</th>
                             <th scope="col">{{ __('strings.lb_subjects') }}</th>
                             <th scope="col">{{ __('strings.lb_comment') }}</th>
+                            <th scope="col">{{ __('strings.lb_wordian_title') }}</th>
                             <th scope="col">{{ __('strings.lb_btn_manage') }}</th>
                         </tr>
                     @else
@@ -83,6 +89,7 @@
                                 @endif
                             @endforeach
                             <th scope="col" rowspan="2"  class="text-center">{{ __('strings.lb_comment') }}</th>
+                            <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_wordian') }}</th>
                             <th scope="col" rowspan="2"  class="text-center">{{ __('strings.lb_btn_manage') }}</th>
                         </tr>
                         @if ($hasDouble == "Y")
@@ -130,6 +137,7 @@
                             @endif
                         @endforeach
                         <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion"/> </td>
+                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" value="{{ $data[$i]["wordian"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian"/> </td>
                         <td>
                             @if ($data[$i]["sent"] == "N")
                                 <div class="btn-group-sm btn-group">
@@ -226,6 +234,16 @@
 @section('scripts')
 
     <script type="text/javascript">
+        let chkMax = false; // 기본 65 점제로 함. 만약 체크 되어 있다면, 100 점제로 환산하여 표시함.
+        $(document).on("click","#chk_max",function (){
+            chkMax = $(this).prop("checked");
+            if (chkMax){
+                $("#guide_100").removeClass("d-none");
+            }else {
+                $("#guide_100").addClass("d-none");
+            }
+            //alert(chkMax);
+        })
         // 저장 후 전송 준비 완료 클릭 시
         $(document).on("click","#btnSetDoneSave",function (){
             event.preventDefault();
@@ -246,7 +264,7 @@
 
         let hakgiData = [];
         let selInput;
-        $(document).on("keyup",".fn_input",function (){
+        $(document).on("keyup",".fn_input",function () {
             //console.log("row Total (Y or N) : " + $(this).attr("fn_total") + " / group : " + $(this).attr("fn_group"));
             let grpId = $(this).attr("fn_group");
             let isTotal = $(this).attr("fn_total");
@@ -255,22 +273,27 @@
             let maxScore = $(this).attr("max");
             let minScore = $(this).attr("min");
 
-            console.log('now val : ' + $(this).val() + ", now max : " + $(this).attr("max"));
-            if (parseInt($(this).val()) > parseInt($(this).attr("max"))){
-                $(this).val(maxScore);
-                console.log("max score");
-                return;
-            }
 
-            if (parseInt($(this).val()) < parseInt($(this).attr("min"))){
-                $(this).val(minScore);
-                return;
+
+            if (!chkMax) {
+                if (parseInt($(this).val()) > parseInt($(this).attr("max"))) {
+                    showAlert("{{__('strings.lb_you_input_over_point')}}");
+                    $(this).val(maxScore);
+                    console.log("max score : " + chkMax);
+                    return;
+                }
+
+                if (parseInt($(this).val()) < parseInt($(this).attr("min"))) {
+                    showAlert("{{__('strings.lb_you_input_under_point')}}");
+                    $(this).val(minScore);
+                    return;
+                }
             }
 
             selInput = $(this);
             let itemsArray = [];
             for (let i =0; i < $(".fn_input").length; i++){
-                console.log("root group id :" + grpId + " , cur group : " + $(".fn_input").eq(i).attr("fn_group"));
+                //console.log("root group id :" + grpId + " , cur group : " + $(".fn_input").eq(i).attr("fn_group"));
                 if ($(".fn_input").eq(i).attr("fn_group") === grpId && $(".fn_input").eq(i).attr("fn_row") === nowRow){
                     itemsArray.push($(".fn_input").eq(i));
                 }
@@ -283,7 +306,27 @@
                 }
                 itemsArray[itemsArray.length -1].val(sumVal);
             }
-            //console.log("items count ; " + itemsArray.length);
+        });
+
+        // 100 환산 시
+        $(document).on("keydown",".fn_input",function (){
+            if (chkMax){
+                let hundredMax = 100;
+                if (event.keyCode === 13){
+                    let nowVal = $(this).val();
+                    let maxVal = $(this).attr("max");
+
+                    let tmp = Math.round(parseInt(maxVal)*parseInt(nowVal)/hundredMax);
+                    if (parseInt(tmp) > parseInt(maxVal)){
+                        showAlert("{{ __('strings.lb_you_input_over_point') }}");
+                        $(this).val(maxVal);
+                    }else{
+                        $(this).val(tmp);
+                    }
+
+                    //console.log("now : " + nowVal + " tmp : " + tmp);
+                }
+            }
         });
 
         $(document).on("focus",".fn_input",function (){
@@ -521,6 +564,7 @@
             });
 
             let curOpinion = $("input[name='ss_opinion[]'").eq(curRow).val();
+            let curWordian = $("input[name='ss_wordian[]'").eq(curRow).val();
 
             $(".fn_fa_" + curRow).removeClass("d-none");
 
@@ -532,7 +576,8 @@
                     "_token":$("input[name='_token']").val(),
                     "scId":curId,
                     "scores":scoresArray.toString(),
-                    "opinion":curOpinion
+                    "opinion":curOpinion,
+                    "wordian":curWordian
                 },
                 success:function (msg){
                     //

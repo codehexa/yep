@@ -166,6 +166,8 @@ Route::prefix('bms')->group(function(){
     Route::post("/saveStudyTimeJs", [\App\Http\Controllers\BmsController::class, "saveStudyTimeJs"]);
     Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
     Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
+    Route::get("/sending",[\App\Http\Controllers\BmsSendingController::class, "index"]);
+    Route::get("/hworks",[\App\Http\Controllers\BmsHworksController::class, "index"]);
 });
 
 /* SMS 외부에서 확인하는 라우트 */

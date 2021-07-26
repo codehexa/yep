@@ -75,4 +75,15 @@ class Configurations extends Model
         ["title"=>"대면수업","value"=>"1"],
         ["title"=>"수업","value"=>"2"]
     ];
+
+    public static $BMS_HWORK_TYPES = [
+        ["code"=>"online","title"=>"Online"],
+        ["code"=>"eyon","title"=>"이언"],
+        ["code"=>"none","title"=>"-"]
+    ];
+
+    // Script TAG
+    public static $JS_ENTER = ":ENTER:";
+    public static $JS_STRING = ":STRING:";
+    public static $JS_SELECT = ":SELECT:";
 }

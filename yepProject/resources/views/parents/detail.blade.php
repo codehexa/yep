@@ -140,6 +140,15 @@
                         <div class="list-group-item"> {{ $teacherSay }}</div>
                     @endforeach
                 </div>
+                <!-- wordian -->
+                @if (sizeof($wordians) > 0)
+                    <h5 class="mt-3">{{ __('strings.lb_wordian_title') }} </h5>
+                    <div class="list-group">
+                        @foreach($wordians as $wordian)
+                            <div class="list-group-item"> {{ $wordian }}</div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             <div class="mt-5 bg-dark container-fluid p-4">

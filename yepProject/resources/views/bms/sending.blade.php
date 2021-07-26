@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_editor') }}</h5>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_bms_sending') }}</h5>
 
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -27,50 +27,49 @@
     @endif
 
     <div class="mt-3">
-        <div class="row">
-            <div class="col-4 bg-secondary overflow-auto p-2">
-                <div class="bg-white rounded list-group">
-                    <div class="list-group-item">
-                        <h6>{{ __('strings.lb_bms_sheets_list') }} <button class="btn btn-sm btn-primary" title="{{ __('strings.fn_load') }}"><i class="fa fa-cloud-download-alt"></i> </button> </h6>
-                        <div class="d-flex justify-content-between">
-                            <select name="up_bs_sheets" id="up_bs_sheets" class="form-control form-control-sm">
-                                <option value="">{{ __('strings.fn_select_item') }}</option>
-                            </select>
-                            <div class="btn-group btn-group-sm ml-1">
-                                <button class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i> </button>
-                                <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i> </button>
-                                <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> </button>
-                            </div>
-                        </div>
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="form-label">{{ __('strings.lb_bms_sheets_list') }}</label>
+                <select name="up_bms_sheets" id="up_bms_sheets" class="form-control ml-2 form-control-sm">
+                    <option value="">{{ __('strings.fn_select_item') }}</option>
+                </select>
+            </div>
 
-                    </div>
-                    <div class="list-group-item">
-                        <label>{{ __('strings.lb_semester') }}</label>
-                        <select name="up_semester" id="up_semester" class="form-control form-control-sm">
-                            <option value="">{{ __('strings.fn_select_item') }}</option>
-                        </select>
-                    </div>
-                    <div class="list-group-item">
-                        <label>{{ __('strings.lb_academy_name') }}</label>
-                        <select name="up_academy" id="up_academy" class="form-control form-control-sm">
-                            <option value="">{{ __('strings.fn_select_item') }}</option>
-                        </select>
-                    </div>
-                    <div class="list-group-item">
-                        <button class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> New Line</button>
-                        <button class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> String</button>
+            <div class="form-group ml-2">
+                <label class="form-label">{{ __('strings.lb_class_name') }}</label>
+                <span class="text-primary ml-2">Class Name</span>
+            </div>
+
+            <button class="btn btn-primary btn-sm ml-3"><i class="fa fa-paper-plane"></i> Send</button>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <h6 class="font-weight-bold">Preview</h6>
+                <div class="mt-3 border rounded">
+                    <div class="list-group border-0">
+                        <div class="list-group-item">dddd</div>
+                        <div class="list-group-item">aaaaa</div>
                     </div>
                 </div>
 
             </div>
-            <!-- right panel -->
-            <div class="col-8 overflow-auto">
-                <div class="list-group" id="fn_panel">
-                    <div class="list-group-item">Preview</div>
+            <div class="col">
+                <h6 class="font-weight-bold">학생 리스트</h6>
+                <div class="list-group mt-3">
+                    <div class="list-group-item d-flex justify-content-between">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input"/>
+                            <label class="form-check-label">학생 이름</label>
+                        </div>
+                        <span>학부모님 HP</span>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
+
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
@@ -161,63 +160,23 @@
 @section('scripts')
     <script type="text/javascript">
 
-        let _bs_Sheets = [];    // bs sheets list
+        let dataSet = [];
+        let _jsEnter = "{{ \App\Models\Configurations::$JS_ENTER }}";
+        let _jsString = "{{ \App\Models\Configurations::$JS_STRING }}";
+        let _jsSelect = "{{ \App\Models\Configurations::$JS_SELECT }}";
 
-        // drag & drop
+        function printPage(){
+            if (dataSet.length > 0){
+                $.each(dataSet,function (i,obj){
 
-        $(document).ready(function (){
-            let $gallery = $("#fn_draggable");
-            let $
-            $("button","#fn_draggable > button").draggable({
-                cancel: "a.ui-icon",
-                revert: "invalid",
-                containment: "document",
-                helper: "clone",
-                cursor: "move"
-            });
-
-            /*$("#fn_draggable").droppable({
-                accept: "#fn_draggable > button",
-                classes: {
-                    "ui-droppable-active" : "ui-state-highlight"
-                },
-                drop: function(event, ui){
-                    recycleImage( ui.draggable);
-                }
-            });*/
-            $("#fn_panel").droppable({
-                accept: "#fn_draggable > button",
-                classes: {
-                    "ui-droppable-active":"ui-state-highlight"
-                },
-                drop: function(event, ui){
-                    deleteImage(ui.draggable);
-                }
-            });
-
-            function deleteImage($item){
-                $item.fadeOut(function(){
-                    //var $list = $("")
-                })
+                });
             }
-
-            function recycleImage($item){
-                $item.fadeOut(function(){
-                    $item
-                    .find("a.ui-icon-refresh")
-                    .remove()
-                    .end()
-
-                })
-            }
-        });
-
+        }
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");
             $("#fn_body").html(str);
             return;
         }
-
     </script>
 @endsection

@@ -50,6 +50,8 @@
                             <div class="btn-group btn-group-sm">
                                 <a href="/bms/editor" class="btn btn-outline-primary"><i class="fa fa-newspaper"></i> {{ __('strings.lb_editor') }}</a>
                                 <a href="/bms/settings" class="btn btn-outline-primary"><i class="fa fa-cog"></i> {{ __('strings.lb_bms_setting') }}</a>
+                                <a href="/bms/hworks" class="btn btn-outline-primary"><i class="fa fa-book"></i> {{ __('strings.lb_bms_hworks_manage') }}</a>
+                                <a href="/bms/sending" class="btn btn-outline-primary"><i class="fa fa-plane"></i> {{ __('strings.lb_bms_sending') }}</a>
                             </div>
                         @endauth
                     </ul>
@@ -71,7 +73,7 @@
                             @endif
                         @else
                             <li class="nav-item mt-1 mr-2">
-                                <a href="/SmsFront" class="btn btn-dark btn-sm"><i class="fa fa-sms"></i> {{ __('strings.lb_sms_work_manage') }}</a>
+                                <a href="/SmsFront" class="btn btn-dark btn-sm"><i class="fa fa-sms"></i> {{ __('strings.lb_sms_work_menu') }}</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-secondary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

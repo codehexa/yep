@@ -185,6 +185,7 @@ class SmsJobController extends Controller
                     $newSmsScore->cl_id = $classId;
                     $newSmsScore->hg_id = $hakgi;
                     $newSmsScore->opinion = "";
+                    $newSmsScore->wordian = "";
                     $newSmsScore->sent = "N";
                     $newSmsScore->score_count = sizeof($tItems);
                     for($i=0; $i < sizeof($tItems); $i++){
@@ -318,9 +319,12 @@ class SmsJobController extends Controller
         $scId = $request->get("scId");
         $scores = $request->get("scores");
         $opinion = $request->get("opinion");
+        $wordian = $request->get("wordian");
 
         $score = SmsScores::find($scId);
         $score->opinion = $opinion;
+        $score->wordian = $wordian;
+
         $arr = explode(",",$scores);
         for ($i=0; $i < sizeof($arr); $i++){
             $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
@@ -560,6 +564,7 @@ class SmsJobController extends Controller
         $testFormItemsCount = TestFormsItems::where('tf_id','=',$smsPaper->tf_id)->where('sj_has_child','=','N')->count();
         //dd($testFormItemsCount); 9
         $opinionVals = $request->get("ss_opinion");
+        $wordianVals = $request->get("ss_wordian");
 
         for($i=0; $i < sizeof($ssIds); $i++){   // $ssId smsscores.id
             //dd($ssIds[$i]);
@@ -576,6 +581,7 @@ class SmsJobController extends Controller
             }
 
             $nowSmsScore->opinion = $opinionVals[$i];
+            $nowSmsScore->woridan = $opinionVals[$i];
             $nowSmsScore->save();
         }
         if ($autoSave == "Y"){
