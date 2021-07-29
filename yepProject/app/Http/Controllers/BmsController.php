@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BmsCurriculums;
 use App\Models\BmsDays;
 use App\Models\BmsStudyTimes;
 use App\Models\BmsStudyTypes;
+use App\Models\BmsSubjects;
+use App\Models\schoolGrades;
 use Illuminate\Http\Request;
 
 class BmsController extends Controller
@@ -22,9 +25,14 @@ class BmsController extends Controller
         $bmsStudyTypes = BmsStudyTypes::orderBy('study_type_index','asc')->get();
         $bmsStudyDays = BmsDays::orderBy('days_index','asc')->get();
         $bmsStudyTimes = BmsStudyTimes::orderBy('time_index','asc')->get();
+        $bmsCurriculums = BmsCurriculums::orderBy('bcur_index','asc')->get();
+        $bmsSubjects = BmsSubjects::orderBy('subject_index','asc')->get();
+        $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
         return view('bms.settings',[
-            "bmsStudyTypes"=>$bmsStudyTypes,"bmsStudyDays"=>$bmsStudyDays,"bmsStudyTimes"=>$bmsStudyTimes
+            "bmsStudyTypes"=>$bmsStudyTypes,"bmsStudyDays"=>$bmsStudyDays,"bmsStudyTimes"=>$bmsStudyTimes,
+            "bmsCurriculums"=>$bmsCurriculums,"bmsSubjects"=>$bmsSubjects,
+            "schoolGrades"=>$schoolGrades
         ]);
     }
 

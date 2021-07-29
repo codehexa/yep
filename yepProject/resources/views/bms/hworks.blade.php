@@ -43,20 +43,36 @@
         </div>
 
         <div class="mt-3">
-            <table class="table table-striped">
+            <table class="table table-striped table-sm">
                 <thead>
-                <tr>
-                    <th scope="col">{{ __('strings.lb_bms_hworks_type') }}</th>
-                    <th scope="col">{{ __('strings.lb_bms_high_school') }}</th>
+                <tr class="text-center">
+                    <th scope="col">{{ __('strings.lb_school_grade') }}</th>
+                    <th scope="col">{{ __('strings.lb_bms_school_class') }}</th>
                     <th scope="col">{{ __('strings.lb_bms_class') }}</th>
                     <th scope="col">{{ __('strings.lb_bms_dt') }}</th>
                     <th scope="col">{{ __('strings.lb_bms_books') }}</th>
                     <th scope="col">{{ __('strings.lb_bms_output_first') }}</th>
                     <th scope="col">{{ __('strings.lb_bms_output_second') }}</th>
+                    <th scope="col">{{ __('strings.lb_btn_manage') }}</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($data as $datum)
+                    <tr>
+                        <td>{{ $datum->SchoolGrade->scg_name }}</td>
+                        <td>{{ $datum->hwork_class }}</td>
+                        <td>{{ $datum->hwork_content }}</td>
+                        <td>{{ $datum->hwork_dt }}</td>
+                        <td>{{ $datum->hwork_book }}</td>
+                        <td>{{ $datum->hwork_output_first }}</td>
+                        <td>{{ $datum->hwork_output_second }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary fn_modify" fn_id="{{ $datum->id }}">{{ __('strings.lb_modify') }}</button>
+                                <button class="btn btn-outline-primary fn_delete" fn_id="{{ $datum->id }}">{{ __('strings.lb_delete') }}</button>
+                            </div>
+                        </td>
+                    </tr>
                 @endforeach
                 </tbody>
             </table>
@@ -79,26 +95,27 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="cmFrm" id="cmFrm" method="post" action="/setComments">
+                <form name="cmFrm" id="cmFrm" method="post" action="/bms/addHworks">
                     @csrf
                     <input type="hidden" name="cm_id" id="cm_id" value=""/>
 
                     <div class="form-group">
-                        <label for="up_type">{{ __('strings.lb_bms_hworks_type') }}</label>
-                        <select name="up_type" id="up_type" class="form-control">
+                        <label for="up_school_grade">{{ __('strings.lb_school_grade') }}</label>
+                        <select name="up_school_grade" id="up_school_grade" class="form-control">
                             <option value="">{{ __('strings.fn_select_item') }}</option>
-                            @for ($i=0; $i < sizeof($hwTypes); $i++ )
-                                <option value="{{ $hwTypes[$i]['code'] }}">{{ $hwTypes[$i]['title'] }}</option>
-                            @endfor
+                            @foreach($schoolGrades as $schoolGrade)
+                                <option value="{{ $schoolGrade->id }}">{{ $schoolGrade->scg_name }}</option>
+                            @endforeach
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="up_high_school">{{ __('strings.lb_bms_high_school') }}</label>
-                        <input type="text" name="up_high_school" id="up_high_school" class="form-control" placeholder="{{ __('strings.lb_insert_high_school') }}"/>
+                        <label for="up_class">{{ __('strings.lb_bms_school_class') }}</label>
+                        <input type="text" name="up_class" id="up_class" class="form-control" placeholder="{{ __('strings.lb_insert_class') }}"/>
                     </div>
                     <div class="form-group">
-                        <label for="up_class">{{ __('strings.lb_bms_class') }}</label>
-                        <input type="text" name="up_class" id="up_class" class="form-control" placeholder="{{ __('strings.lb_insert_class') }}"/>
+                        <label for="up_content">{{ __('strings.lb_bms_class') }}</label>
+                        <input type="text" name="up_content" id="up_content" class="form-control" placeholder="{{ __('strings.lb_insert_content') }}"/>
                     </div>
                     <div class="form-group">
                         <label for="up_dt">{{ __('strings.lb_bms_dt') }}</label>
@@ -177,25 +194,54 @@
 
 @section('scripts')
     <script type="text/javascript">
-
-        let dataSet = [];
-        let _jsEnter = "{{ \App\Models\Configurations::$JS_ENTER }}";
-        let _jsString = "{{ \App\Models\Configurations::$JS_STRING }}";
-        let _jsSelect = "{{ \App\Models\Configurations::$JS_SELECT }}";
-
-        $(document).on("click",'#btnAdd',function (){
+        $(document).on("click","#btnAdd",function (){
             event.preventDefault();
 
             $("#infoModalCenter").modal("show");
-        });
-
-        function printPage(){
-            if (dataSet.length > 0){
-                $.each(dataSet,function (i,obj){
-
-                });
+        })
+        // save
+        $(document).on("click","#btnCmSubmit",function (){
+            //
+            event.preventDefault();
+            if ($("#up_school_grade").val() === ""){
+                showAlert("{{ __('strings.lb_select_school_grade') }}");
+                return;
             }
-        }
+
+            if ($("#up_class").val() === ""){
+                showAlert("{{ __('strings.lb_insert_class') }}");
+                return;
+            }
+
+            if ($("#up_content").val() === ""){
+                showAlert("{{ __('strings.lb_insert_content') }}");
+                return;
+            }
+
+            if ($("#up_dt").val() === ""){
+                showAlert("{{ __('strings.lb_insert_dt') }}");
+                return;
+            }
+
+            if ($("#up_books").val() === ""){
+                showAlert("{{ __('strings.lb_insert_books') }}");
+                return;
+            }
+
+            if ($("#up_output_first").val() === ""){
+                showAlert("{{ __('strings.lb_insert_output_first') }}");
+                return;
+            }
+
+            if ($("#up_output_second").val() === ""){
+                showAlert("{{ __('strings.lb_insert_output_second') }}");
+                return;
+            }
+
+            $("#fn_loading").removeClass("d-none");
+
+            $("#cmFrm").submit();
+        });
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

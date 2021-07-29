@@ -76,11 +76,9 @@ class Configurations extends Model
         ["title"=>"수업","value"=>"2"]
     ];
 
-    public static $BMS_HWORK_TYPES = [
-        ["code"=>"online","title"=>"Online"],
-        ["code"=>"eyon","title"=>"이언"],
-        ["code"=>"none","title"=>"-"]
-    ];
+    public static $BMS_WEEKS_COUNT  = "12";
+
+    public static $ACADEMY_PRESIDENT_CALL   = "PRESIDENT_CALL";
 
     // Script TAG
     public static $JS_ENTER = ":ENTER:";

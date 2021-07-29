@@ -16,7 +16,7 @@ class CreateBmsHworksTable extends Migration
         Schema::create('bms_hworks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->enum('hwork_type',['online','eyon','none'])->default('none');
+            $table->bigInteger('hwork_sgid')->unsigned()->default(0)->comment('school_grades.id');
             $table->string('hwork_class')->comment('고등부 수업과목');
             $table->string('hwork_content')->nullable()->comment('수업내용');
             $table->string('hwork_dt')->nullable()->comment('DT범위(1)');

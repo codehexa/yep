@@ -28,8 +28,17 @@
 
     <div class="mt-3">
         <div class="row">
-            <div class="col-4 bg-secondary overflow-auto p-2">
+            <div class="col-3 bg-secondary overflow-auto p-2">
                 <div class="bg-white rounded list-group">
+                    <div class="list-group-item">
+                        <h6>기본 정보 셋팅</h6>
+                        <div class="form-group">
+                            <label>Semester</label>
+                            <select name="ed_semester" id="ed_semester" class="form-control form-control-sm">
+                                <option value="">{{ __('strings.fn_select_item') }}</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="list-group-item">
                         <h6>{{ __('strings.lb_bms_sheets_list') }} <button class="btn btn-sm btn-primary" title="{{ __('strings.fn_load') }}"><i class="fa fa-cloud-download-alt"></i> </button> </h6>
                         <div class="d-flex justify-content-between">
@@ -64,7 +73,7 @@
 
             </div>
             <!-- right panel -->
-            <div class="col-8 overflow-auto">
+            <div class="col-9 overflow-auto">
                 <div class="list-group" id="fn_panel">
                     <div class="list-group-item">Preview</div>
                 </div>
@@ -167,7 +176,7 @@
 
         $(document).ready(function (){
             let $gallery = $("#fn_draggable");
-            let $
+            //let $
             $("button","#fn_draggable > button").draggable({
                 cancel: "a.ui-icon",
                 revert: "invalid",

@@ -167,7 +167,15 @@ Route::prefix('bms')->group(function(){
     Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
     Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
     Route::get("/sending",[\App\Http\Controllers\BmsSendingController::class, "index"]);
-    Route::get("/hworks",[\App\Http\Controllers\BmsHworksController::class, "index"]);
+    Route::get("/hworks/{sgid?}",[\App\Http\Controllers\BmsHworksController::class, "index"]);
+    Route::post("/addCurrculum",[\App\Http\Controllers\BmsCurriculumsController::class, "addCurri"]);
+    Route::post("/saveCurriculumJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveCurriculum"]);
+    Route::post("/saveSortCurriculumsJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveSortCurriculumsJs"]);
+    Route::post("/addHworks",[\App\Http\Controllers\BmsHworksController::class, "addClass"]);
+    Route::post("/addBmsSubject",[\App\Http\Controllers\BmsSubjectsController::class, "addSubject"]);
+    Route::post("/modifySubject",[\App\Http\Controllers\BmsSubjectsController::class, "modifySubject"]);
+    Route::post("/saveOrderSubject",[\App\Http\Controllers\BmsSubjectsController::class, "saveOrder"]);
+    Route::post("/getSubjects",[\App\Http\Controllers\BmsSubjectsController::class, "getSubjects"]);
 });
 
 /* SMS 외부에서 확인하는 라우트 */
