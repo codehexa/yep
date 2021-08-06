@@ -52,7 +52,7 @@
             <h6>{{ __('strings.lb_page_input_form') }}</h6>
             <form name="frm" id="frm" method="post" action="/bms/pageAddSetting">
                 @csrf
-                <div class="form-group list-group">
+                <div class="form-group list-group border border-3 border-info">
                     <div class="list-group-item">
                         <label >{{ __('strings.lb_title') }}</label>
                         <input type="text" name="up_field_title" id="up_field_title" class="form-control form-control-sm"/>
