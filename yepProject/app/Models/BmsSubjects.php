@@ -11,7 +11,7 @@ class BmsSubjects extends Model
 
     protected $table = "bms_subjects";
     protected $fillable = [
-        "sg_id","subject_title","subject_index"
+        "sg_id","subject_title","subject_index","subject_function"
     ];
 
     public function SchoolGradeObj(){

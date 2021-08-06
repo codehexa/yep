@@ -17,7 +17,13 @@ class CreateBmsSheetsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string("bs_title");
-            $table->bigInteger("sg_id")->unsigned()->default(0);
+            $table->bigInteger("bs_id")->unsigned()->default(0);
+            $table->bigInteger('ac_id')->unsigned()->default(0);
+            $table->bigInteger('sg_id')->unsigned()->default(0);
+            $table->bigInteger('us_id')->unsigned()->default(0);
+            $table->bigInteger('pre_week')->unsigned()->default(0);
+            $table->bigInteger('now_week')->unsigned()->default(0);
+            $table->bigInteger('writer_id')->unsigned()->default(0);
         });
     }
 

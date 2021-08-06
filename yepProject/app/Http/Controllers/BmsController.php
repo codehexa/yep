@@ -7,6 +7,8 @@ use App\Models\BmsDays;
 use App\Models\BmsStudyTimes;
 use App\Models\BmsStudyTypes;
 use App\Models\BmsSubjects;
+use App\Models\BmsWeeks;
+use App\Models\BmsWorkbooks;
 use App\Models\schoolGrades;
 use Illuminate\Http\Request;
 
@@ -28,11 +30,13 @@ class BmsController extends Controller
         $bmsCurriculums = BmsCurriculums::orderBy('bcur_index','asc')->get();
         $bmsSubjects = BmsSubjects::orderBy('subject_index','asc')->get();
         $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
+        $bmsWorkbooks = BmsWorkbooks::orderBy('bw_index','asc')->get();
+        $bmsWeeks = BmsWeeks::orderBy('bmw_index','asc')->get();
 
         return view('bms.settings',[
             "bmsStudyTypes"=>$bmsStudyTypes,"bmsStudyDays"=>$bmsStudyDays,"bmsStudyTimes"=>$bmsStudyTimes,
             "bmsCurriculums"=>$bmsCurriculums,"bmsSubjects"=>$bmsSubjects,
-            "schoolGrades"=>$schoolGrades
+            "schoolGrades"=>$schoolGrades,"bmsWorkbooks"=>$bmsWorkbooks,"bmsWeeks"=>$bmsWeeks
         ]);
     }
 

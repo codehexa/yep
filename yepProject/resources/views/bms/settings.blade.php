@@ -43,6 +43,9 @@
             <div class="nav-item">
                 <a href="#page5" class="btn btn-link"><i class="fa fa-sticky-note"></i> {{ __('strings.lb_bms_school_class') }}</a>
             </div>
+            <div class="nav-item">
+                <a href="#page6" class="btn btn-link"><i class="fa fa-sticky-note"></i> {{ __('strings.lb_workbook') }}</a>
+            </div>
         </div>
 
         <div class="mt-3 overflow-auto h-100">
@@ -211,8 +214,36 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
 
+            <!-- workbook -->
+            <h6 class="mt-3" id="page6">{{ __('strings.lb_workbook') }}</h6>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="list-group" id="ls_workbooks">
+                        @foreach ($bmsWorkbooks as $bmsWorkbook)
+                            <div class="list-group-item d-flex justify-content-between">
+                                <input type="hidden" name="bw_ids[]" value="{{ $bmsWorkbook->id }}"/>
+                                <input type="text" name="up_bw_title[]" class="form-control" value="{{ $bmsWorkbook->bw_title }}"/>
+                                <button class="btn btn-sm btn-outline-info text-nowrap fn_bw_modify ml-2" fn_id="{{ $bmsWorkbook->id }}">
+                                    <i class="fa fa-edit"></i> {{ __('strings.fn_modify') }}
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row mt-1">
+                <div class="col-sm-6">
+                    <input type="text" name="up_bw_title" id="up_bw_title" class="form-control form-control-sm"/>
+                </div>
+                <i class="fa fa-spin fa-spinner d-none mr-2 mt-1" id="fn_spinner_bw"></i>
+                <div class="btn-group">
+                    <a href="#" id="btnAddBw" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</a>
+                    <a href="#" id="btnSaveBwSort" class="btn btn-outline-secondary btn-sm"><i class="fa fa-save"></i> {{ __('strings.fn_sort_save') }}</a>
+                </div>
             </div>
         </div>
     </div>
@@ -309,6 +340,103 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // workbooks
+        let _workbooks = [
+            @foreach($bmsWorkbooks as $bmsWorkbook)
+            {"id":{{ $bmsWorkbook->id }},"title":"{{ $bmsWorkbook->bw_title }}","index":{{ $bmsWorkbook->bw_index }}},
+            @endforeach
+        ];
+
+        $(document).on("click","#btnAddBw",function (){
+            event.preventDefault();
+            if ($("#up_bw_title").val() === "") return;
+
+            $("#fn_spinner_bw").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/addWorkbook",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "_bwTitle":$("#up_bw_title").val()
+                },
+                success:function (msg){
+                    $("#fn_spinner_bw").addClass("d-none");
+                    if (msg.result === "true"){
+                        _workbooks.push({"id":msg.data.id,"title":msg.data.bw_title,"index":msg.data.bw_index});
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                        reloadPrint("bw")
+                    }else{
+                        showAlert("{{ __('strings.err_fail_to_save') }}");
+                    }
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                }
+            });
+        });
+
+        $(document).on("click","#btnSaveBwSort",function (){
+            event.preventDefault();
+
+            let _arr = [];
+            $.each($("input[name='bw_ids[]'"),function (i,obj){
+                _arr.push($(obj).val());
+            });
+
+            $("#fn_spinner_bw").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/saveSortWorkbook",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "sortData":_arr.toString()
+                },
+                success:function (msg){
+                    $("#fn_spinner_bw").addClass("d-none");
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                    }else{
+                        showAlert("{{ __('strings.err_fail_to_save') }}");
+                    }
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                }
+            })
+        });
+
+        $(document).on("click",".fn_bw_modify",function (){
+            let _id = $(this).attr("fn_id");
+            let _txt = $(this).parent().find("input[name='up_bw_title[]'").val();
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/storeWorkbook",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "_bwId":_id,
+                    "_bwTitle":_txt
+                },
+                success:function (msg){
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                    }else{
+                        showAlert("{{ __('strings.err_fail_to_save') }}");
+                    }
+                },
+                error:function(e1,e2,e3){
+                    showAlert(e2);
+                }
+            })
+        });
+
+
+
         // 수업 과목
         let _subjects = [
             @foreach($bmsSubjects as $bmsSubject)
@@ -893,11 +1021,22 @@
                         "</button>" +
                         "</div>").appendTo($("#ls_curriculums"));
                 });
+            }else if(fn === "bw"){
+                $("#ls_workbooks").empty();
+                $.each(_workbooks, function (i,obj){
+                    $("<div class='list-group-item d-flex justify-content-between'>" +
+                        "<input type='hidden' name='bw_ids[]' value='" + obj.id + "'/>" +
+                        "<input type='text' name='up_bw_title[]' class='form-control' value='" + obj.title + "'/>" +
+                        "<button class='btn btn-sm btn-outline-info text-nowrap fn_bw_modify ml-2' fn_id='" + obj.id + "'>" +
+                        "<i class='fa fa-edit'></i> {{ __('strings.fn_modify') }}" +
+                        "</button>" +
+                        "</div>").appendTo($("#ls_workbooks"));
+                });
             }
         }
 
         $(document).ready(function (){
-            $("#ls_studies,#ls_days,#ls_times,#ls_curriculums,#ls_subjects").sortable();
+            $("#ls_studies,#ls_days,#ls_times,#ls_curriculums,#ls_subjects,#ls_workbooks").sortable();
         });
 
         function showAlert(str){

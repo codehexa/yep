@@ -165,7 +165,7 @@ Route::prefix('bms')->group(function(){
     Route::post("/addStudyTimeJs", [\App\Http\Controllers\BmsController::class, "addStudyTimeJs"]);
     Route::post("/saveStudyTimeJs", [\App\Http\Controllers\BmsController::class, "saveStudyTimeJs"]);
     Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
-    Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
+
     Route::get("/sending",[\App\Http\Controllers\BmsSendingController::class, "index"]);
     Route::get("/hworks/{sgid?}",[\App\Http\Controllers\BmsHworksController::class, "index"]);
     Route::post("/addCurrculum",[\App\Http\Controllers\BmsCurriculumsController::class, "addCurri"]);
@@ -176,6 +176,20 @@ Route::prefix('bms')->group(function(){
     Route::post("/modifySubject",[\App\Http\Controllers\BmsSubjectsController::class, "modifySubject"]);
     Route::post("/saveOrderSubject",[\App\Http\Controllers\BmsSubjectsController::class, "saveOrder"]);
     Route::post("/getSubjects",[\App\Http\Controllers\BmsSubjectsController::class, "getSubjects"]);
+    Route::post("/addWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "addWorkbook"]);
+    Route::post("/saveSortWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "saveSortWorkbooks"]);
+    Route::post("/storeWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "storeWorkbook"]);
+    /* editor */
+    Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
+    Route::post("/editorAddBasic",[\App\Http\Controllers\BmsEditorController::class,"addBasic"]);
+    Route::post("/editorGetClasses",[\App\Http\Controllers\BmsEditorController::class, "getClasses"]);
+    Route::post("/editorSheetItemSave",[\App\Http\Controllers\BmsEditorController::class, "saveSheetItems"]);
+    Route::post("/editorLoadSheet",[\App\Http\Controllers\BmsEditorController::class, "loadSheet"]);
+    Route::post("/editorPreviewer",[\App\Http\Controllers\BmsEditorController::class, "preview"]);
+
+    /* mms page settings */
+    Route::get("/pageSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "index"]);
+    Route::post("/pageAddSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "addSetting"]);
 });
 
 /* SMS 외부에서 확인하는 라우트 */

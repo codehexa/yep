@@ -16,7 +16,10 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             YoilSeeder::class,
-            DtSeeder::class
+            DtSeeder::class,
+            BmsWeeksSeeder::class,
+            SettingsSeeder::class,
+            BmsSemestersSeeder::class
         ]);
     }
 }

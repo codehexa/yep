@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBmsSubjectsTable extends Migration
+class CreateBmsSemestersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateBmsSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bms_subjects', function (Blueprint $table) {
+        Schema::create('bms_semesters', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('sg_id')->unsigned()->default(0);
-            $table->string('subject_title');
-            $table->integer('subject_index')->unsigned()->default(0);
-            $table->bigInteger('subject_function')->unsigned()->nullable()->default(0);
+            $table->string('bs_title');
+            $table->string('bs_index');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateBmsSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bms_subjects');
+        Schema::dropIfExists('bms_semesters');
     }
 }
