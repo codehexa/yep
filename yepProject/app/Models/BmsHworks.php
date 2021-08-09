@@ -18,4 +18,8 @@ class BmsHworks extends Model
     public function SchoolGrade(){
         return $this->hasOne(schoolGrades::class, "id","hwork_sgid");
     }
+
+    public function Subject(){
+        return $this->hasOne(BmsSubjects::class, "id","hwork_class");
+    }
 }

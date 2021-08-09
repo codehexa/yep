@@ -167,7 +167,12 @@ Route::prefix('bms')->group(function(){
     Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
 
     Route::get("/sending",[\App\Http\Controllers\BmsSendingController::class, "index"]);
+    /* hwork manage */
     Route::get("/hworks/{sgid?}",[\App\Http\Controllers\BmsHworksController::class, "index"]);
+    Route::get("/hworkInput/{hwid?}",[\App\Http\Controllers\BmsHworksController::class, 'inputPage']);
+    Route::post("/hworkSave",[\App\Http\Controllers\BmsHworksController::class, "addClass"]);
+    Route::post("/hworkStore",[\App\Http\Controllers\BmsHworksController::class, "storeClass"]);
+
     Route::post("/addCurrculum",[\App\Http\Controllers\BmsCurriculumsController::class, "addCurri"]);
     Route::post("/saveCurriculumJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveCurriculum"]);
     Route::post("/saveSortCurriculumsJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveSortCurriculumsJs"]);

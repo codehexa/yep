@@ -231,6 +231,9 @@ class BmsEditorController extends Controller
         ];
 
         $sheets = BmsSheets::where($whereArray)->first();
+        if (is_null($sheets)){
+            return response()->json(['data'=>[],'classes'=>$classes]);
+        }
         $sheet_id = $sheets->id;
 
         $sheetItems = BmsSheetInfo::where('sheet_id','=',$sheet_id)->orderBy('bsi_sheet_index','asc')->get();

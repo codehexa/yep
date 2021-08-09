@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_bms_hworks_manage') }}</h5>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_bms_hworks_manage') }} &gt; {{ __('strings.lb_hwork_input_title') }}</h5>
 
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -29,54 +29,112 @@
     <div class="mt-3">
         <div class="list-inline">
             <div class="form-group form-inline">
-                <span>{{ __('strings.fn_search') }}</span>
-                <select name="up_key_type" id="up_key_type" class="form-control form-control-sm ml-2">
-                    <option value="">{{ __('strings.fn_select_item') }}</option>
-                </select>
-                <input type="text" name="up_key" id="up_key" class="form-control form-control-sm ml-2"/>
-                <button class="btn btn-primary btn-sm ml-2"><i class="fa fa-search"></i> {{ __('strings.fn_search') }}</button>
-
                 <div class="form-inline btn-group btn-group-sm ml-2">
-                    <a href="/bms/hworkInput" class="btn btn-outline-primary" id="btnAdd"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</a>
+                    <a href="{{ url()->previous() }}" class="btn btn-outline-primary" ><i class="fa fa-list"></i> {{ __('strings.fn_list') }}</a>
                 </div>
             </div>
         </div>
 
         <div class="mt-3">
-            @foreach($data as $datum)
-                <div class="mt-4">
-                    <div class="mt-1 d-flex justify-content-between">
-                        <h6>{{ $datum->SchoolGrade->scg_name }} - {{ $datum->Subject->subject_title }}</h6>
-                        <a href="/bms/hworkInput/{{ $datum->id }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{ __('strings.fn_modify') }} </a>
+            <form name="frm" id="frm" method="post" action="
+            @if (isset($data->id))
+                /bms/hworkStore
+            @else
+                /bms/hworkSave
+            @endif">
+                @csrf
+                @if (isset($data->id))
+                    <input type="hidden" name="saved_hw_id" id="saved_hw_id" value="{{ $data->id }}"/>
+                @endif
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <label>{{ __('strings.lb_bms_hworks_type') }}</label>
+                        <select name="up_sgid" id="up_sgid" class="form-control form-control-sm">
+                            <option value="">{{ __('strings.fn_select_item') }}</option>
+                            @foreach($sgrades as $sgrade)
+                                <option value="{{ $sgrade->id }}"
+                                        @if (isset($data->hwork_sgid) && $data->hwork_sgid == $sgrade->id)
+                                            selected
+                                        @endif
+                                >{{ $sgrade->scg_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
-                    <div class="list-group mt-1">
-                        <div class="list-group-item">
-                            <label class="form-label">{{ __('strings.lb_bms_school_class') }}</label>
-                            <span class="form-control fn_item">{{ $datum->hwork_content }}</span>
-                        </div>
-                        <div class="list-group-item">
-                            <label class="form-label">{{ __('strings.lb_bms_dt') }}</label>
-                            <span class="form-control fn_item">{{ $datum->hwork_dt }}</span>
-                        </div>
-                        <div class="list-group-item">
-                            <label class="form-label">{{ __('strings.lb_bms_books') }}</label>
-                            <span class="form-control fn_item">{{ $datum->hwork_book }}</span>
-                        </div>
-                        <div class="list-group-item">
-                            <label class="form-label">{{ __('strings.lb_bms_output_first') }}</label>
-                            <span class="form-control fn_item">{{ $datum->hwork_output_first }}</span>
-                        </div>
-                        <div class="list-group-item">
-                            <label class="form-label">{{ __('strings.lb_bms_output_second') }}</label>
-                            <span class="form-control fn_item">{{ $datum->hwork_output_second }}</span>
+                    <div class="list-group-item">
+                        <label>{{ __('strings.lb_bms_school_class') }}</label>
+                        <select name="up_class" id="up_class" class="form-control form-control-sm">
+                            <option value="">{{ __('strings.fn_select_item') }}</option>
+                            @foreach($subjects as $subject)
+                                <option value="{{ $subject->id }}"
+                                        @if (isset($data->hwork_class) && $data->hwork_class == $subject->id)
+                                            selected
+                                        @endif
+                                >{{ $subject->subject_title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="list-inline">
+                                    @foreach($functions as $function)
+                                        <button class="btn btn-outline-primary btn-sm mb-1 fn_function" fn_code="{{ $function->tag }}">{{ $function->title }}</button>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="list-group" id="ls_fields">
+                                    <div class="list-group-item">
+                                        <label>{{ __('strings.lb_bms_class') }}</label>
+                                        <input type="text" name="up_content" id="up_content" class="fn_item form-control form-control-sm"
+                                               @if (isset($data->hwork_content))
+                                                   value="{{ $data->hwork_content }}"
+                                               @endif
+                                        />
+                                    </div>
+                                    <div class="list-group-item">
+                                        <label>{{ __('strings.lb_bms_dt') }}</label>
+                                        <input type="text" name="up_dt" id="up_dt" class="fn_item form-control form-control-sm"
+                                               @if (isset($data->hwork_dt))
+                                                   value="{{ $data->hwork_dt }}"
+                                               @endif
+                                        />
+                                    </div>
+                                    <div class="list-group-item">
+                                        <label>{{ __('strings.lb_bms_books') }}</label>
+                                        <input type="text" name="up_book" id="up_book" class="fn_item form-control form-control-sm"
+                                               @if (isset($data->hwork_book))
+                                                   value="{{ $data->hwork_book }}"
+                                                @endif
+                                        />
+                                    </div>
+                                    <div class="list-group-item">
+                                        <label>{{ __('strings.lb_bms_output_first') }}</label>
+                                        <input type="text" name="up_output_first" id="up_output_first" class="fn_item form-control form-control-sm"
+                                               @if (isset($data->hwork_output_first))
+                                                   value="{{ $data->hwork_output_first }}"
+                                                @endif
+                                        />
+                                    </div>
+                                    <div class="list-group-item">
+                                        <label>{{ __('strings.lb_bms_output_second') }}</label>
+                                        <input type="text" name="up_output_second" id="up_output_second" class="fn_item form-control form-control-sm"
+                                               @if (isset($data->hwork_output_second))
+                                                   value="{{ $data->hwork_output_second }}"
+                                                @endif
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
-
+            </form>
             <div class="mt-3">
-                {{ $data->links() }}
+                <button id="btn_save" class="btn btn-primary"><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
+                <button id="btn_reset" class="btn btn-primary"><i class="fa fa-redo"></i> {{ __('strings.fn_reset') }}</button>
             </div>
         </div>
     </div>
@@ -101,9 +159,7 @@
                         <label for="up_school_grade">{{ __('strings.lb_school_grade') }}</label>
                         <select name="up_school_grade" id="up_school_grade" class="form-control">
                             <option value="">{{ __('strings.fn_select_item') }}</option>
-                            @foreach($schoolGrades as $schoolGrade)
-                                <option value="{{ $schoolGrade->id }}">{{ $schoolGrade->scg_name }}</option>
-                            @endforeach
+
                         </select>
                     </div>
 
@@ -192,76 +248,77 @@
 
 @section('scripts')
     <script type="text/javascript">
-        let _codes = @json($codes);
-        // save
-        $(document).on("click","#btnCmSubmit",function (){
+
+
+        let _listIndex = -1;    // 현재 포커스 된 위치
+        $(document).on("click",".fn_item",function (){
+            _listIndex = $(".fn_item").index($(this));
+            console.log(_listIndex);
+            $(".fn_item").parent().removeClass("active");
+            $(".fn_item").eq(_listIndex).parent().addClass("active");
+        });
+
+        // buttons click event
+        $(document).on("click",".fn_function",function (){
             //
             event.preventDefault();
-            if ($("#up_school_grade").val() === ""){
-                showAlert("{{ __('strings.lb_select_school_grade') }}");
+            let _curTag = $(this).attr("fn_code");
+            let _str = $(".fn_item").eq(_listIndex).val();
+            let _preStr = _str.substring(0,$(".fn_item").eq(_listIndex).prop('selectionStart'));
+            let _aftStr = _str.substring($(".fn_item").eq(_listIndex).prop('selectionStart'),_str.length);
+
+            $(".fn_item").eq(_listIndex).val(_preStr + _curTag + _aftStr);
+        });
+
+        // save
+        $(document).on("click","#btn_save",function (){
+            event.preventDefault();
+            if ($("#up_sgid").val() === ""){
+                showAlert("{{ __('strings.str_select_sgrade') }}");
                 return;
             }
 
             if ($("#up_class").val() === ""){
-                showAlert("{{ __('strings.lb_insert_class') }}");
+                showAlert("{{ __('strings.str_select_class') }}");
                 return;
             }
 
             if ($("#up_content").val() === ""){
-                showAlert("{{ __('strings.lb_insert_content') }}");
+                showAlert("{{ __('strings.str_input_content') }}");
                 return;
             }
 
             if ($("#up_dt").val() === ""){
-                showAlert("{{ __('strings.lb_insert_dt') }}");
+                showAlert("{{ __('strings.str_input_dt') }}");
                 return;
             }
 
-            if ($("#up_books").val() === ""){
-                showAlert("{{ __('strings.lb_insert_books') }}");
+            if ($("#up_book").val() === ""){
+                showAlert("{{ __('strings.str_input_book') }}");
                 return;
             }
 
             if ($("#up_output_first").val() === ""){
-                showAlert("{{ __('strings.lb_insert_output_first') }}");
+                showAlert("{{ __('strings.str_input_output_first') }}");
                 return;
             }
 
             if ($("#up_output_second").val() === ""){
-                showAlert("{{ __('strings.lb_insert_output_second') }}");
+                showAlert("{{ __('strings.str_input_output_second') }}");
                 return;
             }
 
-            $("#fn_loading").removeClass("d-none");
-
-            $("#cmFrm").submit();
+            $("#frm").submit();
         });
 
-        $(document).ready(function (){
-            codeChanges();
+        $(document).on("click","#btn_reset",function (){
+            location.href="/bms/hworkInput";
         });
 
-        function codeChanges(){
-            $.each($(".fn_item"),function (i,obj){
-                let _txt = $(obj).text();
-                _txt = codeChange(_txt);
-                $(".fn_item").eq(i).html(_txt);
-            });
-        }
-
-        function codeChange(txt){
-            $.each(_codes, function (i,obj){
-                let regEx = new RegExp(obj.tag, "gi");
-
-                txt = txt.replace(regEx,"<span class='text-primary'>" + obj.title + "</span>");
-            });
-            return txt;
-        }
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");
             $("#fn_body").html(str);
-            return;
         }
     </script>
 @endsection

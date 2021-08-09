@@ -88,6 +88,7 @@ class Configurations extends Model
         ["tag"=>":ACADEMY_NAME","title"=>"(학원)관 이름","type"=>"STRING"],
         ["tag"=>":CLASS_NAME","title"=>"반 이름","type"=>"STRING"],
         ["tag"=>":TEACHER_NAME","title"=>"선생님 이름","type"=>"STRING"],
+        ["tag"=>":SUBJECT_NAME","title"=>"수업 과목","type"=>"STRING"],
         ["tag"=>":SEMESTER","title"=>"학기","type"=>"STRING"],
         ["tag"=>":CURRICULUM","title"=>"과정","type"=>"STRING"],
         ["tag"=>":HAKGI_NAME","title"=>"학기","type"=>"STRING"],

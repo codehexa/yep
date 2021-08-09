@@ -17,6 +17,7 @@ class CreateBmsSheetInfoItemsFunctionsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger('bs_subject_id')->unsigned()->default(0)->comment('bms_subjects.id');
+            $table->bigInteger('scg_id')->unsigned()->default(0)->comment('school_grades.id');
             $table->string('class_context')->nullable()->comment('수업 내용');
             $table->string('dt_between')->nullable()->comment('DT 범위 1 ');
             $table->string('book_work')->nullable()->comment('교재 과제');

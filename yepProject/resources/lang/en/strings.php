@@ -352,6 +352,15 @@ return [
     "lb_input_array"    => "반복 형태",
     "lb_input_function" => "함수 형태",
 
+    /* 교제 관리 */
+    "lb_hwork_input_title"    => "교제 관리 입력",
+    "str_select_sgrade" => "구분을 선택하세요",
+    "str_input_content" => "수업내용을 입력하세요",
+    "str_input_dt" => "DT을(를) 입력하세요",
+    "str_input_book" => "교재과제를 입력하세요",
+    "str_input_output_first"    => "제출과제 (첫수업) 을 입력하세요",
+    "str_input_output_second"    => "제출과제 (두번째 수업) 을 입력하세요",
+
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",
     "str_do_you_want_to_delete_cant_recover" => "삭제를 하시겠습니까? 진행하면 회복할 수 없습니다",
@@ -373,6 +382,8 @@ return [
     "fn_modify" => "편집",
     "fn_stop"   => "정지",
     "fn_update" => "업데이트",
+    "fn_refresh"    => "새로고침",
+    "fn_reset"  => "초기화",
     "fn_submit" => "확인",
     "fn_list"   => "리스트",
     "fn_information"    => "정보",
