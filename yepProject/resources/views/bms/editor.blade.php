@@ -470,6 +470,7 @@
                 dataType:"json",
                 data:{
                     "_token":$("input[name='_token']").val(),
+                    "up_sheet_id":$("#saved_sheet_id").val(),
                     "up_semester":$("#up_semester").val(),
                     "up_academy":$("#up_academy").val(),
                     "up_school_grade":$("#up_school_grade").val(),
@@ -481,9 +482,14 @@
                     $("#guide_txt").addClass("d-none");
                     if (msg.result === "true"){
                         $("#saved_sheet_id").val(msg.data.id);
-                        showAlert("{{ __('strings.fn_save_complete') }}");
+                        if (msg.shId !== ""){
+                            showAlert("{{ __('strings.str_did_update') }}");
+                            return;
+                        }else{
+                            showAlert("{{ __('strings.fn_save_complete') }}");
+                        }
                     }else{
-                        showAlert("{{ __('strings.err_fail_to_save') }}");
+                        showAlert("{{ __('strings.err_has_same_data') }}");
                     }
                 },
                 error:function (e1,e2,e3){
@@ -499,6 +505,11 @@
             nowPanelIndex = $(".fn_save").index($(this));
             if ($(".fn_forms_list_inner").eq(nowPanelIndex).find("div").length <= 0){
                 showAlert("{{ __('strings.str_must_has_classes') }}");
+            }
+
+            if ($("#saved_sheet_id").val() === ""){
+                showAlert("{{ __('strings.err_save_sheet_id') }}");
+                return;
             }
 
             let innerCls = [];
@@ -565,10 +576,16 @@
                 success:function (msg){
                     if (msg.result === "true"){
                         showAlert("{{ __('strings.fn_save_complete') }}");
-                        $(".fn_status_now").eq(nowPanelIndex).html("{{ __("strings.fn_now_saved") }}");
+                        //$(".fn_status_now").eq(nowPanelIndex).html("{{ __("strings.fn_now_saved") }}");
+                        $("input[name='saved_sheet_info_id[]']").eq(nowPanelIndex).val(msg.shi_id);
                     }else{
-                        showAlert("{{ __('strings.err_fail_to_save') }}");
-                        return;
+                        if (msg.errorcode === "NO_SHEET_ID"){
+                            showAlert("{{ __('strings.err_save_sheet_id') }}");
+                            return;
+                        }else{
+                            showAlert("{{ __('strings.err_fail_to_save') }}");
+                            return;
+                        }
                     }
                 },
                 error:function (e1,e2,e3){
@@ -645,6 +662,13 @@
                 },
                 success:function(msg){
                     //
+                    if (msg.result === "false"){
+                        switch(msg.code){
+                            case "FIRST_PAGE_SET":
+                                showAlert("{{ __('strings.err_save_sheet_id') }}");
+                                break;
+                        }
+                    }
                 },
                 error:function (e1,e2,e3){
                     showAlert(e2);

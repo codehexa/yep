@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Academies;
 use App\Models\BmsCurriculums;
 use App\Models\BmsDays;
+use App\Models\BmsPageSettings;
 use App\Models\BmsSemesters;
 use App\Models\BmsSheetInfo;
 use App\Models\BmsSheetInfoItems;
@@ -19,6 +20,7 @@ use App\Models\Classes;
 use App\Models\Configurations;
 use App\Models\Hakgi;
 use App\Models\schoolGrades;
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +63,7 @@ class BmsEditorController extends Controller
     public function addBasic(Request $request){
         $user = Auth::user();
 
+        $shId = $request->get("up_sheet_id");
         $bsId = $request->get("up_semester");
         $acId = $request->get("up_academy");
         $sgId = $request->get("up_school_grade");
@@ -72,10 +75,23 @@ class BmsEditorController extends Controller
             ["bs_id","=",$bsId],["ac_id","=",$acId],["sg_id","=",$sgId],["us_id","=",$usId]
         ];
 
+        if ($shId != ""){
+            $check = BmsSheets::find($shId);
+
+            $check->bs_id = $bsId;
+            $check->ac_id = $acId;
+            $check->sg_id = $sgId;
+            $check->us_id = $usId;
+            $check->pre_week = $preWeek;
+            $check->now_week = $nowWeek;
+            $check->writer_id = $user->id;
+
+            return response()->json(['result'=>'true','shId'=>$check->id]);
+        }
         $check = BmsSheets::where($checkArray)->count();
 
         if ($check > 0){
-            return response()->json(['result'=>'false']);
+            return response()->json(['result'=>'false','cnt'=>$check]);
         }else{
             $academy = Academies::find($acId);
             $semester = BmsSemesters::find($bsId);
@@ -138,6 +154,10 @@ class BmsEditorController extends Controller
             ["bsi_now_week","=",$nowWeek]
         ];
 
+        if (is_null($sheetId)){
+            return response()->json(['result'=>'false','errcode'=>'NO_SHEET_ID']);
+        }
+
         $check = BmsSheetInfo::where($whereArray)->first();
 
         if (!is_null($check)){
@@ -176,6 +196,8 @@ class BmsEditorController extends Controller
                 ->where('bms_sheet_info_id','=',$check->id)
                 ->where('bms_shi_index','>=',sizeof($upClassArray))
                 ->delete();
+
+            return response()->json(['result'=>'true','shi_id'=>$check->id]);
         }else{
             $new = new BmsSheetInfo();
 
@@ -213,9 +235,9 @@ class BmsEditorController extends Controller
 
                 $newSheetItem->save();
             }
-        }
 
-        return response()->json(['result'=>'true']);
+            return response()->json(['result'=>'true','shi_id'=>$bmsSheetInfoId]);
+        }
     }
 
     public function loadSheet(Request $request){
@@ -264,5 +286,51 @@ class BmsEditorController extends Controller
 
     public function preview(Request $request){
         $sheetInfoId = $request->get("saved_sh_info_id");
+
+        $sheetInfo = BmsSheetInfo::find($sheetInfoId);
+
+        // 기본 정보
+        $settings = Settings::where('set_code','=',Configurations::$ACADEMY_PRESIDENT_CALL)->first();
+        $academy_president_call = $settings->set_value;
+
+        // sheet 에 대한 정보
+        $sheet = BmsSheets::find($sheetInfo->sheet_id);
+        $academy = $sheet->BmsAcademy;
+
+        // 요일별 내용 들
+        $sheetInfoItems = BmsSheetInfoItems::where('bms_sheet_id','=',$sheetInfoId)->orderBy('bms_shi_index','asc')->get();
+
+        $d0 = [];
+        $d0[":ACADEMY_NAME:"] = $academy->ac_name;
+        $d0[":ACADEMY_ALL_TEL:"]    = $academy_president_call;
+        $d0[":ACADEMY_TEL:"] = $academy->ac_tel;
+
+        $sheetProcess = BmsPageSettings::orderBy('field_index','asc')->get();
+        if (is_null($sheetProcess)){
+            return response()->json(['result'=>'false','code'=>'FIRST_PAGE_SET']);
+        }
+
+        $strings = "";  // 표현될 대상 문자열.
+        foreach($sheetProcess as $process){
+            $str = $process->field_function;
+            $typ = $process->field_type;
+            if ($typ == ":ADD_BOTTOM_ROW:"){
+                $strings .= PHP_EOL;
+            }else{
+                $strings .= $str;
+            }
+        }
+
+        foreach ($d0 as $k=>$v){
+            $strings = preg_replace('/'.$k.'/i',$v,$strings);
+        }
+
+        $functionCodes = Configurations::$BMS_PAGE_FUNCTION_KEYS;
+
+        return response()->json(['txt'=>$strings]);
+    }
+
+    public function getFunctions(){
+
     }
 }

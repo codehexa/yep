@@ -340,6 +340,10 @@ return [
     "err_dt" => "DT(을)를 선택하세요",
     "lb_no_list"    => "불러올 자료가 없습니다",
     "err_select_now_week"   => "이번 주를 선택하세요",
+    "err_save_sheet_id" => "기본 정보 셋팅을 우선 저장하세요.",
+    "str_did_update"    => "업데이트 되었습니다",
+    "err_has_same_data" => "중복된 데이터가 있습니다. 불러오기 하세요.",
+
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
     "lb_page_input_form"    => "폼 정보 입력",
