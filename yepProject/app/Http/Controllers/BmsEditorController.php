@@ -300,10 +300,21 @@ class BmsEditorController extends Controller
         // 요일별 내용 들
         $sheetInfoItems = BmsSheetInfoItems::where('bms_sheet_id','=',$sheetInfoId)->orderBy('bms_shi_index','asc')->get();
 
-        $d0 = [];
-        $d0[":ACADEMY_NAME:"] = $academy->ac_name;
-        $d0[":ACADEMY_ALL_TEL:"]    = $academy_president_call;
-        $d0[":ACADEMY_TEL:"] = $academy->ac_tel;
+        $transData = [];
+        $transData[":CLASS_NAME:"]  = $sheetInfo->BmsClass->class_name;
+        $transData[":TEACHER_NAME:"]    = $sheet->Teacher->name;
+        $transData[":SEMESTER:"]    = $sheet->Semester->bs_title;
+        $transData[":CURRICULUM:"]  = $sheetInfo->BmsWorkbook->bw_title;
+        $transData[":HAKGI_NAME:"]  = $sheet->Hakgi->hakgi_name;
+        $transData[":PRE_WEEK:"]    = $sheet->PreWeek->bmw_title;
+        $transData[":NOW_WEEK:"]    = $sheet->NowWeek->bmw_title;
+        $transData[":STUDY_TYPE:"]  = $sheetInfo->BmsStudyType->study_title;
+        $transData[":TEACHER_SAY:"] = $sheetInfo->bsi_comment;
+        $transData[":ACADEMY_NAME:"] = $academy->ac_name;
+        $transData[":ACADEMY_ALL_TEL:"]    = $academy_president_call;
+        $transData[":ACADEMY_TEL:"] = $academy->ac_tel;
+        $transData[":ADD_BOTTOM_ROW:"]  = PHP_EOL;
+
 
         $sheetProcess = BmsPageSettings::orderBy('field_index','asc')->get();
         if (is_null($sheetProcess)){
@@ -321,7 +332,7 @@ class BmsEditorController extends Controller
             }
         }
 
-        foreach ($d0 as $k=>$v){
+        foreach ($transData as $k=>$v){
             $strings = preg_replace('/'.$k.'/i',$v,$strings);
         }
 

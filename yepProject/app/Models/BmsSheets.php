@@ -17,4 +17,24 @@ class BmsSheets extends Model
     public function BmsAcademy(){
         return $this->hasOne(Academies::class,"id","ac_id");
     }
+
+    public function Teacher(){
+        return $this->hasOne(User::class, "id","us_id");
+    }
+
+    public function Semester(){
+        return $this->hasOne(BmsSemesters::class, "id", "bs_id");
+    }
+
+    public function PreWeek(){
+        return $this->hasOne(BmsWeeks::class, "id","pre_week");
+    }
+
+    public function NowWeek(){
+        return $this->hasOne(BmsWeeks::class, "id","now_week");
+    }
+
+    public function Hakgi(){
+        return $this->hasOne(schoolGrades::class, "id","sg_id");
+    }
 }

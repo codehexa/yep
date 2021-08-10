@@ -20,4 +20,24 @@ class BmsSheetInfo extends Model
     public function nowDays(){
         return $this->hasOne(BmsDays::class,"id","bsi_days");
     }
+
+    public function BmsStudyType(){
+        return $this->hasOne(BmsStudyTypes::class,"id","bsi_std_type");
+    }
+
+    public function BmsWorkbook(){
+        return $this->hasOne(BmsWorkbooks::class, "id","bsi_workbook");
+    }
+
+    public function BmsClass(){
+        return $this->hasOne(Classes::class, "id","bsi_cls_id");
+    }
+
+    public function BmsDays(){
+        return $this->hasOne(BmsDays::class, "id","bsi_days");
+    }
+
+    public function BmsStudyTimes(){
+        return $this->hasOne(BmsStudyTimes::class, "id","bsi_std_times");
+    }
 }
