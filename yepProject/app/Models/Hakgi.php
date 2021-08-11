@@ -11,7 +11,7 @@ class Hakgi extends Model
 
     protected $table = "hakgi";
     protected $fillable = [
-        "year","hakgi_name","show","school_grade","weeks"
+        "hakgi_name","show","school_grade","weeks"
     ];
 
     public function SchoolGrades(){

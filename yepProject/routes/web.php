@@ -41,7 +41,7 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::post("/deleteCategory",[\App\Http\Controllers\AcademyController::class, 'delete'])->name('deleteCategory');
 
     /* 학기 관리 */
-    Route::get("/hakgis",[\App\Http\Controllers\HakgiController::class, "index"])->name("hakgis");
+    Route::get("/hakgis/{sgid?}",[\App\Http\Controllers\HakgiController::class, "index"])->name("hakgis");
     Route::post("/addHakgi",[\App\Http\Controllers\HakgiController::class, "add"]);
     Route::post("/hakgiInfoJson",[\App\Http\Controllers\HakgiController::class, "getInfo"]);
     Route::post("/storeHakgi",[\App\Http\Controllers\HakgiController::class, "store"]);

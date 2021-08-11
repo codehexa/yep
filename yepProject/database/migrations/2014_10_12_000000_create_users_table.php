@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('drop_date')->nullable();
             $table->bigInteger('academy_id')->unsigned()->nullable()->default(0)->comment('academies.id');
             $table->timestamp('last_login')->nullable();
+            $table->string('zoom_id')->nullable()->comment('zoom id');
         });
     }
 

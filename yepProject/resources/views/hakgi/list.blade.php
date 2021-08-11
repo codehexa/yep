@@ -24,14 +24,26 @@
     @endif
 
     <div class="mt-3">
+        <div class="form-inline ">
+            <label>{{ __('strings.fn_select') }}</label>
+            <select name="ch_school_grade" id="ch_school_grade" class="form-control form-control-sm ml-3">
+                <option value="">{{ __('strings.fn_all') }}</option>
+                @foreach($grades as $sgrade)
+                    <option value="{{ $sgrade->id }}"
+                            @if (isset($sgid) && $sgid == $sgrade->id)
+                                selected
+                            @endif
+                    >{{ $sgrade->scg_name }}</option>
+                @endforeach
+            </select>
+        </div>
         <table class="mt-3 table table-striped">
             <thead>
                 <tr class="text-center">
                     <th scope="col">#</th>
-                    <th scope="col">{{ __('strings.lb_year_name') }}</th>
                     <th scope="col">{{ __('strings.lb_interdisciplinary') }}</th>
                     <th scope="col">{{ __('strings.lb_hakgi_name') }}</th>
-                    <th scope="col">{{ __('strings.lb_week') }}</th>
+                    <th scope="col">{{ __('strings.lb_week_count') }}</th>
                     <th scope="col">{{ __('strings.lb_show') }}</th>
                     <th scope="col">{{ __('strings.lb_function') }}</th>
                 </tr>
@@ -40,7 +52,6 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ $datum->year }}</td>
                     <td>{{ $datum->SchoolGrades->scg_name }}</td>
                     <td>{{ $datum->hakgi_name }}</td>
                     <td>{{ $datum->weeks }}</td>
@@ -69,18 +80,6 @@
                 <form name="hakgiFrm" id="hakgiFrm" method="post" action="/addHakgi">
                     @csrf
                     <input type="hidden" name="up_id" id="up_id"/>
-                    <div class="form-group">
-                        <label for="up_year">{{ __('strings.lb_year_name') }}</label>
-                        <select name="up_year" id="up_year" class="form-control">
-                            @for ($i=date('Y') + 1; $i > (date('Y') -4); $i--)
-                                <option value="{{ $i }}"
-                                        @if ($i == date('Y'))
-                                            selected
-                                        @endif
-                                >{{ $i }} {{ __('strings.lb_year_name') }}</option>
-                            @endfor
-                        </select>
-                    </div>
 
                     <div class="form-group">
                         <label for="up_school_grade">{{ __('strings.lb_interdisciplinary') }}</label>
@@ -182,7 +181,6 @@
             $("#btnHakgiDelete").addClass("d-none");
 
             $("#up_id").val("");
-            $("#up_year").val(new Date().getFullYear());
             $("#up_school_grade").val("");
             $("#up_name").val("");
             $("#up_weeks").val("");
@@ -221,7 +219,6 @@
                 success:function (msg){
                     if (msg.result === "true"){
                         $("#up_id").val(clId);
-                        $("#up_year").val(msg.data.year);
                         $("#up_school_grade").val(msg.data.school_grade);
                         $("#up_name").val(msg.data.hakgi_name);
                         $("#up_show").val(msg.data.show);
@@ -251,7 +248,13 @@
             $("#hakgiFrm").submit();
         });
 
-
+        $(document).on("change","#ch_school_grade",function (){
+            if ($(this).val() !== ""){
+                location.href = "/hakgis/" + $(this).val();
+            }else{
+                location.href = "/hakgis";
+            }
+        });
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

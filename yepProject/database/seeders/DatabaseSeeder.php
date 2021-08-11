@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             DtSeeder::class,
             BmsWeeksSeeder::class,
             SettingsSeeder::class,
-            BmsSemestersSeeder::class
+            BmsSemestersSeeder::class,
+            BmsStudyTypesSeeder::class
         ]);
     }
 }

@@ -18,6 +18,7 @@ class CreateBmsStudyTypesTable extends Migration
             $table->timestamps();
             $table->string("study_title");
             $table->integer("study_type_index")->unsigned()->default(0);
+            $table->enum('show_zoom',['Y','N'])->default('N')->comment('zoom id 를 보여주기 위함.');
         });
     }
 

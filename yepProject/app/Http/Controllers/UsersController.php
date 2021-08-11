@@ -66,6 +66,7 @@ class UsersController extends Controller
         $upPower = $request->get("up_power");
         $upLive = $request->get("up_live");
         $upAcademyId = $request->get("up_academy_id");
+        $upZoomId = $request->get("up_zoom_id");
 
         $targetId = $id;
 
@@ -107,10 +108,19 @@ class UsersController extends Controller
             $logUserCtrl->addLog($user->id,$targetId,$fieldName,$oldValue,$newValue);
         }
 
+        if ($upZoomId != $old->zoom_id){
+            $fieldName = "zoom_id";
+            $oldValue = $old->zoom_id;
+            $newValue = $upZoomId;
+
+            $logUserCtrl->addLog($user->id,$targetId,$fieldName,$oldValue,$newValue);
+        }
+
         $old->name = $upName;
         $old->power = $upPower;
         $old->live = $upLive;
         $old->academy_id = $upAcademyId;
+        $old->zoom_id = $upZoomId;
 
         try {
             $old->save();
@@ -150,6 +160,7 @@ class UsersController extends Controller
         $email = $request->get("up_email");
         $name = $request->get("up_usname");
         $passwd = $request->get("up_password");
+        $zoomId = $request->get("up_zoom_id");
 
         $check = User::where('email','=',$email)->count();
 
@@ -164,6 +175,7 @@ class UsersController extends Controller
         $addUser->password = Hash::make($passwd);
         $addUser->power = Configurations::$USER_POWER_TEACHER;
         $addUser->live = "N";
+        $addUser->zoom_id = $zoomId;
 
         try {
             $addUser->save();

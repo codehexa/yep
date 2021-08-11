@@ -11,29 +11,31 @@ use Illuminate\Http\Request;
 class HakgiController extends Controller
 {
     //
-    public function index(){
-        $data = Hakgi::orderBy('year','desc')
-        ->orderBy('school_grade','asc')->orderBy('hakgi_name')->get();
+    public function index($sgid=''){
+        if ($sgid != ''){
+            $data = Hakgi::where('school_grade','=',$sgid)
+                ->orderBy('id','asc')->get();
+        }else{
+            $data = Hakgi::orderBy('id','asc')->get();
+        }
 
         $grades = schoolGrades::orderBy('scg_index','asc')->get();
 
-        return view('hakgi.list',["data"=>$data,"grades"=>$grades]);
+        return view('hakgi.list',["data"=>$data,"grades"=>$grades,"sgid"=>$sgid]);
     }
 
     public function add(Request $request){
-        $year = $request->get("up_year");
         $schoolGrade = $request->get("up_school_grade");
         $hName = $request->get("up_name");
         $upShow = $request->get("up_show");
         //$upCommon = $request->get("up_common");
         $upWeek = $request->get("up_weeks");
 
-        $check = Hakgi::where('year','=',$year)->where('hakgi_name','=',$hName)->where('school_grade','=',$schoolGrade)->count();
+        $check = Hakgi::where('hakgi_name','=',$hName)->where('school_grade','=',$schoolGrade)->count();
         if ($check > 0){
             return redirect()->back()->withErrors(['msg'=>'FAIL_ALREADY_HAS']);
         }else{
             $hakgi = new Hakgi();
-            $hakgi->year = $year;
             $hakgi->school_grade = $schoolGrade;
             $hakgi->hakgi_name = $hName;
             $hakgi->show = $upShow;
@@ -95,14 +97,12 @@ class HakgiController extends Controller
 
     public function store(Request $request){
         $upId = $request->get("up_id");
-        $upYear = $request->get("up_year");
         $schoolGrade = $request->get("up_school_grade");
         $upName = $request->get("up_name");
         $upWeek = $request->get("up_weeks");
         $upShow = $request->get("up_show");
 
         $root = Hakgi::find($upId);
-        $root->year = $upYear;
         $root->hakgi_name = $upName;
         $root->school_grade = $schoolGrade;
         $root->weeks = $upWeek;

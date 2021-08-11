@@ -231,6 +231,7 @@ return [
     "lb_sms_work_input" => "SMS 내용 입력",
     "lb_weeks"  => "주차",
     "lb_week"   => "주",
+    "lb_week_count" => "주 수",
     "lb_input"  => "입력",
     "lb_title"  => "이름",
     "lb_subjects"   => "과목",

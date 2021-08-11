@@ -11,6 +11,6 @@ class BmsStudyTypes extends Model
 
     protected $table= "bms_study_types";
     protected $fillable = [
-        "study_title","study_type_index"
+        "study_title","study_type_index","show_zoom"
     ];
 }

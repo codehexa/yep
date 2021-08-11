@@ -20,7 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'power','live','drop_date','academy_id','last_login'
+        'power','live','drop_date','academy_id','last_login',
+        'zoom_id'
     ];
 
     /**

@@ -12,6 +12,10 @@ class BmsPageSettings extends Model
     protected $table = "bms_page_settings";
 
     protected $fillable = [
-        "field_name","field_index","field_function","field_type"
+        "sg_id","field_name","field_index","field_function","field_type"
     ];
+
+    public function Sgrade(){
+        return $this->hasOne(schoolGrades::class,"id","sg_id");
+    }
 }

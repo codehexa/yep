@@ -43,6 +43,7 @@
                     >{{ $grade->scg_name }}</option>
                 @endforeach
             </select>
+            <span class="d-none ml-2" id="selectLoader"><i class="fa fa-spin fa-spinner"></i> </span>
         </div>
     </div>
 
@@ -294,6 +295,8 @@
 
         $(document).on("change","#section_grades",function (){
             let curVal = $(this).val();
+
+            $("#selectLoader").removeClass("d-none");
 
             if (curVal === ''){
                 location.href = "/subjects";
