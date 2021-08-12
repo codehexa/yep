@@ -17,10 +17,15 @@ class CreateBmsSheetInfoTable extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger('sheet_id')->unsigned()->default(0);
+            $table->bigInteger('bsi_acid')->unsigned()->default(0)->comment('academy.id');
+            $table->bigInteger('bsi_sgid')->unsigned()->default(0)->comment('academy.id');
+            $table->bigInteger('bsi_hakgi')->unsigned()->default(0)->comment('academy.id');
+            $table->bigInteger('bsi_usid')->unsigned()->default(0)->comment('academy.id');
             $table->text('bsi_comment')->nullable();
             $table->bigInteger('bsi_std_type')->unsigned()->default(0);
             $table->bigInteger('bsi_workbook')->unsigned()->default(0);
             $table->bigInteger('bsi_cls_id')->unsigned()->default(0);
+            $table->bigInteger('bsi_curri_id')->unsigned()->default(0);
             $table->bigInteger('bsi_days')->unsigned()->default(0);
             $table->bigInteger('bsi_std_times')->unsigned()->default(0);
             $table->integer('bsi_subjects_count')->unsigned()->default(0);

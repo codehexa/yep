@@ -27,30 +27,52 @@
     @endif
 
     <div class="mt-3">
-        <div class="list-group" id="page_list">
-            @foreach($data as $datum)
-                <div class="list-group-item">
-                    <label>{{ $datum->field_index }}. {{ $datum->field_name }}
-                        @if ($datum->field_type == "ARRAY_START")
-                            <span class="font-weight-bold">{{ __('strings.lb_array_type_start') }}</span>
-                        @elseif ($datum->field_type == "ARRAY_END")
-                            <span class="font-weight-bold">{{ __('strings.lb_array_type_end') }}</span>
-                        @endif
-                    </label>
-                    <div class="mt-1">
-                        <div class="fn_rows" fn_index="{{ $datum->field_index }}">{{ $datum->field_function }}</div>
-                        <textarea name="field_vals[]" class="bg-light fn_textarea form-control" fn_id="{{ $datum->id }}">{{ $datum->field_function }}</textarea>
-                        <div class="my-1">
-                            <button class="btn btn-sm btn-outline-primary"><i class="fa fa-upload"></i> {{ __('strings.fn_modify') }}</button>
+        <div class="form-inline">
+            <label>{{ __('strings.lb_haknyon') }}</label>
+            <select name="ch_school_grade" id="ch_school_grade" class="form-control form-control-sm ml-2">
+                <option value="">{{ __('strings.fn_select_item') }}</option>
+                @foreach($sgrades as $sgrade)
+                    <option value="{{ $sgrade->id }}"
+                    @if (isset($sgrade_val) && $sgrade_val == $sgrade->id)
+                        selected
+                    @endif
+                    >{{ $sgrade->scg_name }}</option>
+                @endforeach
+            </select>
+
+            <span id="selectLoader" class="d-none ml-2"><i class="fa fa-spinner fa-spin"></i> {{ __('strings.fn_loading') }}</span>
+        </div>
+
+        <div class="list-group list-group-horizontal">
+            <div class="list-group mt-3" id="page_list">
+                @foreach($data as $datum)
+                    <div class="list-group-item">
+                        <label>{{ $datum->field_index }}. {{ $datum->field_name }}
+                            @if ($datum->field_type == "ARRAY_START")
+                                <span class="font-weight-bold">{{ __('strings.lb_array_type_start') }}</span>
+                            @elseif ($datum->field_type == "ARRAY_END")
+                                <span class="font-weight-bold">{{ __('strings.lb_array_type_end') }}</span>
+                            @endif
+                        </label>
+                        <div class="mt-1">
+                            <div class="fn_rows" fn_index="{{ $datum->field_index }}">{{ $datum->field_function }}</div>
+                            <textarea name="field_vals[]" class="bg-light fn_textarea form-control" fn_id="{{ $datum->id }}">{{ $datum->field_function }}</textarea>
+                            <div class="my-1">
+                                <button class="btn btn-sm btn-outline-primary"><i class="fa fa-upload"></i> {{ __('strings.fn_modify') }}</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
+
+            <div id="page_preview"></div>
         </div>
+
 
         <div class="mt-3">
             <h6>{{ __('strings.lb_page_input_form') }}</h6>
             <form name="frm" id="frm" method="post" action="/bms/pageAddSetting">
+                <input type="hidden" name="up_sg_id" id="up_sg_id" value="{{$sgrade_val}}"/>
                 @csrf
                 <div class="form-group list-group border border-3 border-info">
                     <div class="list-group-item">
@@ -69,7 +91,7 @@
                         </div>
                     </div>
                     <div class="list-group-item">
-                        <div class="list-group-horizontal list-group">
+                        <div class="form-inline">
                             <label class="text-nowrap mr-3">{{ __('strings.lb_input_strings') }}</label>
                             <select name="up_field_type" id="up_field_type" class="form-control form-control-sm">
                                 <option value="TXT">{{ __('strings.lb_input_string') }}</option>
@@ -90,6 +112,7 @@
                 <button id="btnSave" class="btn btn-outline-primary">
                     <i class="fa fa-save"></i> {{ __('strings.fn_save') }}
                 </button>
+                <span id="saveLoader" class="d-none ml-2"><i class="fa fa-spin fa-spinner"></i> {{ __('strings.fn_saving') }}</span>
             </div>
         </div>
     </div>
@@ -200,6 +223,7 @@
                 return;
             }
 
+            $("#saveLoader").removeClass("d-none");
             $("#frm").submit();
         });
 
@@ -250,6 +274,15 @@
         $(document).ready(function (){
             $("#page_list").sortable();
             printText();
+        });
+
+        $(document).on("change","#ch_school_grade",function (){
+            $("#selectLoader").removeClass("d-none");
+            if ($(this).val() === ""){
+                location.href = "/bms/pageSetting";
+            }else{
+                location.href = "/bms/pageSetting/" + $(this).val();
+            }
         });
 
         function showAlert(str){

@@ -10,6 +10,7 @@ class BmsSheetInfo extends Model
     use HasFactory;
     protected $table = "bms_sheet_info";
     protected $fillable = [
+        "bsi_acid","bsi_sgid","bsi_hakgi","bsi_usid","bsi_curri_id",
         "sheet_id","bsi_comment","bsi_std_type","bsi_workbook","bsi_cls_id","bsi_days","bsi_std_times",
         "bsi_subjects_count",
         "bsi_pre_subject_1","bsi_pre_subject_2",

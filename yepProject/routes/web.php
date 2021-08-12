@@ -184,6 +184,13 @@ Route::prefix('bms')->group(function(){
     Route::post("/addWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "addWorkbook"]);
     Route::post("/saveSortWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "saveSortWorkbooks"]);
     Route::post("/storeWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "storeWorkbook"]);
+
+    /* 세팅 */
+    Route::get("/basic",[\App\Http\Controllers\BmsBasicController::class, "index"]);
+    Route::post("/getTeachers",[\App\Http\Controllers\BmsBasicController::class, "getTeachers"]);
+    Route::post("/getHakgis",[\App\Http\Controllers\BmsBasicController::class, "getHakgis"]);
+    Route::post("/basicLoadSheet",[\App\Http\Controllers\BmsBasicController::class, "basicLoadSheet"]);
+
     /* editor */
     Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
     Route::post("/editorAddBasic",[\App\Http\Controllers\BmsEditorController::class,"addBasic"]);
@@ -193,7 +200,7 @@ Route::prefix('bms')->group(function(){
     Route::post("/editorPreviewer",[\App\Http\Controllers\BmsEditorController::class, "preview"]);
 
     /* mms page settings */
-    Route::get("/pageSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "index"]);
+    Route::get("/pageSetting/{sgid?}",[\App\Http\Controllers\BmsPageSettingsController::class, "index"]);
     Route::post("/pageAddSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "addSetting"]);
 });
 

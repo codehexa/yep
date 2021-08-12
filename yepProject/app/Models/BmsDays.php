@@ -11,6 +11,6 @@ class BmsDays extends Model
 
     protected $table = "bms_days";
     protected $fillable = [
-        "days_title"
+        "days_title","days_index","days_count"
     ];
 }

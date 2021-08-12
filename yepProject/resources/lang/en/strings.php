@@ -366,6 +366,10 @@ return [
     "str_input_output_first"    => "제출과제 (첫수업) 을 입력하세요",
     "str_input_output_second"    => "제출과제 (두번째 수업) 을 입력하세요",
 
+    /* bms setting -> basic */
+    "lb_bms_basic"  => "세팅",
+    "lb_class_title" => "반 이름",
+
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",
     "str_do_you_want_to_delete_cant_recover" => "삭제를 하시겠습니까? 진행하면 회복할 수 없습니다",
@@ -412,6 +416,8 @@ return [
     "fn_been"   => "있음",
     "fn_not_been"   => "없음",
     "fn_preview"    => "미리보기",
+    "fn_loading"    => "불러오는 중...",
+    "fn_saving" => "저장 중...",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",

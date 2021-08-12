@@ -48,6 +48,7 @@
                     <ul class="navbar-nav mr-auto">
                         @auth
                             <div class="btn-group btn-group-sm">
+                                <a href="/bms/basic" class="btn btn-outline-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_bms_basic') }}</a>
                                 <a href="/bms/editor" class="btn btn-outline-primary"><i class="fa fa-newspaper"></i> {{ __('strings.lb_editor') }}</a>
                                 <a href="/bms/settings" class="btn btn-outline-primary"><i class="fa fa-cog"></i> {{ __('strings.lb_bms_setting') }}</a>
                                 <a href="/bms/hworks" class="btn btn-outline-primary"><i class="fa fa-book"></i> {{ __('strings.lb_bms_hworks_manage') }}</a>

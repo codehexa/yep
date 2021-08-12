@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBmsDaysTable extends Migration
+class CreateBmsStudyBooksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateBmsDaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('bms_days', function (Blueprint $table) {
+        Schema::create('bms_study_books', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("days_title");
-            $table->integer("days_index")->unsigned()->default(0);
-            $table->integer("days_count")->unsigned()->default(0)->comment("실제 일자 수 ");
+            $table->string("bsb_title");
+            $table->integer("bsb_index")->unsigned()->default(0)->comment("순서 ");
+            $table->enum("bsb_direct",["Y","N"])->default("N")->comment("직접작성일 경우 선택. Y");
         });
     }
 
@@ -29,6 +29,6 @@ class CreateBmsDaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bms_days');
+        Schema::dropIfExists('bms_study_books');
     }
 }
