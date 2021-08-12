@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             BmsSemestersSeeder::class,
             BmsStudyTypesSeeder::class,
             BmsStudyBooksSeeder::class,
+            BmsSdlSeeder::class,
         ]);
     }
 }
