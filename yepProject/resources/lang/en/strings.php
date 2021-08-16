@@ -321,6 +321,7 @@ return [
     "lb_insert_books"   => "교재과제를 입력하세요",
     "lb_insert_output_first"    => "제출과제(첫수업) 을 입력하세요",
     "lb_insert_output_second"   => "제출과제(두번째 수업)을 입력하세요",
+    "lb_select_study_days"  => "수업 요일을 선택하세요",
     "lb_curriculums"    => "과정",
     "lb_ex_week"    => "지난 주",
     "lb_now_week"   => "이번 주",
@@ -344,6 +345,11 @@ return [
     "err_save_sheet_id" => "기본 정보 셋팅을 우선 저장하세요.",
     "str_did_update"    => "업데이트 되었습니다",
     "err_has_same_data" => "중복된 데이터가 있습니다. 불러오기 하세요.",
+    "lb_give_sdl_use"   => "SDL 제출 사항 운영 여부",
+    "lb_give_sdl"   => "SDL 제출",
+    "lb_study_book" => "익힘책",
+    "lb_set_outputs_by_day" => "요일별 수업 과제 설정",
+    "lb_make_class" => "수업만들기",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
@@ -418,6 +424,7 @@ return [
     "fn_preview"    => "미리보기",
     "fn_loading"    => "불러오는 중...",
     "fn_saving" => "저장 중...",
+    "fn_direct_input"   => "직접 작성",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",

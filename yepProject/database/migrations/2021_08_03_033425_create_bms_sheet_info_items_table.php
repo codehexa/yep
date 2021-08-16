@@ -24,6 +24,7 @@ class CreateBmsSheetInfoItemsTable extends Migration
             $table->bigInteger('bms_sii_second_class')->unsigned()->default(0);
             $table->bigInteger('bms_sii_second_teacher')->unsigned()->default(0);
             $table->enum('bms_sii_dt',['Y','N'])->default("N");
+            $table->text('bms_sii_dt_direct')->nullable();
         });
     }
 

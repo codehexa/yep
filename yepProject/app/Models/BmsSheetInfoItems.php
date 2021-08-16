@@ -14,6 +14,6 @@ class BmsSheetInfoItems extends Model
         "bms_sheet_id","bms_sheet_info_id","bms_shi_index",
         "bms_sii_first_class","bms_sii_first_teacher",
         "bms_sii_second_class","bms_sii_second_teacher",
-        "bms_sii_dt"
+        "bms_sii_dt","bms_sii_dt_direct"
     ];
 }

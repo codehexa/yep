@@ -191,6 +191,7 @@
     </div>
 </div>
 
+
 @endsection
 
 @section('scripts')
@@ -202,70 +203,168 @@
                 <div class="col list-group">
                     <div class="list-group-item">
                         <label for="up_comment">{{ __('strings.lb_class_comment') }}</label>
-                        <textarea name="up_comment" class="form-control form-control-sm fn_up_comment">${bsi_comment}</textarea>
+                        <textarea name="up_comment" class="form-control form-control-sm fn_up_comment">${comments}</textarea>
                         <input type="hidden" name="saved_sheet_info_id[]" value="${id}" />
+                        <input type="hidden" name="saved_class_id[]" value="${classId}" />
                     </div>
                     <div class="list-group-item">
-                        <div class="form-group form-inline">
-                            <label for="">{{ __('strings.lb_study') }}</label>
-                            <select name="up_study" class="form-control form-control-sm ml-2 fn_up_study" >
-                                <option value="">{{ __('strings.fn_select_item') }}</option>
-                            @foreach($studyTypes as $studyType)
-                                <option value="{{ $studyType->id }}" data-zoom="{{ $studyType->show_zoom }}" @{{if studyType == {!! $studyType->id !!}}}  selected @{{/if}}>{{ $studyType->study_title }}</option>
-                            @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="form-group form-inline">
-                            <label for="">{{ __('strings.lb_curriculums') }}</label>
-                            <select name="up_curri" class="form-control form-control-sm ml-2 fn_up_study" >
-                                <option value="">{{ __('strings.fn_select_item') }}</option>
-                            @foreach($curriculums as $curriculum)
-                                <option value="{{ $curriculum->id }}" @{{if curriId == {!! $curriculum->id !!}}}  selected @{{/if}}>{{ $curriculum->bcur_title }}</option>
-                            @endforeach
-                            </select>
+                        <div class="d-flex justify-content-between">
+                            <div class="form-group form-inline">
+                                <label for="">{{ __('strings.lb_study') }}</label>
+                                <select name="up_study" class="form-control form-control-sm ml-2 fn_up_study" >
+                                    <option value="">{{ __('strings.fn_select_item') }}</option>
+                                @foreach($studyTypes as $studyType)
+                                    <option value="{{ $studyType->id }}" data-zoom="{{ $studyType->show_zoom }}" @{{if studyType == {!! $studyType->id !!}}}  selected @{{/if}}>{{ $studyType->study_title }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group form-inline">
+                                <label for="">{{ __('strings.lb_curriculums') }}</label>
+                                <select name="up_curri" class="form-control form-control-sm ml-2 fn_up_curri" >
+                                    <option value="">{{ __('strings.fn_select_item') }}</option>
+                                @foreach($curriculums as $curriculum)
+                                    <option value="{{ $curriculum->id }}" @{{if curriId == {!! $curriculum->id !!}}}  selected @{{/if}}>{{ $curriculum->bcur_title }}</option>
+                                @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
 
                     <div class="list-group-item">
-                        <div class="form-group form-inline">
-                            <label for="">{{ __('strings.lb_study_days') }}</label>
-                            <select name="up_days" class="form-control form-control-sm ml-2 fn_up_study" >
-                                <option value="">{{ __('strings.fn_select_item') }}</option>
-                            @foreach($stdDays as $stdDay)
-                                <option value="{{ $stdDay->id }}" @{{if studyDays == {!! $stdDay->id !!}}}  selected @{{/if}}>{{ $stdDay->days_title }}</option>
-                            @endforeach
-                            </select>
+                        <div class="d-flex justify-content-between">
+                            <div class="form-group form-inline">
+                                <label for="">{{ __('strings.lb_study_days') }}</label>
+                                <select name="up_days" class="form-control form-control-sm ml-2 fn_up_days" >
+                                    <option value="">{{ __('strings.fn_select_item') }}</option>
+                                @foreach($stdDays as $stdDay)
+                                    <option value="{{ $stdDay->id }}" data-len="{{ $stdDay->days_count }}" @{{if studyDays == {!! $stdDay->id !!}}}  selected @{{/if}}>{{ $stdDay->days_title }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group form-inline">
+                                <label for="">{{ __('strings.lb_study_times') }}</label>
+                                <select name="up_study_times" class="form-control form-control-sm ml-2 fn_up_study_times" >
+                                    <option value="">{{ __('strings.fn_select_item') }}</option>
+                                    @foreach($stdTimes as $stdTime)
+                                    <option value="{{ $stdTime->id }}" @{{if studyTimes == {!! $stdTime->id !!}}}  selected @{{/if}}>{{ $stdTime->time_title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
 
                     <div class="list-group-item">
-                        <div class="form-group form-inline">
-                            <label for="">{{ __('strings.lb_study_times') }}</label>
-                            <select name="up_study_times" class="form-control form-control-sm ml-2 fn_up_study" >
-                                <option value="">{{ __('strings.fn_select_item') }}</option>
-                            @foreach($stdTimes as $stdTime)
-                                <option value="{{ $stdTime->id }}" @{{if studyTimes == {!! $stdTime->id !!}}}  selected @{{/if}}>{{ $stdTime->time_title }}</option>
-                            @endforeach
-                            </select>
+                        <div class="d-flex justify-content-between">
+                            <div class="form-group form-inline">
+                                <div class="form-check">
+                                    <input type="checkbox" name="chk_sdl" class="form-check-input" value="Y" @{{if sdl_use == 'Y' }} checked @{{/if}}/>
+                                    <label for="">{{ __('strings.lb_give_sdl') }}</label>
+                                </div>
+                                <select name="sel_sdl" class="form-control form-control-sm ml-2 fn_sel_sdl">
+                                    <option value=''>{{ __("strings.fn_select_item") }}</option>
+                                    @foreach($sdls as $sdl)
+                                    <option value="{{ $sdl->id }}" data-direct={{ $sdl->bs_direct }} @{{if sdl == {!! $sdl->id !!} }} selected @{{/if}}>{{ $sdl->bs_title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group form-inline">
+                                <div class="form-check">
+                                    <input type="checkbox" name="chk_workbook" class="form-check-input" value="Y" @{{if workbook_use == 'Y' }}checked@{{/if}}/>
+                                    <label for="">{{ __('strings.lb_workbook') }}</label>
+                                </div>
+                                <select name="sel_workbook" class="form-control form-control-sm ml-2 fn_sel_workbook">
+                                    <option value=''>{{ __("strings.fn_select_item") }}</option>
+                                    @foreach($workbooks as $workbook)
+                                    <option value="{{ $workbook->id }}" @{{if workbook == {!! $workbook->id !!} }} selected @{{/if}}>{{ $workbook->bw_title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
+
+
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div class="form-group form-inline">
+                                <div class="form-check">
+                                    <input type="checkbox" name="chk_studybook" class="form-check-input" value="Y" @{{if studybook_use == 'Y' }}checked@{{/if}}/>
+                                    <label for="">{{ __('strings.lb_study_book') }}</label>
+                                </div>
+                                <select name="sel_studybook" class="form-control form-control-sm ml-2 fn_sel_studybook">
+                                    <option value=''>{{ __("strings.fn_select_item") }}</option>
+                                    @foreach($studyBooks as $studyBook)
+                                    <option value="{{ $studyBook->id }}" data-studybook="{{ $studyBook->bsb_direct }}" @{{if studybook == {!! $studyBook->id !!} }} selected @{{/if}}>{{ $studyBook->bsb_title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group form-inline">
+                                <div class="form-check">
+                                    <input type="checkbox" name="chk_dt" class="form-check-input" value="Y" @{{if dt_use == 'Y' }}checked@{{/if}}/>
+                                    <label for="">{{ __('strings.lb_bms_dt') }}</label>
+                                </div>
+                                <select name="sel_dt" class="form-control form-control-sm ml-2 fn_sel_dt">
+                                    <option value=''>{{ __("strings.fn_select_item") }}</option>
+                                    @foreach($dts as $dt)
+                                    <option value="{{ $dt->id }}" @{{if dt == {!! $dt->id !!} }} selected @{{/if}}>{{ $dt->dt_title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list-group-item">
+                        <h6>{{ __('strings.lb_set_outputs_by_day') }}</h6>
+                        <div class="mt-2 fn_classes list-group"></div>
+                    </div>
+
+                    <div class="list-group-item">
+                        <h6>{{ __('strings.lb_pre_week_class') }}</h6>
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label>{{ __('strings.lb_first_class') }}</label>
+                                <select name="up_pre_week_first" class="form-control form-control-sm fn_pre_week_first ml-2">
+                                    <option value=''>{{ __('strings.fn_select_item') }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group ml-3">
+                                <label>{{ __('strings.lb_second_class') }}</label>
+                                <select name="up_pre_week_second" class="form-control form-control-sm fn_pre_week_second ml-2">
+                                    <option value=''>{{ __('strings.fn_select_item') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="mt-1 btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary fn_make_class"><i class="fa fa-bread-slice"></i> {{ __('strings.lb_make_class') }}</button>
+                            <button class="btn btn-outline-primary fn_save"><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
+                            <button class="btn btn-outline-primary fn_preview"><i class="fa fa-binoculars"></i> {{ __('strings.fn_preview') }}</button>
+                            <i class="fa fa-spin fa-spinner d-none excute_loader"></i>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="col list-group">
                     <div class="list-group-item">
                         <h6>Show Panel</h6>
-                        <textarea class="form-control"></textarea>
+                        <div class="mt-3 list-group"></div>
                     </div>
                 </div>
+
             </div>
         </div>
 </script>
 
     <script id="yoilForm" type="text/x-jquery-tmpl">
         <div class="list-group-item fn_forms_list_inner_child">
-            <label >${dayName} {{ __('strings.lb_yoil_title') }}</label>
+            <label ><span class="fn_yoil_name">${dayName}</span> {{ __('strings.lb_yoil_title') }}</label>
             <div class="list-group list-group-horizontal">
                 <div class="form-group">
                     <label>{{ __('strings.lb_first_class') }} </label>
@@ -277,6 +376,16 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label>{{ __('strings.lb_second_class') }} </label>
+                    <select class="form-control form-control-sm fn_up_class_second_subject">
+                        <option value="">{{ __('strings.fn_select_item') }}</option>
+                    </select>
+                    <select class="form-control form-control-sm fn_up_class_second_teacher">
+                        <option value="">{{ __('strings.fn_select_item') }}</option>
+                    </select>
+                </div>
+
                 <div class="form-group ml-2">
                     <label>{{ __('strings.lb_dt_title') }}</label>
                     <select class="form-control form-control-sm fn_up_class_dt">
@@ -284,6 +393,11 @@
                         <option value="Y" @{{if bms_sii_dt == 'Y' }} selected @{{/if}}>{{ __('strings.fn_been') }}</option>
                         <option value="N" @{{if bms_sii_dt == 'N' }} selected @{{/if}}>{{ __('strings.fn_not_been') }}</option>
                     </select>
+                </div>
+
+                <div class="form-group ml-2">
+                    <label>{{ __('strings.fn_direct_input') }}</label>
+                    <textarea name="output_text" class="form-control fn_dt_direct_text">${bms_sii_dt_direct}</textarea>
                 </div>
             </div>
         </div>
@@ -300,6 +414,9 @@
         ];    // 기본 그리는 패널들 정보 배열.
 
         let dataArray = []; // 데이터를 담는 그릇.
+        let itemsArray = [];    // 수업 정보를 담는 그릇.
+        let subjects = [];  // 수업 리스트
+        let teachers = [];  // 동일한 학원에 속한 선생님 리스트
 
         // 학원 변경 시 선생님 정보 가져오기
         $(document).on("change","#up_academy",function (){
@@ -510,35 +627,30 @@
         $(document).on("click",".fn_save",function (){
             event.preventDefault();
             nowPanelIndex = $(".fn_save").index($(this));
-            if ($(".fn_forms_list_inner").eq(nowPanelIndex).find("div").length <= 0){
+            if ($(".fn_classes").eq(nowPanelIndex).find("div").length <= 0){
                 showAlert("{{ __('strings.str_must_has_classes') }}");
-            }
-
-            if ($("#saved_sheet_id").val() === ""){
-                showAlert("{{ __('strings.err_save_sheet_id') }}");
-                return;
             }
 
             let innerCls = [];
 
-            for(let innerI = 0; innerI < $(".fn_forms_list_inner").eq(nowPanelIndex).children(".fn_forms_list_inner_child").length; innerI++){
-                if ($(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(innerI).val() === ""){
+            for(let innerI = 0; innerI < $(".fn_classes").eq(nowPanelIndex).children(".fn_forms_list_inner_child").length; innerI++){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(innerI).val() === ""){
                     showAlert("{{ __('strings.err_first_subject') }}");
                     return;
                 }
-                if ($(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(innerI).val() === ""){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(innerI).val() === ""){
                     showAlert("{{ __('strings.err_first_teacher') }}");
                     return;
                 }
-                if ($(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(innerI).val() === ""){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(innerI).val() === ""){
                     showAlert("{{ __('strings.err_second_subject') }}");
                     return;
                 }
-                if ($(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(innerI).val() === ""){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(innerI).val() === ""){
                     showAlert("{{ __('strings.err_second_teacher') }}");
                     return;
                 }
-                if ($(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_dt").eq(innerI).val() === ""){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_dt").eq(innerI).val() === ""){
                     showAlert("{{ __('strings.err_dt') }}");
                     return;
                 }
@@ -551,48 +663,57 @@
                 innerCls.push(
                     {
                         "index":innerI,
-                        "firstClass":$(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(innerI).val(),
-                        "firstTeacher":$(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(innerI).val(),
-                        "secondClass":$(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(innerI).val(),
-                        "secondTeacher":$(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(innerI).val(),
-                        "dt":$(".fn_forms_list_inner").eq(nowPanelIndex).find(".fn_up_class_dt").eq(innerI).val()
+                        "firstClass":$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(innerI).val(),
+                        "firstTeacher":$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(innerI).val(),
+                        "secondClass":$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(innerI).val(),
+                        "secondTeacher":$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(innerI).val(),
+                        "dt":$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_dt").eq(innerI).val(),
+                        "dtDirect":$(".fn_classes").eq(nowPanelIndex).find(".fn_dt_direct_text").eq(innerI).val(),
                     }
                 );
             }
 
+            $(".excute_loader").eq(nowPanelIndex).removeClass("d-none");
+
             $.ajax({
                 type:"POST",
-                url:"/bms/editorSheetItemSave",
+                url:"/bms/basicInfoSave",
                 dataType:"json",
                 data:{
                     "_token":$("input[name='_token']").val(),
-                    "sheetId":$("#saved_sheet_id").val(),
                     "comment":$(".fn_up_comment").eq(nowPanelIndex).val(),
                     "std_type":$(".fn_up_study").eq(nowPanelIndex).val(),
-                    "workbook":$(".fn_up_workbook").eq(nowPanelIndex).val(),
-                    "classId":$(".fn_up_class_name").eq(nowPanelIndex).val(),
-                    "days":$(".fn_study_days").eq(nowPanelIndex).val(),
-                    "std_time":$(".fn_up_study_time").eq(nowPanelIndex).val(),
-                    "pre_week_first":$(".fn_up_first_class").eq(nowPanelIndex).val(),
-                    "pre_week_second":$(".fn_up_second_class").eq(nowPanelIndex).val(),
+                    "curriculum":$(".fn_up_curri").eq(nowPanelIndex).val(),
+                    "days":$(".fn_up_days").eq(nowPanelIndex).val(),
+                    "std_time":$(".fn_up_study_times").eq(nowPanelIndex).val(),
+                    "sdl_use":$("input[name='chk_sdl']").eq(nowPanelIndex).val(),
+                    "sdl":$(".fn_sel_sdl").eq(nowPanelIndex).val(),
+                    "workbook_use":$("input[name='chk_workbook']").eq(nowPanelIndex).val(),
+                    "workbook":$(".fn_sel_workbook").eq(nowPanelIndex).val(),
+                    "studybook_use":$("input[name='chk_studybook']").eq(nowPanelIndex).val(),
+                    "studybook":$(".fn_sel_studybook").eq(nowPanelIndex).val(),
+                    "dt_use":$("input[name='chk_dt']").eq(nowPanelIndex).val(),
+                    "dt":$(".fn_sel_dt").eq(nowPanelIndex).val(),
+
+                    "classId":$("input[name='saved_class_id[]']").eq(nowPanelIndex).val(),
+                    "sheetInfoId":$("input[name='saved_sheet_info_id[]']").eq(nowPanelIndex).val(),
+
+                    "pre_week_first":$(".fn_pre_week_first").eq(nowPanelIndex).val(),
+                    "pre_week_second":$(".fn_pre_week_second").eq(nowPanelIndex).val(),
                     "class_array":innerCls,
                     "cur_class_index":nowPanelIndex,
                     "now_week":$("#up_now_week").val(),
-                    "pre_week":$("up_ex_week").val()
+                    "pre_week":$("#up_ex_week").val()
                 },
                 success:function (msg){
                     if (msg.result === "true"){
                         showAlert("{{ __('strings.fn_save_complete') }}");
                         //$(".fn_status_now").eq(nowPanelIndex).html("{{ __("strings.fn_now_saved") }}");
-                        $("input[name='saved_sheet_info_id[]']").eq(nowPanelIndex).val(msg.shi_id);
+                        $(".excute_loader").eq(nowPanelIndex).addClass("d-none");
                     }else{
-                        if (msg.errorcode === "NO_SHEET_ID"){
-                            showAlert("{{ __('strings.err_save_sheet_id') }}");
-                            return;
-                        }else{
-                            showAlert("{{ __('strings.err_fail_to_save') }}");
-                            return;
-                        }
+                        showAlert("{{ __('strings.err_fail_to_save') }}");
+                        $(".excute_loader").eq(nowPanelIndex).addClass("d-none");
+                        return;
                     }
                 },
                 error:function (e1,e2,e3){
@@ -619,12 +740,13 @@
                     "upHakgi":$("#up_hakgi").val(),
                     "upSchoolGrade":$("#up_school_grade").val(),
                     "upTeacher":$("#up_teacher").val(),
+                    "upAcId":$("#up_academy").val()
                 },
                 success:function (msg){
                     //
                     console.log(msg);
                     $.each(msg.data,function(i,obj){
-                        dataArray.push([
+                        dataArray.push(
                             {
                                 "id":obj.id,
                                 "classId":obj.class.id,
@@ -635,17 +757,26 @@
                                 "curriId":obj.bsi_curri_id,
                                 "studyDays":obj.bsi_days,
                                 "studyTimes":obj.bsi_std_times,
+                                "sdl":obj.bsi_sdl,
+                                "sdl_use":obj.bsi_sdl_use,
+                                "workbook":obj.bsi_workbook,
+                                "workbook_use":obj.bsi_workbook_use,
+                                "studybook":obj.bsi_studybook,
+                                "studybook_use":obj.bsi_studybook_use,
+                                "dt":obj.bsi_dt,
+                                "dt_use":obj.bsi_dt_use,
                                 "comments":obj.bsi_comment,
                                 "preSubject1":obj.bsi_pre_subject_1,
                                 "preSubject2":obj.bsi_pre_subject_2,
+                                "preWeek":obj.bsi_pre_week,
+                                "nowWeek":obj.bsi_now_week,
+                                "subItems":obj.ShItems
                             }
-                        ]);
-                        let _inItems = [];
-                        $.each(obj.items, function(j,obj2){
-                            _inItems.push({"id":obj2.id,"name":obj2.name})
-                        });
-                        dataArray[i]["items"] = _inItems;
+                        );
                     });
+
+                    subjects = msg.subjects;
+                    teachers = msg.teachers;
                     drawLists();
                     $("#formLoader").addClass("d-none");
                 },
@@ -658,42 +789,126 @@
 
         // 폼 리스트를 그리는 함수
         function  drawLists(){
-            console.log("draw");
             $("#formPanel").empty();
-            $.each(dataArray,function(i,obj){
+
+            for (let i=0; i < dataArray.length; i++){
                 $("#bmsForm").tmpl(dataArray[i]).appendTo($("#formPanel"));
-            })
+                let nowObj = dataArray[i];
+                if (nowObj.subItems !== undefined){
+                    $("#yoilForm").tmpl(nowObj.subItems).appendTo($(".fn_classes").eq(i));
+                }
+            }
+
+            $(".fn_pre_week_first, .fn_pre_week_second").empty();
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_pre_week_first"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_pre_week_second"));
+
+            $.each(subjects, function (i,obj){
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first"));
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second"));
+            });
+
+
+            $(".fn_up_class_first_subject, .fn_up_class_second_subject").empty();
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_up_class_first_subject"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_up_class_second_subject"));
+
+            $.each(subjects,function (i,obj){
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_up_class_first_subject"));
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_up_class_second_subject"));
+            });
+
+            $(".fn_up_class_first_teacher, .fn_up_class_second_teacher").empty();
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_up_class_first_teacher"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_up_class_second_teacher"));
+
+            $.each(teachers,function (i,obj){
+                $("<option value='" + obj.id + "'>" + obj.name + "</option>").appendTo($(".fn_up_class_first_teacher"));
+                $("<option value='" + obj.id + "'>" + obj.name + "</option>").appendTo($(".fn_up_class_second_teacher"));
+            });
+
+            // 최종적으로 UI 를 그린 후 데이터를 지정한다.
+            for (let i=0; i < dataArray.length; i++){
+                let yoilNameText = $(".fn_up_days").eq(i).find("option:selected").text();
+                for (let s=0; s < yoilNameText.length; s++){
+                    $(".fn_forms_list").eq(i).find(".fn_yoil_name").eq(s).text(yoilNameText.substr(s,1));
+                }   // 요일 프린트
+                if (dataArray[i]["subItems"] !== undefined){
+                    for (let j=0; j < dataArray[i]["subItems"].length; j++){
+                        $(".fn_forms_list").eq(i).find(".fn_forms_list_inner_child").find(".fn_up_class_first_subject").eq(j).val(dataArray[i]["subItems"][j].bms_sii_first_class);
+                        $(".fn_forms_list").eq(i).find(".fn_forms_list_inner_child").find(".fn_up_class_first_teacher").eq(j).val(dataArray[i]["subItems"][j].bms_sii_first_teacher);
+                        $(".fn_forms_list").eq(i).find(".fn_forms_list_inner_child").find(".fn_up_class_second_subject").eq(j).val(dataArray[i]["subItems"][j].bms_sii_second_class);
+                        $(".fn_forms_list").eq(i).find(".fn_forms_list_inner_child").find(".fn_up_class_second_teacher").eq(j).val(dataArray[i]["subItems"][j].bms_sii_second_teacher);
+                    }
+                }   // 각 요일에 대한 값들 지정.
+                $(".fn_pre_week_first").eq(i).val(dataArray[i].preSubject1);
+                $(".fn_pre_week_second").eq(i).val(dataArray[i].preSubject2);
+                /*console.log("now week : " + dataArray[i].nowWeek + " / pre week : " + dataArray[i].preWeek);
+                $("#up_now_week").val(dataArray[i].nowWeek);
+                $("#up_ex_week").val(dataArray[i].preWeek);*/
+            }
+        }
+
+        // 수업 만들기 클릭
+        $(document).on("click",".fn_make_class",function (){
+            event.preventDefault();
+            nowPanelIndex = $(".fn_make_class").index($(this));
+
+            if ($(".fn_up_days").eq(nowPanelIndex).val() === ""){
+                showAlert("{{ __('strings.lb_select_study_days') }}");
+                return;
+            }
+
+            targetInnerList = $(".fn_classes").eq(nowPanelIndex);
+
+            let daysLen = $(".fn_up_days").eq(nowPanelIndex).find("option:selected").data("len");
+            let dayStrs = $(".fn_up_days").eq(nowPanelIndex).find("option:selected").text();
+
+            targetInnerList.empty();
+
+            for (let i=0; i < daysLen; i++){
+                let nTmplData = {
+                    "dayName":dayStrs.substr(i,1),
+                    "bms_sii_first_class":"",
+                    "bms_sii_first_teacher":"",
+                    "bms_sii_second_class":"",
+                    "bms_sii_second_teacher":"",
+                    "bms_sii_dt":""
+                };
+                $("#yoilForm").tmpl(nTmplData).appendTo(targetInnerList);
+            }
+
+            classNteacherSet();
+        });
+
+        function classNteacherSet(){
+            let innerPanel = $(".fn_classes").eq(nowPanelIndex);
+            innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject,.fn_up_class_first_teacher,.fn_up_class_second_teacher, .fn_pre_week_first, .fn_pre_week_second").empty();
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject,.fn_up_class_first_teacher,.fn_up_class_second_teacher, .fn_pre_week_first, .fn_pre_week_second"));
+
+            $.each(subjects,function(i,obj){
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject"));
+            });
+
+            $.each(subjects,function(i,obj){
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first").eq(nowPanelIndex));
+            });
+
+            $.each(subjects,function(i,obj){
+                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second").eq(nowPanelIndex));
+            });
+
+            $.each(teachers,function(i,obj){
+                $("<option value='" + obj.id + "' data-zoom='" + obj.zoom_id + "'>" + obj.name + "</option>").appendTo(innerPanel.find(".fn_up_class_first_teacher,.fn_up_class_second_teacher"));
+            });
         }
 
         // preview click
         $(document).on("click",".fn_preview",function (){
             event.preventDefault();
             nowPanelIndex = $(".fn_preview").index($(this));
-            let savedSheetInfoId = $("input[name='saved_sheet_info_id[]'").eq(nowPanelIndex).val();
 
-            $.ajax({
-                type:"POST",
-                url:"/bms/editorPreviewer",
-                dataType:"json",
-                data:{
-                    "_token":$("input[name='_token']").val(),
-                    "saved_sh_info_id":savedSheetInfoId
-                },
-                success:function(msg){
-                    //
-                    if (msg.result === "false"){
-                        switch(msg.code){
-                            case "FIRST_PAGE_SET":
-                                showAlert("{{ __('strings.err_save_sheet_id') }}");
-                                break;
-                        }
-                    }
-                },
-                error:function (e1,e2,e3){
-                    showAlert(e2);
-                    return;
-                }
-            })
+
         });
 
         function showAlert(str){

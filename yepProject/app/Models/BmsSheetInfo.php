@@ -11,8 +11,11 @@ class BmsSheetInfo extends Model
     protected $table = "bms_sheet_info";
     protected $fillable = [
         "bsi_acid","bsi_sgid","bsi_hakgi","bsi_usid","bsi_curri_id",
-        "sheet_id","bsi_comment","bsi_std_type","bsi_workbook","bsi_cls_id","bsi_days","bsi_std_times",
+        "sheet_id","bsi_comment","bsi_std_type","bsi_workbook","bsi_workbook_use",
+        "bsi_studybook","bsi_studybok_use",
+        "bsi_cls_id","bsi_days","bsi_std_times",
         "bsi_subjects_count",
+        "bsi_sdl","bsi_sdl_use",
         "bsi_pre_subject_1","bsi_pre_subject_2",
         "writer_id","bsi_deleted","bsi_status","bsi_sent_date","bsi_sheet_index",
         "bsi_pre_week","bsi_now_week"
