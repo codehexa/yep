@@ -37,7 +37,7 @@
                     <select name="up_academy" id="up_academy" class="form-control form-control-sm">
                         <option value="">{{ __('strings.fn_select_item') }}</option>
                         @foreach($academies as $academy)
-                            <option value="{{ $academy->id }}">{{ $academy->ac_name }}</option>
+                            <option value="{{ $academy->id }}" data-tel="{{ $academy->ac_tel }}">{{ $academy->ac_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -197,7 +197,7 @@
 @section('scripts')
     <script id="bmsForm" type="text/x-jquery-tmpl">
         <div class="list-group-item fn_forms_list mb-3">
-            <h6>{{ __('strings.lb_class_title') }} : <span class="text-primary">${className}</span></h6>
+            <h6>{{ __('strings.lb_class_title') }} : <span class="text-primary fn_class_name">${className}</span></h6>
             <div class="row">
 
                 <div class="col list-group">
@@ -354,7 +354,12 @@
                 <div class="col list-group">
                     <div class="list-group-item">
                         <h6>Show Panel</h6>
-                        <div class="mt-3 list-group"></div>
+                        <div class="mt-3 fn_draw_panel">
+                            <textarea class="form-control form-control-sm fn_draw_panel_ta" style="height:40rem"></textarea>
+                        </div>
+                        <div class="mt-1">
+                            <button class="btn btn-primary btn-sm fn_sms_send"><i class="fa fa-share"></i> {{ __('strings.lb_sending') }}</button>
+                        </div>
                     </div>
                 </div>
 
@@ -364,7 +369,14 @@
 
     <script id="yoilForm" type="text/x-jquery-tmpl">
         <div class="list-group-item fn_forms_list_inner_child">
-            <label ><span class="fn_yoil_name">${dayName}</span> {{ __('strings.lb_yoil_title') }}</label>
+            <div class="d-flex justify-content-between">
+                <label ><span class="fn_yoil_name">${dayName}</span> {{ __('strings.lb_yoil_title') }}</label>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input fn_yoil_check"/>
+                    <label for="">{{ __('strings.lb_closed_day') }}</label>
+                </div>
+            </div>
+
             <div class="list-group list-group-horizontal">
                 <div class="form-group">
                     <label>{{ __('strings.lb_first_class') }} </label>
@@ -408,6 +420,7 @@
         let targetStudyDays;    // 수업 요일 셀렉트
         let targetInnerList;    // 수업요일에 대한 결과를 프린트하는 대상 .
         let nowPanelIndex = -1; // 현재 실행하는 아이템 순번.
+        let targetPreview;  // Preview 가 보여지는 대상
 
         let panels = [
             {"bsi_std_type":"","bsi_workbook":"","bsi_cls_id":"","bsi_days":"","bsi_std_times":"","bsi_pre_subject_1":"","bsi_pre_subject_2":"","sheetInfoItems":[]}
@@ -417,6 +430,7 @@
         let itemsArray = [];    // 수업 정보를 담는 그릇.
         let subjects = [];  // 수업 리스트
         let teachers = [];  // 동일한 학원에 속한 선생님 리스트
+        let basicInfos = [];  // 기초 데이터 폼
 
         // 학원 변경 시 선생님 정보 가져오기
         $(document).on("change","#up_academy",function (){
@@ -480,7 +494,14 @@
 
             for (let i = 0; i < _week; i++){
                 let _nowWeek = i + 1;
-                $("<option value='" + _nowWeek + "'>" + _nowWeek + " Week</option>").appendTo($("#up_now_week, #up_ex_week"));
+                $("<option value='" + _nowWeek + "'>{{ __('strings.lb_week_name') }} " + _nowWeek + "</option>").appendTo($("#up_now_week, #up_ex_week"));
+            }
+        });
+
+        // 이번 주를 선택하면 지난 주를 자동 선택하기.
+        $(document).on("change","#up_now_week",function (){
+            if ($(this).val() !== "" && $("#up_now_week option").index($("#up_now_week option:selected")) > 1){
+                $("#up_ex_week option").eq($(this).find("option").index($("#up_now_week option:selected")) -1).attr("selected","selected");
             }
         });
 
@@ -778,6 +799,7 @@
                     subjects = msg.subjects;
                     teachers = msg.teachers;
                     drawLists();
+                    getSmsBasic();  // 기초 정보를 가져오는 함수
                     $("#formLoader").addClass("d-none");
                 },
                 error:function (e1,e2,e3){
@@ -823,8 +845,8 @@
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_up_class_second_teacher"));
 
             $.each(teachers,function (i,obj){
-                $("<option value='" + obj.id + "'>" + obj.name + "</option>").appendTo($(".fn_up_class_first_teacher"));
-                $("<option value='" + obj.id + "'>" + obj.name + "</option>").appendTo($(".fn_up_class_second_teacher"));
+                $("<option value='" + obj.id + "' data-tel='" + obj.zoom_id + "'>" + obj.name + "</option>").appendTo($(".fn_up_class_first_teacher"));
+                $("<option value='" + obj.id + "' data-tel='" + obj.zoom_id + "'>" + obj.name + "</option>").appendTo($(".fn_up_class_second_teacher"));
             });
 
             // 최종적으로 UI 를 그린 후 데이터를 지정한다.
@@ -907,9 +929,131 @@
         $(document).on("click",".fn_preview",function (){
             event.preventDefault();
             nowPanelIndex = $(".fn_preview").index($(this));
+            targetPreview = $(".fn_draw_panel").eq(nowPanelIndex);
 
-
+            printPage();
         });
+
+        // print page logic
+        function printPage(){
+            // first ment
+            let _greeting = replaceContext("greeting",basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_GREETING }}').tagText);
+            let _notice = basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_NOTICE }}').tagText;
+            let _academyTel = replaceContext("academyTel",basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_ACADEMY_INFO }}').tagText);
+            let _bookWork = basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_BOOK_WORK }}').tagText;
+            let _outputWork = basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_OUTPUT_WORK }}').tagText;
+
+            let _drawingText = "";
+
+            // 1st, 인사말 작성.
+            _drawingText += _greeting + "\r\n\r\n";
+
+            // 2nd. 선생님 말씀 붙이기.
+            _drawingText += $(".fn_up_comment").eq(nowPanelIndex).val() + "\r\n\r\n";
+
+            // 3rd. 학원 요일 시간
+            _drawingText += "[" + $("#up_academy option:selected").text() + " " +
+                $(".fn_up_days option:selected").eq(nowPanelIndex).text() + " " +
+                $(".fn_up_study_times option:selected").eq(nowPanelIndex).text() +
+                "]\r\n\r\n";
+
+            // 4th. 요일, 수업내용, DT범위, 과제 (교재과제, 제출과제) 배열 처리
+            let subItems = dataArray[nowPanelIndex].subItems;
+            $.each(subItems,function (i,obj){
+                // 내부 폼 작성
+                // 요일
+                _drawingText += "[" + $(".fn_up_days").eq(nowPanelIndex).find("option:selected").text().substr(i,1) + "{{ __('strings.lb_yoil_title') }}" + "]\r\n";
+                _drawingText += "1. {{ __('strings.lb_bms_class') }}: ";
+                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text() + "_" + $("#up_now_week option:selected").text();  // 1 교시
+                // zoom 수업 여부
+                if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y"){
+                    _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
+                    _drawingText += "    PPPPPP     ";
+                    _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
+                    _drawingText += ")" ;   // 1교시 줌 내용.
+                }
+
+                // 2교시
+                _drawingText += " / ";
+
+                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text() + "_" + $("#up_now_week option:selected").text();  // 2 교시
+                if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y"){
+                    _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").text(); // 선생님 이름
+                    _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
+                    _drawingText += ")" ;   // 2교시 줌 내용.
+                }
+
+                _drawingText += "\r\n";
+            });
+            _drawingText += "\r\n";
+
+            // 5th. 공지
+            _drawingText += _notice + "\r\n\r\n";
+
+            // 6th. 전화번호
+            _drawingText += _academyTel;
+
+            $(".fn_draw_panel_ta").eq(nowPanelIndex).val(_drawingText);
+
+        }
+
+
+
+        // replace context
+        function replaceContext(flag,srcText){
+            let academyNameReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[0]["tag"]}}"); // AcademyName
+            let classNameReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[1]["tag"]}}"); // ClassName
+            let teacherNameReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[2]["tag"]}}"); // TeacherName
+            let semesterReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[4]["tag"]}}"); // Semester.학기
+            let curriReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[5]["tag"]}}"); // Curriculum
+            let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"]}}"); // Now Week
+            let studyTypeReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[11]["tag"]}}"); // Now Week
+            let academyTelReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[15]["tag"] }}"); // Academy Tel
+            let academyPresidentTelReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[16]["tag"] }}"); // Academy President Tel
+
+            switch (flag){
+                case "greeting":
+                    srcText = srcText.replace(classNameReg,$(".fn_class_name").eq(nowPanelIndex).text());
+                    srcText = srcText.replace(teacherNameReg,$("#up_teacher").find("option:selected").text());
+                    srcText = srcText.replace(semesterReg,$("#up_hakgi").find("option:selected").text());
+                    srcText = srcText.replace(curriReg,$(".fn_up_curri").eq(nowPanelIndex).find("option:selected").text());
+                    srcText = srcText.replace(nowWeekReg,$("#up_now_week").find("option:selected").text());
+                    srcText = srcText.replace(studyTypeReg,$(".fn_up_study").eq(nowPanelIndex).find("option:selected").text());
+                    return srcText;
+                    break;
+
+                case "notice":
+                    break;
+
+                case "academyTel":
+                    srcText = srcText.replace(academyNameReg,$("#up_academy option:selected").text());
+                    srcText = srcText.replace(academyTelReg,$("#up_academy option:selected").data("tel"));
+                    srcText = srcText.replace(academyPresidentTelReg,"{{ $presidentCall }}");
+                    return srcText;
+                    break;
+            }
+        }
+
+        // basic information call
+        function getSmsBasic(){
+            basicInfos = [];
+            $.ajax({
+                type:"POST",
+                url:"/bms/getBasicPageJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val()
+                },
+                success:function(msg){
+                    $.each(msg.data,function(i,obj){
+                        basicInfos.push({tagText:obj.field_function,tagItem:obj.field_tag});
+                    });
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                }
+            });
+        }
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

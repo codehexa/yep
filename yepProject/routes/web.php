@@ -191,6 +191,8 @@ Route::prefix('bms')->group(function(){
     Route::post("/getHakgis",[\App\Http\Controllers\BmsBasicController::class, "getHakgis"]);
     Route::post("/basicLoadSheet",[\App\Http\Controllers\BmsBasicController::class, "basicLoadSheet"]);
     Route::post("/basicInfoSave",[\App\Http\Controllers\BmsBasicController::class, "saveInfo"]);
+    Route::post("/getBasicPageJson",[\App\Http\Controllers\BmsBasicController::class, "getBasicPageJson"]);
+
 
     /* editor */
     Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
@@ -201,8 +203,11 @@ Route::prefix('bms')->group(function(){
     Route::post("/editorPreviewer",[\App\Http\Controllers\BmsEditorController::class, "preview"]);
 
     /* mms page settings */
-    Route::get("/pageSetting/{sgid?}",[\App\Http\Controllers\BmsPageSettingsController::class, "index"]);
+    Route::get("/pageSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "index"]);
     Route::post("/pageAddSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "addSetting"]);
+    Route::post("/pageStoreSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "storeSetting"]);
+    Route::post("/saveSort",[\App\Http\Controllers\BmsPageSettingsController::class, "saveSort"]);
+    Route::post("/delPageSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "deleteDo"]);
 });
 
 /* SMS 외부에서 확인하는 라우트 */

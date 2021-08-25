@@ -6,6 +6,7 @@ use App\Models\Academies;
 use App\Models\BmsCurriculums;
 use App\Models\BmsDays;
 use App\Models\BmsDts;
+use App\Models\BmsPageSettings;
 use App\Models\BmsSdl;
 use App\Models\BmsSemesters;
 use App\Models\BmsSheetInfo;
@@ -19,6 +20,7 @@ use App\Models\Classes;
 use App\Models\Configurations;
 use App\Models\Hakgi;
 use App\Models\schoolGrades;
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,9 +43,10 @@ class BmsBasicController extends Controller
         $sdls = BmsSdl::orderBy('bs_index','asc')->get();
         $workbooks = BmsWorkbooks::orderBy('bw_index','asc')->get();
         $dts = BmsDts::orderBy('id','asc')->get();
+        $settingsTel = Settings::where('set_code','=',Configurations::$ACADEMY_PRESIDENT_CALL)->first();
 
         return view('bms.basic',[
-            "sgrades"=>$sGrades,"academies"=>$academies,
+            "sgrades"=>$sGrades,"academies"=>$academies,"presidentCall"=>$settingsTel->set_value,
             "studyTypes"=>$studyTypes,"curriculums"=>$curriculums,"stdDays"=>$days,"stdTimes"=>$studyTimes,
             "studyBooks"=>$studyBooks,"sdls"=>$sdls,"workbooks"=>$workbooks,"dts"=>$dts
         ]);
@@ -208,7 +211,19 @@ class BmsBasicController extends Controller
         }catch (\Exception $exception){
             return response()->json(['result'=>'false','code'=>$exception]);
         }
+    }
 
+    public function getBasicPageJson(Request $request){
+        $wheres = [
+            Configurations::$BMS_SMS_TAG_GREETING,
+            Configurations::$BMS_SMS_TAG_BOOK_WORK,
+            Configurations::$BMS_SMS_TAG_OUTPUT_WORK,
+            Configurations::$BMS_SMS_TAG_NOTICE,
+            Configurations::$BMS_SMS_TAG_ACADEMY_INFO
+        ];
 
+        $data = BmsPageSettings::whereIn('field_tag',$wheres)->orderBy('field_index','asc')->get();
+
+        return response()->json(['data'=>$data]);
     }
 }

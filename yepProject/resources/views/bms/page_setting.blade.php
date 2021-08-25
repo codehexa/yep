@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_page_setting') }}</h5>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }} &gt; {{ __('strings.lb_page_elements_set') }}</h5>
 
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -27,80 +27,70 @@
     @endif
 
     <div class="mt-3">
-        <div class="form-inline">
-            <label>{{ __('strings.lb_haknyon') }}</label>
-            <select name="ch_school_grade" id="ch_school_grade" class="form-control form-control-sm ml-2">
-                <option value="">{{ __('strings.fn_select_item') }}</option>
-                @foreach($sgrades as $sgrade)
-                    <option value="{{ $sgrade->id }}"
-                    @if (isset($sgrade_val) && $sgrade_val == $sgrade->id)
-                        selected
-                    @endif
-                    >{{ $sgrade->scg_name }}</option>
-                @endforeach
-            </select>
-
-            <span id="selectLoader" class="d-none ml-2"><i class="fa fa-spinner fa-spin"></i> {{ __('strings.fn_loading') }}</span>
-        </div>
-
-        <div class="list-group list-group-horizontal">
-            <div class="list-group mt-3" id="page_list">
-                @foreach($data as $datum)
-                    <div class="list-group-item">
-                        <label>{{ $datum->field_index }}. {{ $datum->field_name }}
-                            @if ($datum->field_type == "ARRAY_START")
-                                <span class="font-weight-bold">{{ __('strings.lb_array_type_start') }}</span>
-                            @elseif ($datum->field_type == "ARRAY_END")
-                                <span class="font-weight-bold">{{ __('strings.lb_array_type_end') }}</span>
-                            @endif
-                        </label>
-                        <div class="mt-1">
-                            <div class="fn_rows" fn_index="{{ $datum->field_index }}">{{ $datum->field_function }}</div>
-                            <textarea name="field_vals[]" class="bg-light fn_textarea form-control" fn_id="{{ $datum->id }}">{{ $datum->field_function }}</textarea>
-                            <div class="my-1">
-                                <button class="btn btn-sm btn-outline-primary"><i class="fa fa-upload"></i> {{ __('strings.fn_modify') }}</button>
-                            </div>
+        <div class="list-group mt-3" id="page_list">
+            @foreach($data as $datum)
+                <div class="list-group-item">
+                    <input type="hidden" name="up_sort_id[]" value="{{ $datum->id }}"/>
+                    <div class="d-flex justify-content-between">
+                        <label ><span class="fn_field_name_val">{{ $datum->field_name }}</span> | <span class="text-primary border border-1 p-1 fn_field_tag_val">{{ $datum->field_tag }}</span> </label>
+                        <div class="btn btn-group btn-group-sm">
+                            <button class="btn btn-sm btn-primary fn_edit_element"><i class="fa fa-edit"></i> {{ __('strings.fn_modify') }}</button>
+                            <button class="btn btn-danger btn-sm fn_delete_element" data-id="{{ $datum->id }}"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
                         </div>
                     </div>
-                @endforeach
+
+                    <div class="mt-1 fn_rows">
+                        {{ $datum->field_function }}
+                    </div>
+                    <div class="mt-1 form-inline">
+                        <i class="fa fa-arrow-right"></i>
+                        <div class="ml-2 fn_list_group_item"></div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <div class="mt-2">
+            <div class="btn btn-group btn-sm">
+                <button class="btn btn-primary btn-sm" id="btnSortSave"><i class="fa fa-save"></i> {{ __('strings.fn_sort_save') }}</button>
+                <span id="sortLoader" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
             </div>
 
-            <div id="page_preview"></div>
         </div>
-
 
         <div class="mt-3">
             <h6>{{ __('strings.lb_page_input_form') }}</h6>
             <form name="frm" id="frm" method="post" action="/bms/pageAddSetting">
-                <input type="hidden" name="up_sg_id" id="up_sg_id" value="{{$sgrade_val}}"/>
+                <input type="hidden" name="up_pg_id" id="up_pg_id">
                 @csrf
                 <div class="form-group list-group border border-3 border-info">
                     <div class="list-group-item">
-                        <label >{{ __('strings.lb_title') }}</label>
-                        <input type="text" name="up_field_title" id="up_field_title" class="form-control form-control-sm"/>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="list-inline">
-                            @foreach($tags as $keyField)
-                                @if ($keyField->type == "STRING")
-                                    <button fn_key="{{ $keyField->tag }}" class="list-inline-item mb-1 btn btn-sm btn-outline-secondary text-nowrap fn_tag_btn">{{ $keyField->title }}</button>
-                                @else
-                                    <button fn_key="{{ $keyField->tag }}" class="list-inline-item mb-1 btn btn-sm btn-outline-info text-nowrap fn_tag_btn"><i class="fa fa-filter"></i> {{ $keyField->title }}</button>
-                                @endif
-                            @endforeach
+                        <div class="form-inline">
+                            <label >{{ __('strings.lb_title') }}</label>
+                            <input type="text" name="up_field_title" id="up_field_title" class="form-control form-control-sm ml-2"/>
                         </div>
                     </div>
                     <div class="list-group-item">
                         <div class="form-inline">
-                            <label class="text-nowrap mr-3">{{ __('strings.lb_input_strings') }}</label>
-                            <select name="up_field_type" id="up_field_type" class="form-control form-control-sm">
-                                <option value="TXT">{{ __('strings.lb_input_string') }}</option>
-                                <option value="ARRAY_START">{{ __('strings.lb_array_type_start') }}</option>
-                                <option value="ARRAY_END">{{ __('strings.lb_array_type_end') }}</option>
-                                <option value="FUNCTION">{{ __('strings.lb_input_function') }}</option>
+                            <label>{{ __('strings.lb_page_elements_tag') }}</label>
+                            <select name="up_field_tags" id="up_field_tags" class="form-control form-control-sm ml-2">
+                                <option value="">{{ __('strings.fn_select_item') }}</option>
+                                @foreach($fieldsTitles as $title)
+                                    <option value="{{ $title->code }}">{{ $title->title }}</option>
+                                @endforeach
                             </select>
                         </div>
+                    </div>
 
+                    <div class="list-group-item">
+                        <div class="form-inline">
+                            @foreach($tags as $keyField)
+                                <button class="btn btn-outline-secondary btn-sm mr-2 mb-1 fn_tag_btn" fn_key="{{ $keyField->tag }}">{{ $keyField->title }}</button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="list-group-item">
+                        <label class="text-nowrap mr-3">{{ __('strings.lb_input_strings') }}</label>
                         <textarea name="up_field_function" id="up_field_function" class="form-control form-text form-control-sm "></textarea>
                     </div>
                 </div>
@@ -116,7 +106,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
@@ -188,7 +177,7 @@
             </div>
             <div class="modal-body">
                 <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
-                <form name="delFrm" id="delFrm" method="post" action="/delComments">
+                <form name="delFrm" id="delFrm" method="post" action="/bms/delPageSetting">
                     @csrf
                     <input type="hidden" name="del_id" id="del_id"/>
                 </form>
@@ -218,8 +207,13 @@
                 return;
             }
 
+            if ($("#up_field_tags").val() === ""){
+                showAlert("{{ __('strings.err_select_tag') }}");
+                return;
+            }
+
             if ($("#up_field_function").val() === ""){
-                showAlert("{{ __('strings.lb_input_page_function') }}");
+                showAlert("{{ __('strings.err_input_text') }}");
                 return;
             }
 
@@ -229,13 +223,15 @@
 
         $(document).on("click","#btnAdd",function (){
             event.preventDefault();
-            $("#up_field_title,#up_field_function").val("");
+            $("#up_field_title,#up_field_tags,#up_field_function").val("");
+            $("#frm").prop({"action":"/bms/pageAddSetting"});
+            $("#up_pg_id").val("");
         })
 
         function printText(){
             $.each($(".fn_rows"),function (i,obj){
                 let _txt = codeChange($(obj).text());
-                $(".fn_rows").eq(i).html(_txt);
+                $(".fn_list_group_item").eq(i).html(_txt);
             });
         }
 
@@ -271,18 +267,65 @@
 
         });
 
+
         $(document).ready(function (){
             $("#page_list").sortable();
             printText();
         });
 
-        $(document).on("change","#ch_school_grade",function (){
-            $("#selectLoader").removeClass("d-none");
-            if ($(this).val() === ""){
-                location.href = "/bms/pageSetting";
-            }else{
-                location.href = "/bms/pageSetting/" + $(this).val();
-            }
+        $(document).on("click",".fn_edit_element",function (){
+            let _idx = $(".fn_edit_element").index($(this));
+            $("#up_pg_id").val($("input[name='up_sort_id[]']").eq(_idx).val());
+            $("#up_field_title").val($(".fn_field_name_val").eq(_idx).text());
+            $("#up_field_tags").val($(".fn_field_tag_val").eq(_idx).text());
+            $("#up_field_function").val($.trim($(".fn_rows").eq(_idx).text()));
+            $("#frm").prop({"action":"/bms/pageStoreSetting"});
+        });
+
+        $(document).on("click","#btnSortSave",function (){
+            event.preventDefault();
+            let _sortIds = "";
+            let _sortArray = [];
+            $.each($("input[name='up_sort_id[]'"),function (i,obj){
+                _sortArray.push($(obj).val());
+            });
+
+            _sortIds = _sortArray.toString();
+
+            $("#sortLoader").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/saveSort",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "sortIds":_sortIds
+                },
+                success:function(msg){
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                        $("#sortLoader").addClass("d-none");
+                        return;
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                        $("#sortLoader").addClass("d-none");
+                        return;
+                    }
+                }
+            })
+        });
+
+        $(document).on("click",".fn_delete_element",function (){
+            event.preventDefault();
+            $("#confirmModalCenter").modal("show");
+            let _dataId = $(this).data("id");
+            $("#del_id").val(_dataId);
+        })
+
+        $(document).on("click","#btnDeleteDo",function (){
+            $("#confirm_spin").removeClass("d-none");
+            $("#delFrm").submit();
         });
 
         function showAlert(str){

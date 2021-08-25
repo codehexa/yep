@@ -294,6 +294,7 @@ return [
     /* BMS */
     "lb_bms_title"  => "수업공지",
     "lb_bms_setting"    => "Setting",
+    "lb_week_name"  => "Week",
     "lb_study"  => "수업",
     "lb_study_days"   => "수업 요일",
     "lb_yoil_title" => "요일",
@@ -350,6 +351,12 @@ return [
     "lb_study_book" => "익힘책",
     "lb_set_outputs_by_day" => "요일별 수업 과제 설정",
     "lb_make_class" => "수업만들기",
+    "lb_closed_day" => "휴원",
+    "lb_page_elements_set"  => "페이지 요소 셋팅",
+    "lb_page_elements_title"    => "페이지 요소",
+    "lb_page_elements_tag"  => "TAG",
+    "err_select_tag"    => "TAG 를 선택하세요",
+    "err_input_text"    => "입력 폼 문자열을 입력하세요",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
@@ -375,6 +382,7 @@ return [
     /* bms setting -> basic */
     "lb_bms_basic"  => "세팅",
     "lb_class_title" => "반 이름",
+    "lb_sending"    => "전송하기",
 
     /*  strings */
     "str_there_is_no_data"  => "자료가 없습니다",
@@ -416,6 +424,7 @@ return [
     "fn_send"   => "전송",
     "fn_sort_save"  => "순서저장",
     "fn_save_complete"  => "저장 완료",
+    "fn_save_false" => "저장 실패",
     "fn_processing" => "처리 중입니다. 잠시만 기다려 주세요",
     "fn_need_save"  => "저장 필요합니다",
     "fn_now_saved"  => "저장 했습니다",

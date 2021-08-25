@@ -90,18 +90,18 @@ class Configurations extends Model
         ["tag"=>":TEACHER_NAME:","title"=>"선생님 이름","type"=>"STRING"],
         ["tag"=>":SUBJECT_NAME:","title"=>"수업 과목","type"=>"STRING"],
         ["tag"=>":SEMESTER:","title"=>"학기","type"=>"STRING"],
-        ["tag"=>":CURRICULUM:","title"=>"과정","type"=>"STRING"],
+        ["tag"=>":CURRICULUM:","title"=>"과정","type"=>"STRING"], // 5
         ["tag"=>":HAKGYON_NAME:","title"=>"학년","type"=>"STRING"],
         /*["tag"=>":HAKGI_NAME:","title"=>"학기","type"=>"STRING"],*/
         ["tag"=>":DAYS:","title"=>"수업 요일","type"=>"STRING"],
         ["tag"=>":DAY:","title"=>"해당 요일","type"=>"STRING"],
         ["tag"=>":NOW_WEEK:","title"=>"이번 주","type"=>"STRING"],
-        ["tag"=>":PRE_WEEK:","title"=>"이전 주","type"=>"STRING"],
+        ["tag"=>":PRE_WEEK:","title"=>"이전 주","type"=>"STRING"], // 10
         ["tag"=>":STUDY_TYPE:","title"=>"수업 종류","type"=>"STRING"],
         ["tag"=>":STUDY_TIME:","title"=>"수업 시간","type"=>"STRING"],
         ["tag"=>":TEACHER_SAY:","title"=>"선생님 의견","type"=>"STRING"],
         ["tag"=>":ADD_BOTTOM_ROW:","title"=>"한줄 띄우기","type"=>"STRING"],
-        ["tag"=>":ACADEMY_TEL:","title"=>"학원 개별 전화번호","type"=>"STRING"],
+        ["tag"=>":ACADEMY_TEL:","title"=>"학원 개별 전화번호","type"=>"STRING"],    // 15
         ["tag"=>":ACADEMY_ALL_TEL:","title"=>"학원 대표 전화번호","type"=>"STRING"],
         ["tag"=>":FN_ARRAY_START:","title"=>"반복 시작","type"=>"ARRAY_START"],
         ["tag"=>":FN_ARRAY_END:","title"=>"반복 끝","type"=>"ARRAY_END"],
@@ -112,6 +112,19 @@ class Configurations extends Model
         ["tag"=>":NOTICE:","title"=>"공지사항","type"=>"STRING"],
 
     ];
+
+    public static $BMS_SMS_TAG_CLASSNAME    = ":CLASS_NAME";
+    public static $BMS_SMS_TAG_CLASSNAME_TITLE    = "반 이름";
+    public static $BMS_SMS_TAG_GREETING = ":GREETING";
+    public static $BMS_SMS_TAG_GREETING_TITLE = "맨 상위 인사말";
+    public static $BMS_SMS_TAG_BOOK_WORK    = ":BOOK_WORK";
+    public static $BMS_SMS_TAG_BOOK_WORK_TITLE    = "교재과제";
+    public static $BMS_SMS_TAG_OUTPUT_WORK    = ":OUTPUT_WORK";
+    public static $BMS_SMS_TAG_OUTPUT_WORK_TITLE    = "제출과제";
+    public static $BMS_SMS_TAG_NOTICE    = ":NOTICE";
+    public static $BMS_SMS_TAG_NOTICE_TITLE    = "공지사항";
+    public static $BMS_SMS_TAG_ACADEMY_INFO    = ":ACADEMY_INFO";
+    public static $BMS_SMS_TAG_ACADEMY_INFO_TITLE    = "학원 정보";
 
     // Script TAG
     public static $JS_ENTER = ":ENTER:";
