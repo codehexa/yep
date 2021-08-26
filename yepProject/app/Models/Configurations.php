@@ -78,6 +78,9 @@ class Configurations extends Model
 
     public static $BMS_WEEKS_COUNT  = "12";
 
+    public static $BMS_MAX_MASS_SIZE    = 500;  // 알리고 에서 문자 보내기 대량 최대치
+    public static $BMS_SENT_MESSAGE_READY   = "READY";
+
     public static $BMS_SHEET_INFO_SENT_DATE_READY = "READY";
     public static $BMS_SHEET_INFO_SENT_DATE_SENDING = "SENDING";
     public static $BMS_SHEET_INFO_SENT_DATE_SENT = "SENT";

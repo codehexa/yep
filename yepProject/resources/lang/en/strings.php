@@ -361,6 +361,8 @@ return [
     "err_input_text"    => "입력 폼 문자열을 입력하세요",
     "lb_send_title" => "전송 내용 보내기",
     "lb_target_class_name"  => "전송 대상 반 이름 및 대상자 정보",
+    "err_no_date_to_send"   => "전송할 대상이 없습니다",
+    "str_send_title"    => ":CLASS_NAME 반 :NUMBER 명에게 :COUNT 차 전송합니다",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",

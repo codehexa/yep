@@ -10,6 +10,7 @@ use App\Models\BmsHworks;
 use App\Models\BmsPageSettings;
 use App\Models\BmsSdl;
 use App\Models\BmsSemesters;
+use App\Models\BmsSendLogs;
 use App\Models\BmsSheetInfo;
 use App\Models\BmsSheetInfoItems;
 use App\Models\BmsStudyBooks;
@@ -243,5 +244,49 @@ class BmsBasicController extends Controller
         $users = Students::where('class_id','=',$clId)->orderBy('student_name')->get();
 
         return response()->json(['data'=>$users]);
+    }
+
+    public function saveToBmsSend(Request $request){
+        $user = Auth::user();
+        $tels = $request->get("up_us_id");
+        $title = $request->get("up_info_title");
+        $txt = $request->get("infoTextVal");
+
+        $targetTels = [];
+        $loopCount = number_format(ceil(sizeof($tels)/Configurations::$BMS_MAX_MASS_SIZE));
+
+        for ($i=0; $i < $loopCount; $i++){
+            $start = $i*Configurations::$BMS_MAX_MASS_SIZE;
+            $end = ($i + 1)*Configurations::$BMS_MAX_MASS_SIZE;
+            if ($end > sizeof($tels)){
+                $end = sizeof($tels);
+            }
+            $elements = [];
+            //echo ("total : ".sizeof($tels)." , ".$start.":".$end."<br/>");
+            for ($j = $start; $j < $end; $j++){
+                $elements[] = $tels[$j];
+            }
+            $targetTels[] = $elements;
+        }
+
+        // 여기부터 실제 알리고 코딩 작성.
+        for ($i=0; $i < sizeof($targetTels); $i++){
+            $title_val = trans('strings.str_send_title',["CLASS_NAME"=>$title,"NUMBER"=>sizeof($tels),"COUNT"=>$i]);
+            $newData = new BmsSendLogs();
+            $newData->tels = implode(",",$targetTels[$i]);
+            $newData->bsl_title = $title_val;
+            $newData->bsl_sent_date = null;
+            $newData->bsl_us_id = $user->id;
+            $newData->bsl_us_name = $user->name;
+            $newData->bsl_fault_msg = null;
+            $newData->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_READY;
+            $newData->bsl_usage_point = null;
+            $newData->bsl_aligo_result_code = null;
+            $newData->bsl_send_text = $txt;
+
+            $newData->save();
+        }
+
+        return response()->json(['result'=>'true']);
     }
 }

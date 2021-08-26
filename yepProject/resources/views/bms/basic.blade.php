@@ -118,9 +118,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="cmFrm" id="cmFrm" method="post" action="/setComments">
+                <form name="cmFrm" id="cmFrm" method="post" action="/bms/saveToBmsSend">
                     @csrf
-
+                    <input type="hidden" name="up_info_title" id="up_info_title"/>
                     <div class="row">
                         <div class="col">
                             <div class="list-group">
@@ -132,6 +132,7 @@
                         </div>
                         <div class="col">
                             <div id="infoText" class="h6"></div>
+                            <input type="hidden" name="infoTextVal" id="infoTextVal"/>
                         </div>
                     </div>
                 </form>
@@ -203,7 +204,7 @@
     <script id="usForm" type="text/x-jquery-tmpl">
         <div class="list-group-item pl-1">
             <div class="form-check">
-                <input type="checkbox" name="up_us_id[]" value="${id}" class="form-check-input fn_students" checked/>
+                <input type="checkbox" name="up_us_id[]" value="${parent_hp}" class="form-check-input fn_students" checked/>
                 <label class="ml-2 form-check-label">${student_name} / ${parent_hp}</label>
             </div>
         </div>
@@ -1130,6 +1131,7 @@
             $("#infoModalCenter").modal("show");
 
             $("#infoText").html(nowText.replace(/(?:\r\n|\r|\n)/g,'<br/>'));
+            $("#infoTextVal").val(nowText);
 
             $("#target_class_name").html(dataArray[nowPanelIndex].className);
 
@@ -1245,6 +1247,39 @@
             })
             $("#lbCount").html(_n);
         }
+
+        // 최종 보내기 클릭 시
+        $(document).on("click","#btnCmSubmit",function (){
+            event.preventDefault();
+            if ($("#lbCount").text() === "0"){
+                showAlert("{{ __('strings.err_no_date_to_send') }}");
+                return;
+            }
+
+            let _title = $(".fn_class_name").eq(nowPanelIndex).text();
+
+            $("#up_info_title").val(_title);
+
+            $("#fn_loading").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/saveToBmsSend",
+                dataType:"json",
+                data:$("#cmFrm").serialize(),
+                success:function (msg){
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                        $("#fn_loading").addClass("d-none");
+                        return;
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                        $("#fn_loading").addClass("d-none");
+                        return;
+                    }
+                }
+            })
+        })
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

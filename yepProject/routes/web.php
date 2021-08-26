@@ -194,6 +194,7 @@ Route::prefix('bms')->group(function(){
     Route::post("/getBasicPageJson",[\App\Http\Controllers\BmsBasicController::class, "getBasicPageJson"]);
     Route::post("/getHworkValues",[\App\Http\Controllers\BmsBasicController::class, "getHworkValues"]);
     Route::post("/getStudentsJson",[\App\Http\Controllers\BmsBasicController::class, "getStudentJson"]);
+    Route::post("/saveToBmsSend",[\App\Http\Controllers\BmsBasicController::class,"saveToBmsSend"]);
 
     /* editor */
     Route::get("/editor",[\App\Http\Controllers\BmsEditorController::class, "index"]);
