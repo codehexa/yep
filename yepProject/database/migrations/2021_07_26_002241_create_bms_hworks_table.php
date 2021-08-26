@@ -17,7 +17,7 @@ class CreateBmsHworksTable extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger('hwork_sgid')->unsigned()->default(0)->comment('school_grades.id');
-            $table->string('hwork_class')->comment('고등부 수업과목');
+            $table->bigInteger('hwork_class')->unsigned()->default(0)->comment('고등부 수업과목');
             $table->string('hwork_content')->nullable()->comment('수업내용');
             $table->string('hwork_dt')->nullable()->comment('DT범위(1)');
             $table->string('hwork_book')->nullable()->comment('교재과제');

@@ -87,7 +87,7 @@
                 <button id="btnLoad" class="btn btn-light btn-sm mt-1">
                     <i class="fa fa-folder-open"></i> {{ __('strings.fn_load') }}
                 </button>
-                <button id="btnSave" class="btn btn-primary btn-sm mt-1">
+<!--                <button id="btnSave" class="btn btn-primary btn-sm mt-1">
                     <i class="fa fa-save"></i> {{ __('strings.fn_save') }}
                 </button>
                 <button id="btnMake" class="btn btn-light btn-sm mt-1">
@@ -95,7 +95,7 @@
                 </button>
                 <button id="btnDelete" class="btn btn-danger btn-sm mt-1">
                     <i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}
-                </button>
+                </button>-->
             </div>
             <div class="text-info d-none mt-2" id="guide_txt"><i class="fa fa-spin fa-spinner"></i> {{ __('strings.fn_processing') }}</div>
         </div>
@@ -108,11 +108,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered " role="document">
+<div class="modal fade " id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.lb_comment_setting') }}</h5>
+                <h5 class="modal-title" id="infoModalLongTitle">{{ __('strings.lb_send_title') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -120,27 +120,32 @@
             <div class="modal-body">
                 <form name="cmFrm" id="cmFrm" method="post" action="/setComments">
                     @csrf
-                    <input type="hidden" name="cm_id" id="cm_id" value=""/>
 
-                    <div class="form-group">
-                        <label for="up_min_score">{{ __('strings.lb_min_score_title') }}</label>
-                        <input type="number" name="up_min_score" id="up_min_score" class="form-control" placeholder="{{ __('strings.lb_insert_min_score') }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="up_min_score">{{ __('strings.lb_max_score_title') }}</label>
-                        <input type="number" name="up_max_score" id="up_max_score" class="form-control" placeholder="{{ __('strings.lb_insert_max_score') }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="up_min_score">{{ __('strings.lb_comment_context') }}</label>
-                        <textarea name="up_comments" id="up_comments" class="form-control" placeholder="{{ __('strings.lb_insert_comments') }}"></textarea>
+                    <div class="row">
+                        <div class="col">
+                            <div class="list-group">
+                                <div class="list-group-item">{{ __('strings.lb_target_class_name') }} : <span class="text-primary" id="target_class_name"></span> </div>
+                                <div class="list-group-item " >
+                                    <div class="list-group overflow-auto" id="target_class_users" style="height: 40rem;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div id="infoText" class="h6"></div>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
-                <button type="button" class="btn btn-primary" id="btnCmSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
-                <button type="button" class="btn btn-danger d-none" id="btnDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+                <div class="btn-group btn-group-sm">
+                    <span id="lbCount" class="mr-2">0</span>
+                    <button type="button" class="btn btn-outline-primary" id="chkAll"><i class="fa fa-check-square"></i> {{ __('strings.fn_all_check') }}</button>
+                    <button type="button" class="btn btn-outline-secondary" id="unChkAll"><i class="fa fa-square"></i> {{ __('strings.fn_all_uncheck') }}</button>
+                    <button type="button" class="btn btn-outline-info" id="chkReverse"><i class="fa fa-dot-circle"></i> {{ __('strings.fn_toggle') }}</button>
+                    <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
+                    <button type="button" class="btn btn-primary" id="btnCmSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+                </div>
             </div>
         </div>
     </div>
@@ -195,6 +200,15 @@
 @endsection
 
 @section('scripts')
+    <script id="usForm" type="text/x-jquery-tmpl">
+        <div class="list-group-item pl-1">
+            <div class="form-check">
+                <input type="checkbox" name="up_us_id[]" value="${id}" class="form-check-input fn_students" checked/>
+                <label class="ml-2 form-check-label">${student_name} / ${parent_hp}</label>
+            </div>
+        </div>
+    </script>
+
     <script id="bmsForm" type="text/x-jquery-tmpl">
         <div class="list-group-item fn_forms_list mb-3">
             <h6>{{ __('strings.lb_class_title') }} : <span class="text-primary fn_class_name">${className}</span></h6>
@@ -431,6 +445,9 @@
         let subjects = [];  // 수업 리스트
         let teachers = [];  // 동일한 학원에 속한 선생님 리스트
         let basicInfos = [];  // 기초 데이터 폼
+        let subject_function;  // 교재 과제 나 DT 범위 등등 함수를 가져오는 정의.
+
+        let _nowWeekTitle, _preWeekTitle;
 
         // 학원 변경 시 선생님 정보 가져오기
         $(document).on("change","#up_academy",function (){
@@ -798,6 +815,7 @@
 
                     subjects = msg.subjects;
                     teachers = msg.teachers;
+                    subject_function = msg.functions;
                     drawLists();
                     getSmsBasic();  // 기초 정보를 가져오는 함수
                     $("#formLoader").addClass("d-none");
@@ -929,7 +947,13 @@
         $(document).on("click",".fn_preview",function (){
             event.preventDefault();
             nowPanelIndex = $(".fn_preview").index($(this));
+            console.log('now panel index');
             targetPreview = $(".fn_draw_panel").eq(nowPanelIndex);
+            console.log('target preview');
+
+            // 지금 주, 이전 주
+            _nowWeekTitle = $("#up_now_week option:selected").text();
+            _preWeekTitle = $("#up_ex_week option:selected").text();
 
             printPage();
         });
@@ -959,16 +983,16 @@
 
             // 4th. 요일, 수업내용, DT범위, 과제 (교재과제, 제출과제) 배열 처리
             let subItems = dataArray[nowPanelIndex].subItems;
+
             $.each(subItems,function (i,obj){
                 // 내부 폼 작성
                 // 요일
                 _drawingText += "[" + $(".fn_up_days").eq(nowPanelIndex).find("option:selected").text().substr(i,1) + "{{ __('strings.lb_yoil_title') }}" + "]\r\n";
                 _drawingText += "1. {{ __('strings.lb_bms_class') }}: ";
-                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text() + "_" + $("#up_now_week option:selected").text();  // 1 교시
+                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text() + "_" + _nowWeekTitle;  // 1 교시
                 // zoom 수업 여부
                 if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y"){
                     _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
-                    _drawingText += "    PPPPPP     ";
                     _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
                     _drawingText += ")" ;   // 1교시 줌 내용.
                 }
@@ -976,7 +1000,7 @@
                 // 2교시
                 _drawingText += " / ";
 
-                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text() + "_" + $("#up_now_week option:selected").text();  // 2 교시
+                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text() + "_" + _nowWeekTitle;  // 2 교시
                 if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y"){
                     _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").text(); // 선생님 이름
                     _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
@@ -984,6 +1008,34 @@
                 }
 
                 _drawingText += "\r\n";
+
+                // DT 범위
+                // 1교시 영역
+                _drawingText += "2. {{ __('strings.lb_bms_dt') }} : ";
+                _drawingText += getDtArea($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+
+                // 2교시 영역
+                _drawingText += " / ";
+                _drawingText += getDtArea($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                _drawingText += "\r\n";
+
+                // 과제 : 교재과제
+                _drawingText += "3. {{ __('strings.lb_bms_hworks') }}\r\n{{ __('strings.lb_bms_books_print') }}";
+                // 1교시 영역
+                _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                // 2교시 영역
+                _drawingText += " / ";
+                _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                _drawingText += "\r\n";
+
+                // 과제 : 제출과제
+                _drawingText += "{{ __('strings.lb_bms_output_work_print') }}";
+                // 1교시 영역
+                _drawingText += outputWork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                _drawingText += " / ";
+                _drawingText += outputWork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                _drawingText += "\r\n\r\n";
+
             });
             _drawingText += "\r\n";
 
@@ -995,8 +1047,111 @@
 
             $(".fn_draw_panel_ta").eq(nowPanelIndex).val(_drawingText);
 
+        }   // 여기까지 내부 영역 텍스트 그리기
+
+        // DT 정보 가져오기. subject_function 에 의거...
+        function getDtArea(subjectId,subjectName){    //
+            let nowFunction;
+            $.each(subject_function,function (i,obj){
+                if (String.valueOf(obj.id) === String.valueOf(subjectId)){
+                    nowFunction = obj;
+                    return false;
+                }
+            });
+            let resultText = nowFunction.hwork_dt;
+
+            if (resultText === undefined) return;
+
+            let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
+            let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
+            let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
+
+            resultText = resultText.replace(subjectReg,subjectName);
+            resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
+            resultText = resultText.replace(preWeekReg,_preWeekTitle);
+
+            return resultText;
         }
 
+        // 교재 과제 가져오기
+        function getHwork(subjectId,subjectName){
+            let nowFunction;
+            $.each(subject_function,function (i,obj){
+                if (String.valueOf(obj.id) === String.valueOf(subjectId)){
+                    nowFunction = obj;
+                    return false;
+                }
+            });
+            let resultText = nowFunction.hwork_dt;
+
+            if (resultText === undefined) return;
+
+            let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
+            let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
+            let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
+
+            resultText = resultText.replace(subjectReg,subjectName);
+            resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
+            resultText = resultText.replace(preWeekReg,_preWeekTitle);
+
+            return resultText;
+        }
+
+        // 제출과제
+        function outputWork(subjectId,subjectName){
+            let nowFunction;
+            $.each(subject_function,function (i,obj){
+                if (String.valueOf(obj.id) === String.valueOf(subjectId)){
+                    nowFunction = obj;
+                    return false;
+                }
+            });
+            let resultText = nowFunction.hwork_dt;
+
+            if (resultText === undefined) return;
+
+            let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
+            let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
+            let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
+
+            resultText = resultText.replace(subjectReg,subjectName);
+            resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
+            resultText = resultText.replace(preWeekReg,_preWeekTitle);
+
+            return resultText;
+        }
+
+        // 전송하기 버튼 클릭 시
+        $(document).on("click",".fn_sms_send",function (){
+            event.preventDefault();
+            nowPanelIndex = $(".fn_sms_send").index($(this));
+            let nowText = $(".fn_draw_panel_ta").eq(nowPanelIndex).val();
+
+            $("#infoModalCenter").modal("show");
+
+            $("#infoText").html(nowText.replace(/(?:\r\n|\r|\n)/g,'<br/>'));
+
+            $("#target_class_name").html(dataArray[nowPanelIndex].className);
+
+            $.ajax({
+                url:"/bms/getStudentsJson",
+                type:"POST",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "clId":dataArray[nowPanelIndex].classId
+                },
+                success:function(msg){
+                    //target_class_users
+                    $("#target_class_users").empty();
+                    $("#usForm").tmpl(msg.data).appendTo($("#target_class_users"));
+                    printCount();
+                },
+                error:function (e1,e2,e3){
+                    showAlert(e2);
+                }
+            });
+        });
 
 
         // replace context
@@ -1053,6 +1208,42 @@
                     showAlert(e2);
                 }
             });
+        }
+
+        // info modal check
+        $(document).on("click","#chkAll",function (){
+            event.preventDefault();
+
+            $(".fn_students").each(function(i,obj){
+                $(obj).prop("checked",true);
+            });
+            printCount();
+        });
+
+        $(document).on("click","#unChkAll",function (){
+            event.preventDefault();
+            $(".fn_students").each(function(i,obj){
+                $(obj).prop("checked",false);
+            });
+            printCount();
+        });
+
+        $(document).on("click","#chkReverse",function (){
+            event.preventDefault();
+            $(".fn_students").each(function(i,obj){
+                $(obj).prop("checked",!$(obj).prop("checked"));
+            });
+            printCount();
+        });
+
+        function printCount(){
+            let _n = 0;
+            $(".fn_students").each(function(i,obj){
+                if ($(obj).is(":checked")){
+                    _n++;
+                }
+            })
+            $("#lbCount").html(_n);
         }
 
         function showAlert(str){

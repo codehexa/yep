@@ -313,6 +313,8 @@ return [
     "lb_bms_class"  => "수업내용",
     "lb_bms_dt" => "DT 범위",
     "lb_bms_books"  => "교재과제",
+    "lb_bms_books_print"    => "* 교재과제 : ",
+    "lb_bms_output_work_print"  => "* 제출과제 : ",
     "lb_bms_output_first"   => "제출과제(첫수업)",
     "lb_bms_output_second"  => "제출과제(두번쨰수업)",
     "lb_select_school_grade"    => "학년을 선택하세요",
@@ -357,6 +359,8 @@ return [
     "lb_page_elements_tag"  => "TAG",
     "err_select_tag"    => "TAG 를 선택하세요",
     "err_input_text"    => "입력 폼 문자열을 입력하세요",
+    "lb_send_title" => "전송 내용 보내기",
+    "lb_target_class_name"  => "전송 대상 반 이름 및 대상자 정보",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
@@ -434,6 +438,9 @@ return [
     "fn_loading"    => "불러오는 중...",
     "fn_saving" => "저장 중...",
     "fn_direct_input"   => "직접 작성",
+    "fn_all_check"  => "전체 선택",
+    "fn_all_uncheck"    => "전체 해제",
+    "fn_toggle" => "반전",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",

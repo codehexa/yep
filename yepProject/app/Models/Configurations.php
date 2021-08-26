@@ -92,7 +92,6 @@ class Configurations extends Model
         ["tag"=>":SEMESTER:","title"=>"학기","type"=>"STRING"],
         ["tag"=>":CURRICULUM:","title"=>"과정","type"=>"STRING"], // 5
         ["tag"=>":HAKGYON_NAME:","title"=>"학년","type"=>"STRING"],
-        /*["tag"=>":HAKGI_NAME:","title"=>"학기","type"=>"STRING"],*/
         ["tag"=>":DAYS:","title"=>"수업 요일","type"=>"STRING"],
         ["tag"=>":DAY:","title"=>"해당 요일","type"=>"STRING"],
         ["tag"=>":NOW_WEEK:","title"=>"이번 주","type"=>"STRING"],

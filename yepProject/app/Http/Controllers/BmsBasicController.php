@@ -6,6 +6,7 @@ use App\Models\Academies;
 use App\Models\BmsCurriculums;
 use App\Models\BmsDays;
 use App\Models\BmsDts;
+use App\Models\BmsHworks;
 use App\Models\BmsPageSettings;
 use App\Models\BmsSdl;
 use App\Models\BmsSemesters;
@@ -21,6 +22,7 @@ use App\Models\Configurations;
 use App\Models\Hakgi;
 use App\Models\schoolGrades;
 use App\Models\Settings;
+use App\Models\Students;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -81,6 +83,8 @@ class BmsBasicController extends Controller
         $teachers = User::where('academy_id','=',$acId)->where('power','=',Configurations::$USER_POWER_TEACHER)->orderBy('name','asc')->get();
         $data = [];
 
+        $functions = BmsHworks::where('hwork_sgid','=',$sgrade)->get();
+
         foreach($classes as $class){
             $classId = $class->id;
             $check = BmsSheetInfo::where('bsi_cls_id','=',$classId)->where('bsi_sgid','=',$sgrade)->first();
@@ -119,7 +123,7 @@ class BmsBasicController extends Controller
             }
         }
 
-        return response()->json(['data'=>$data,'subjects'=>$subjects,'teachers'=>$teachers]);
+        return response()->json(['data'=>$data,'subjects'=>$subjects,'teachers'=>$teachers,'functions'=>$functions]);
     }
 
     public function saveInfo(Request $request){
@@ -225,5 +229,19 @@ class BmsBasicController extends Controller
         $data = BmsPageSettings::whereIn('field_tag',$wheres)->orderBy('field_index','asc')->get();
 
         return response()->json(['data'=>$data]);
+    }
+
+    public function getHworkValues(Request $request){
+        $d = BmsHworks::where('hwork_class','=',$request->get('bs_id'))->first();
+
+        return response()->json(['data'=>$d]);
+    }
+
+    public function getStudentJson(Request $request){
+        $clId = $request->get("clId");
+
+        $users = Students::where('class_id','=',$clId)->orderBy('student_name')->get();
+
+        return response()->json(['data'=>$users]);
     }
 }
