@@ -139,7 +139,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-group btn-group-sm">
-                    <span id="lbCount" class="mr-2">0</span>
+                    <i class="fa fa-users"></i> <span id="lbCount" class="mr-2">0</span>
                     <button type="button" class="btn btn-outline-primary" id="chkAll"><i class="fa fa-check-square"></i> {{ __('strings.fn_all_check') }}</button>
                     <button type="button" class="btn btn-outline-secondary" id="unChkAll"><i class="fa fa-square"></i> {{ __('strings.fn_all_uncheck') }}</button>
                     <button type="button" class="btn btn-outline-info" id="chkReverse"><i class="fa fa-dot-circle"></i> {{ __('strings.fn_toggle') }}</button>
@@ -274,13 +274,13 @@
                         <div class="d-flex justify-content-between">
                             <div class="form-group form-inline">
                                 <div class="form-check">
-                                    <input type="checkbox" name="chk_sdl" class="form-check-input" value="Y" @{{if sdl_use == 'Y' }} checked @{{/if}}/>
+                                    <input type="checkbox" name="chk_sdl" class="form-check-input fn_chk_sdl" value="Y" @{{if sdl_use == 'Y' }} checked @{{/if}}/>
                                     <label for="">{{ __('strings.lb_give_sdl') }}</label>
                                 </div>
                                 <select name="sel_sdl" class="form-control form-control-sm ml-2 fn_sel_sdl">
                                     <option value=''>{{ __("strings.fn_select_item") }}</option>
                                     @foreach($sdls as $sdl)
-                                    <option value="{{ $sdl->id }}" data-direct={{ $sdl->bs_direct }} @{{if sdl == {!! $sdl->id !!} }} selected @{{/if}}>{{ $sdl->bs_title }}</option>
+                                    <option value="{{ $sdl->id }}" data-direct={{ $sdl->bs_direct }} data-code={{ $sdl->bs_code }} @{{if sdl == {!! $sdl->id !!} }} selected @{{/if}}>{{ $sdl->bs_title }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -297,34 +297,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                    </div>
-
-
-                    <div class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <div class="form-group form-inline">
-                                <div class="form-check">
-                                    <input type="checkbox" name="chk_studybook" class="form-check-input" value="Y" @{{if studybook_use == 'Y' }}checked@{{/if}}/>
-                                    <label for="">{{ __('strings.lb_study_book') }}</label>
-                                </div>
-                                <select name="sel_studybook" class="form-control form-control-sm ml-2 fn_sel_studybook">
-                                    <option value=''>{{ __("strings.fn_select_item") }}</option>
-                                    @foreach($studyBooks as $studyBook)
-                                    <option value="{{ $studyBook->id }}" data-studybook="{{ $studyBook->bsb_direct }}" @{{if studybook == {!! $studyBook->id !!} }} selected @{{/if}}>{{ $studyBook->bsb_title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
 
                             <div class="form-group form-inline">
                                 <div class="form-check">
-                                    <input type="checkbox" name="chk_dt" class="form-check-input" value="Y" @{{if dt_use == 'Y' }}checked@{{/if}}/>
+                                    <input type="checkbox" name="chk_dt" class="form-check-input fn_chk_dt" value="Y" @{{if dt_use == 'Y' }}checked@{{/if}}/>
                                     <label for="">{{ __('strings.lb_bms_dt') }}</label>
                                 </div>
                                 <select name="sel_dt" class="form-control form-control-sm ml-2 fn_sel_dt">
                                     <option value=''>{{ __("strings.fn_select_item") }}</option>
                                     @foreach($dts as $dt)
-                                    <option value="{{ $dt->id }}" @{{if dt == {!! $dt->id !!} }} selected @{{/if}}>{{ $dt->dt_title }}</option>
+                                    <option value="{{ $dt->id }}" data-txt="{{ $dt->dt_text }}" @{{if dt == {!! $dt->id !!} }} selected @{{/if}}>{{ $dt->dt_title }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -386,9 +368,15 @@
         <div class="list-group-item fn_forms_list_inner_child">
             <div class="d-flex justify-content-between">
                 <label ><span class="fn_yoil_name">${dayName}</span> {{ __('strings.lb_yoil_title') }}</label>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input fn_yoil_check"/>
-                    <label for="">{{ __('strings.lb_closed_day') }}</label>
+                <div class="form-group form-inline">
+                    <div class="form-check mr-2">
+                        <input type="checkbox" class="form-check-input fn_zoom_check"/>
+                        <label for="">{{ __('strings.lb_zoom_check') }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input fn_yoil_check "/>
+                        <label for="">{{ __('strings.lb_closed_day') }}</label>
+                    </div>
                 </div>
             </div>
 
@@ -523,7 +511,7 @@
             }
         });
 
-
+        // 사용 안함.
         $(document).on("click","#btnMake",function (){
             event.preventDefault();
             makeForm();
@@ -845,8 +833,8 @@
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_pre_week_second"));
 
             $.each(subjects, function (i,obj){
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first"));
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second"));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first"));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second"));
             });
 
 
@@ -855,8 +843,8 @@
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo($(".fn_up_class_second_subject"));
 
             $.each(subjects,function (i,obj){
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_up_class_first_subject"));
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_up_class_second_subject"));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_up_class_first_subject"));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_up_class_second_subject"));
             });
 
             $(".fn_up_class_first_teacher, .fn_up_class_second_teacher").empty();
@@ -889,6 +877,17 @@
                 $("#up_ex_week").val(dataArray[i].preWeek);*/
             }
         }
+
+        // 수업 변경 시 .. 특히 ZOOM 처리.
+        $(document).on("change",".fn_up_study",function (){
+            nowPanelIndex = $(".fn_up_study").index($(this));
+            let nowZoomVal = $(".fn_up_study").eq(nowPanelIndex).children("option:selected").data("zoom");
+            if (nowZoomVal === "Y"){
+                $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").attr("checked",true);
+            }else{
+                $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").attr("checked",false);
+            }
+        });
 
         // 수업 만들기 클릭
         $(document).on("click",".fn_make_class",function (){
@@ -956,6 +955,18 @@
             _nowWeekTitle = $("#up_now_week option:selected").text();
             _preWeekTitle = $("#up_ex_week option:selected").text();
 
+            // zoom 관련 박스 점검.
+            if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check:checked").length <= 0){
+                showAlert("{{ __('strings.err_zoom_check_again') }}");
+                return;
+            }
+
+            // DT 범위 관련
+            if ($(".fn_chk_dt").eq(nowPanelIndex).is(":checked") && $(".fn_sel_dt").eq(nowPanelIndex).val() === ""){
+                showAlert("{{ __('strings.err_dt_area_check') }}");
+                return;
+            }
+
             printPage();
         });
 
@@ -990,53 +1001,71 @@
                 // 요일
                 _drawingText += "[" + $(".fn_up_days").eq(nowPanelIndex).find("option:selected").text().substr(i,1) + "{{ __('strings.lb_yoil_title') }}" + "]\r\n";
                 _drawingText += "1. {{ __('strings.lb_bms_class') }}: ";
-                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text() + "_" + _nowWeekTitle;  // 1 교시
-                // zoom 수업 여부
-                if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y"){
-                    _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
-                    _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
-                    _drawingText += ")" ;   // 1교시 줌 내용.
-                }
+                // 휴원 처리
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
+                    _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
+                }else{
+                    _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 1 교시
+                    // zoom 수업 여부
+                    if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
+                        _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
+                        _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
+                        _drawingText += ")" ;   // 1교시 줌 내용.
+                    }
 
-                // 2교시
-                _drawingText += " / ";
+                    // 2교시
+                    _drawingText += " / ";
 
-                _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text() + "_" + _nowWeekTitle;  // 2 교시
-                if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y"){
-                    _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").text(); // 선생님 이름
-                    _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
-                    _drawingText += ")" ;   // 2교시 줌 내용.
+                    _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 2 교시
+                    if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
+                        _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").text(); // 선생님 이름
+                        _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
+                        _drawingText += ")" ;   // 2교시 줌 내용.
+                    }
                 }
 
                 _drawingText += "\r\n";
 
                 // DT 범위
-                // 1교시 영역
                 _drawingText += "2. {{ __('strings.lb_bms_dt') }} : ";
-                _drawingText += getDtArea($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
+                    // 1교시 영역
+                    _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
+                }else{
+                    _drawingText += getDtArea(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    // 2교시 영역
+                    _drawingText += " / ";
+                    _drawingText += getDtArea(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    _drawingText += "\r\n";
+                }
 
-                // 2교시 영역
-                _drawingText += " / ";
-                _drawingText += getDtArea($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
-                _drawingText += "\r\n";
+
 
                 // 과제 : 교재과제
                 _drawingText += "3. {{ __('strings.lb_bms_hworks') }}\r\n{{ __('strings.lb_bms_books_print') }}";
-                // 1교시 영역
-                _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
-                // 2교시 영역
-                _drawingText += " / ";
-                _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
-                _drawingText += "\r\n";
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
+                    _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
+                }else{
+                    // 1교시 영역
+                    _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    // 2교시 영역
+                    _drawingText += " / ";
+                    _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    _drawingText += "\r\n";
+                }
+
 
                 // 과제 : 제출과제
                 _drawingText += "{{ __('strings.lb_bms_output_work_print') }}";
-                // 1교시 영역
-                _drawingText += outputWork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
-                _drawingText += " / ";
-                _drawingText += outputWork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
+                    _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
+                }else {
+                    // 1교시 영역
+                    _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    _drawingText += " / ";
+                    _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                }
                 _drawingText += "\r\n\r\n";
-
             });
             _drawingText += "\r\n";
 
@@ -1050,8 +1079,18 @@
 
         }   // 여기까지 내부 영역 텍스트 그리기
 
+        // 수업 내용 가져오기
+        function getClassContext(txt){
+            let _chIndex = -1;
+            _chIndex = txt.indexOf("(");
+            if (_chIndex > -1){
+                return txt.substr(txt,_chIndex);
+            }
+            return txt;
+        }
+
         // DT 정보 가져오기. subject_function 에 의거...
-        function getDtArea(subjectId,subjectName){    //
+        function getDtArea(sibling,subjectId,subjectName){    //
             let nowFunction;
             $.each(subject_function,function (i,obj){
                 if (String.valueOf(obj.id) === String.valueOf(subjectId)){
@@ -1059,6 +1098,8 @@
                     return false;
                 }
             });
+
+            let toChangeText = $(".fn_sel_dt").eq(nowPanelIndex).find("option:selected").data("txt");
             let resultText = nowFunction.hwork_dt;
 
             if (resultText === undefined) return;
@@ -1066,10 +1107,14 @@
             let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
             let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
             let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
+            let dtReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[24]["tag"] }}");    // DT Area Week
 
+
+            subjectName = getClassContext(subjectName);
             resultText = resultText.replace(subjectReg,subjectName);
             resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
             resultText = resultText.replace(preWeekReg,_preWeekTitle);
+            resultText = resultText.replace(dtReg,toChangeText);
 
             return resultText;
         }
@@ -1091,6 +1136,8 @@
             let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
             let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
 
+            subjectName = getClassContext(subjectName);
+
             resultText = resultText.replace(subjectReg,subjectName);
             resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
             resultText = resultText.replace(preWeekReg,_preWeekTitle);
@@ -1099,7 +1146,7 @@
         }
 
         // 제출과제
-        function outputWork(subjectId,subjectName){
+        function outputWork(sibling,subjectId,subjectName){
             let nowFunction;
             $.each(subject_function,function (i,obj){
                 if (String.valueOf(obj.id) === String.valueOf(subjectId)){
@@ -1115,11 +1162,29 @@
             let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
             let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
 
-            resultText = resultText.replace(subjectReg,subjectName);
-            resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
-            resultText = resultText.replace(preWeekReg,_preWeekTitle);
+            subjectName = getClassContext(subjectName);
 
-            return resultText;
+            if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked")){
+                if ($(".fn_sel_sdl").eq(nowPanelIndex).val() === ""){
+                    showAlert("{{ __('strings.err_select_sdl_code') }}");
+                    return;
+                }
+                let _sdlCode = $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code");
+
+                switch(_sdlCode){
+                    case "{{ \App\Models\Configurations::$BMS_BS_CODE_DIRECT }}":
+                        return resultText = $(".fn_classes").eq(nowPanelIndex).find(".fn_dt_direct_text").eq(sibling).val();
+                        break;
+                    case "{{ \App\Models\Configurations::$BMS_BS_CODE_BOOK }}":
+                        break;
+                    default:
+                        resultText = resultText.replace(subjectReg,subjectName);
+                        resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
+                        resultText = resultText.replace(preWeekReg,_preWeekTitle);
+                        return resultText;
+                        break;
+                }
+            }
         }
 
         // 전송하기 버튼 클릭 시

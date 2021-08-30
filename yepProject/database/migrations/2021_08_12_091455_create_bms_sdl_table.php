@@ -19,6 +19,7 @@ class CreateBmsSdlTable extends Migration
             $table->string('bs_title');
             $table->integer('bs_index')->unsigned()->default(0);
             $table->enum('bs_direct',['Y','N'])->default('N')->comment('직접작성 일 경우, Y');
+            $table->enum('bs_code',['NEXT','SAME','BOOK','DIRECT'])->default('NEXT')->comment('print 페이지에 코드로 적시하기 위함.');
         });
     }
 

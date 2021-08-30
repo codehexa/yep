@@ -17,6 +17,7 @@ class CreateBmsDtTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('dt_title');
+            $table->string('dt_text')->nullable()->comment('실제 작성되는 텍스트');
         });
     }
 

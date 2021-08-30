@@ -108,10 +108,11 @@ class Configurations extends Model
         ["tag"=>":FN_ARRAY_START:","title"=>"반복 시작","type"=>"ARRAY_START"],
         ["tag"=>":FN_ARRAY_END:","title"=>"반복 끝","type"=>"ARRAY_END"],
         ["tag"=>":FN_CLASS_NOW_WEEK:","title"=>"수업_이번주","type"=>"FUNCTION"],
-        ["tag"=>":FN_CLASS_DT:","title"=>"DT","type"=>"FUNCTION"],
+        ["tag"=>":FN_CLASS_DT:","title"=>"DT","type"=>"FUNCTION"],  // 20
         ["tag"=>":FN_CLASS_BOOK_WORK:","title"=>"교재과제","type"=>"FUNCTION"],
         ["tag"=>":FN_CLASS_OUTPUT_WORK:","title"=>"제출과제","type"=>"FUNCTION"],
         ["tag"=>":NOTICE:","title"=>"공지사항","type"=>"STRING"],
+        ["tag"=>":DT_AREA:","title"=>"DT 범위","type"=>"STRING"],
 
     ];
 
@@ -128,8 +129,27 @@ class Configurations extends Model
     public static $BMS_SMS_TAG_ACADEMY_INFO    = ":ACADEMY_INFO";
     public static $BMS_SMS_TAG_ACADEMY_INFO_TITLE    = "학원 정보";
 
+    // SDL CODE
+    public static $BMS_BS_CODES = [
+        ["tag"=>"NEXT","title"=>"다음 등원일에 제출"],
+        ["tag"=>"SAME","title"=>"해당하는 수업시간에 제출"],
+        ["tag"=>"BOOK","title"=>"익힘책"],
+        ["tag"=>"DIRECT","title"=>"직접 입력"],
+    ];
+    // SDL CODES.. DB related. caution.
+    public static $BMS_BS_CODE_NEXT = "NEXT";
+    public static $BMS_BS_CODE_SAME = "SAMEDAY";
+    public static $BMS_BS_CODE_BOOK = "BOOK";
+    public static $BMS_BS_CODE_DIRECT = "DIRECT";
+
     // Script TAG
     public static $JS_ENTER = ":ENTER:";
     public static $JS_STRING = ":STRING:";
     public static $JS_SELECT = ":SELECT:";
+
+    // Subject Functions. with related db
+    public static $BMS_SUBJECT_FUNCTIONS = [
+        ["code"=>"0","title"=>"NORMAL"],
+        ["code"=>"1","title"=>"GRAMMAR"],
+    ];
 }

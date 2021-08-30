@@ -71,6 +71,22 @@
                             <label class="form-label">{{ __('strings.lb_bms_output_second') }}</label>
                             <span class="form-control fn_item">{{ $datum->hwork_output_second }}</span>
                         </div>
+                        <div class="list-group-item">
+                            <label class="form-label">[{{ __('strings.lb_study_book') }}] {{ __('strings.lb_bms_dt') }}</label>
+                            <span class="form-control fn_item">{{ $datum->hwork_opt1 }}</span>
+                        </div>
+                        <div class="list-group-item">
+                            <label class="form-label">[{{ __('strings.lb_study_book') }}] {{ __('strings.lb_bms_books') }}</label>
+                            <span class="form-control fn_item">{{ $datum->hwork_opt2 }}</span>
+                        </div>
+                        <div class="list-group-item">
+                            <label class="form-label">[{{ __('strings.lb_study_book') }}] {{ __('strings.lb_bms_output_first') }}</label>
+                            <span class="form-control fn_item">{{ $datum->hwork_opt3 }}</span>
+                        </div>
+                        <div class="list-group-item">
+                            <label class="form-label">[{{ __('strings.lb_study_book') }}] {{ __('strings.lb_bms_output_second') }}</label>
+                            <span class="form-control fn_item">{{ $datum->hwork_opt4 }}</span>
+                        </div>
                     </div>
                 </div>
             @endforeach

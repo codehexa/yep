@@ -23,10 +23,10 @@ class CreateBmsHworksTable extends Migration
             $table->string('hwork_book')->nullable()->comment('교재과제');
             $table->string('hwork_output_first')->nullable()->comment('제출과제(첫수업)');
             $table->string('hwork_output_second')->nullable()->comment('제출과제(두번째수업)');
-            $table->string('hwork_opt1')->nullable()->comment('Option 1');
-            $table->string('hwork_opt2')->nullable()->comment('Option 2');
-            $table->string('hwork_opt3')->nullable()->comment('Option 3');
-            $table->string('hwork_opt4')->nullable()->comment('Option 4');
+            $table->string('hwork_opt1')->nullable()->comment('dt. 익힘책');
+            $table->string('hwork_opt2')->nullable()->comment('교재과제, 익힘책');
+            $table->string('hwork_opt3')->nullable()->comment('제출과제(첫수업) 익힘책');
+            $table->string('hwork_opt4')->nullable()->comment('제출과제(두번쨰) 익힘책 ');
             $table->string('hwork_opt5')->nullable()->comment('Option 5');
         });
     }

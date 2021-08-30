@@ -19,7 +19,7 @@ class CreateBmsSubjectsTable extends Migration
             $table->bigInteger('sg_id')->unsigned()->default(0);
             $table->string('subject_title');
             $table->integer('subject_index')->unsigned()->default(0);
-            $table->bigInteger('subject_function')->unsigned()->nullable()->default(0);
+            $table->integer('subject_function')->unsigned()->nullable()->default(0)->comment('0:Normal, 1: Grammar');
         });
     }
 

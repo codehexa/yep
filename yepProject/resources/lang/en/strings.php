@@ -363,6 +363,11 @@ return [
     "lb_target_class_name"  => "전송 대상 반 이름 및 대상자 정보",
     "err_no_date_to_send"   => "전송할 대상이 없습니다",
     "str_send_title"    => ":CLASS_NAME 반 :NUMBER 명에게 :COUNT 차 전송합니다",
+    "lb_zoom_check" => "Zoom 수업",
+    "err_zoom_check_again"  => "Zoom 관련 항목을 다시 한번 확인하세요",
+    "lb_nothing"    => "없음",
+    "err_select_sdl_code"   => "SDL 제출을 확인하세요",
+    "err_dt_area_check"   => "DT 범위를 확인하세요",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
