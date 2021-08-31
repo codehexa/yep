@@ -151,5 +151,6 @@ class Configurations extends Model
     public static $BMS_SUBJECT_FUNCTIONS = [
         ["code"=>"0","title"=>"NORMAL"],
         ["code"=>"1","title"=>"GRAMMAR"],
+        ["code"=>"2","title"=>"NOTHING"],
     ];
 }

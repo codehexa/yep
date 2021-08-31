@@ -287,13 +287,13 @@
 
                             <div class="form-group form-inline">
                                 <div class="form-check">
-                                    <input type="checkbox" name="chk_workbook" class="form-check-input" value="Y" @{{if workbook_use == 'Y' }}checked@{{/if}}/>
+                                    <input type="checkbox" name="chk_workbook" class="form-check-input fn_chk_workbook" value="Y" @{{if workbook_use == 'Y' }}checked@{{/if}}/>
                                     <label for="">{{ __('strings.lb_workbook') }}</label>
                                 </div>
                                 <select name="sel_workbook" class="form-control form-control-sm ml-2 fn_sel_workbook">
                                     <option value=''>{{ __("strings.fn_select_item") }}</option>
                                     @foreach($workbooks as $workbook)
-                                    <option value="{{ $workbook->id }}" @{{if workbook == {!! $workbook->id !!} }} selected @{{/if}}>{{ $workbook->bw_title }}</option>
+                                    <option value="{{ $workbook->id }}" data-text="{{ $workbook->bw_text }}" @{{if workbook == {!! $workbook->id !!} }} selected @{{/if}}>{{ $workbook->bw_title }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -352,7 +352,7 @@
                     <div class="list-group-item">
                         <h6>Show Panel</h6>
                         <div class="mt-3 fn_draw_panel">
-                            <textarea class="form-control form-control-sm fn_draw_panel_ta" style="height:40rem"></textarea>
+                            <textarea class="form-control form-control-sm fn_draw_panel_ta" style="height:44rem"></textarea>
                         </div>
                         <div class="mt-1">
                             <button class="btn btn-primary btn-sm fn_sms_send"><i class="fa fa-share"></i> {{ __('strings.lb_sending') }}</button>
@@ -437,6 +437,9 @@
         let subject_function;  // 교재 과제 나 DT 범위 등등 함수를 가져오는 정의.
 
         let _nowWeekTitle, _preWeekTitle;
+        let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
+        let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
+        let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
 
         // 학원 변경 시 선생님 정보 가져오기
         $(document).on("change","#up_academy",function (){
@@ -578,6 +581,18 @@
                 }
             });
         }
+
+        // 과목을 선택할 때, workbook 메뉴를 선택하라고 체크함.
+        $(document).on("change",".fn_up_class_first_subject, .fn_up_class_second_subject",function(){
+            let motherYoil = $(this).parent().parent().parent().parent();
+            nowPanelIndex = $(".fn_classes").index($(motherYoil));
+            let nowSubjectCode = $(this).find("option:selected").data("code");
+            if (nowSubjectCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[1]["code"] }}" &&
+                !$(".fn_chk_workbook").eq(nowPanelIndex).is(":checked")
+            ){
+                showAlert("{{ __('strings.str_check_workbook') }}");
+            }
+        });
 
         // sheet save
         $(document).on("click","#btnSave",function (){
@@ -770,8 +785,6 @@
                     "upAcId":$("#up_academy").val()
                 },
                 success:function (msg){
-                    //
-                    console.log(msg);
                     $.each(msg.data,function(i,obj){
                         dataArray.push(
                             {
@@ -947,9 +960,7 @@
         $(document).on("click",".fn_preview",function (){
             event.preventDefault();
             nowPanelIndex = $(".fn_preview").index($(this));
-            console.log('now panel index');
             targetPreview = $(".fn_draw_panel").eq(nowPanelIndex);
-            console.log('target preview');
 
             // 지금 주, 이전 주
             _nowWeekTitle = $("#up_now_week option:selected").text();
@@ -976,8 +987,6 @@
             let _greeting = replaceContext("greeting",basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_GREETING }}').tagText);
             let _notice = basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_NOTICE }}').tagText;
             let _academyTel = replaceContext("academyTel",basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_ACADEMY_INFO }}').tagText);
-            let _bookWork = basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_BOOK_WORK }}').tagText;
-            let _outputWork = basicInfos.find(element => element.tagItem === '{{ \App\Models\Configurations::$BMS_SMS_TAG_OUTPUT_WORK }}').tagText;
 
             let _drawingText = "";
 
@@ -994,7 +1003,7 @@
                 "]\r\n\r\n";
 
             // 4th. 요일, 수업내용, DT범위, 과제 (교재과제, 제출과제) 배열 처리
-            let subItems = dataArray[nowPanelIndex].subItems;
+            let subItems = dataArray[nowPanelIndex].subItems;   // 각 요일별 데이터가 저장되어 있음.
 
             $.each(subItems,function (i,obj){
                 // 내부 폼 작성
@@ -1007,6 +1016,7 @@
                 }else{
                     _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 1 교시
                     // zoom 수업 여부
+                    // 1교시
                     if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
                         _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
                         _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
@@ -1039,18 +1049,16 @@
                     _drawingText += "\r\n";
                 }
 
-
-
                 // 과제 : 교재과제
                 _drawingText += "3. {{ __('strings.lb_bms_hworks') }}\r\n{{ __('strings.lb_bms_books_print') }}";
                 if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else{
                     // 1교시 영역
-                    _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    _drawingText += getHwork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code"));
                     // 2교시 영역
                     _drawingText += " / ";
-                    _drawingText += getHwork($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    _drawingText += getHwork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code"));
                     _drawingText += "\r\n";
                 }
 
@@ -1062,13 +1070,16 @@
                 ){  // 휴원이거나 마지막 주 일 경우.
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else {
-                    // 1교시 영역
-                    if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked") && $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code") === "{{ \App\Models\Configurations::$BMS_BS_CODE_DIRECT }}"){
-                        _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    // 출력 영역
+                    if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked") && $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code") === "{{ \App\Models\Configurations::$BMS_BS_CODE_DIRECT }}") {
+                        _drawingText += outputWork(0, i, $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                        // 하나만 출력하기 위해 분기 처리함.
+                    }else if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked") && $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code") === "{{ \App\Models\Configurations::$BMS_BS_CODE_NEXT }}") {
+                        _drawingText += outputWorkOther(i);
                     }else{
-                        _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                        _drawingText += outputWork(0,i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
                         _drawingText += " / ";
-                        _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                        _drawingText += outputWork(1,i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
                     }
                 }
                 _drawingText += "\r\n\r\n";
@@ -1135,7 +1146,7 @@
         }
 
         // 교재 과제 가져오기
-        function getHwork(subjectId,subjectName){
+        function getHwork(dayIndex,subjectId,subjectName, subjectCode){
             let nowFunction;
             $.each(subject_function,function (i,obj){
                 if (String.valueOf(obj.id) === String.valueOf(subjectId)){
@@ -1143,7 +1154,8 @@
                     return false;
                 }
             });
-            let resultText = nowFunction.hwork_dt;
+
+            let resultText = nowFunction.hwork_book;
 
             if (resultText === undefined) return;
 
@@ -1157,11 +1169,103 @@
             resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
             resultText = resultText.replace(preWeekReg,_preWeekTitle);
 
+            if (subjectCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[1]["code"] }}"){
+                if ($(".fn_chk_workbook").eq(nowPanelIndex).is(":checked")){
+                    resultText += $(".fn_sel_workbook").eq(nowPanelIndex).find("option:selected").data("text");
+                }
+            }
+
             return resultText;
+        }
+        // 제출 과제 "다음 등원일에 제출 용"
+        function outputWorkOther(sibling){  // 요일 순서
+            let firstResult;
+            let secondResult;
+            let resultFirstText;
+            let resultSecondText;
+
+            let firstFunction;
+            let secondFunction;
+
+            if (sibling <= 0){
+                // 전주 마지막 등원일 수업 정보 가져오기. 1교시
+                let preWeekSubjectFirstTitle = $(".fn_pre_week_first").eq(nowPanelIndex).find("option:selected").text();
+                let preWeekSubjectFirstId = $(".fn_pre_week_first").eq(nowPanelIndex).find("option:selected").val();
+                let preWeekSubjectFirstCode = $(".fn_pre_week_first").eq(nowPanelIndex).find("option:selected").data("code");
+
+                let preWeekSubjectSecondTitle = $(".fn_pre_week_second").eq(nowPanelIndex).find("option:selected").text();
+                let preWeekSubjectSecondId = $(".fn_pre_week_second").eq(nowPanelIndex).find("option:selected").val();
+                let preWeekSubjectSecondCode = $(".fn_pre_week_second").eq(nowPanelIndex).find("option:selected").data("code");
+
+                if (preWeekSubjectFirstCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
+                    firstResult = "{{ __('strings.lb_nothing') }}";
+                }else{
+                    firstFunction = getSubjectFunction(preWeekSubjectFirstId);
+                    resultFirstText = firstFunction.hwork_output_first;
+
+                    firstResult = resultFirstText.replace(subjectReg,preWeekSubjectFirstTitle);
+                    firstResult = firstResult.replace(nowWeekReg,_preWeekTitle);
+                    //firstResult = firstResult.replace(preWeekReg,_preWeekTitle);
+                }
+
+                if (preWeekSubjectSecondCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
+                    secondResult = "{{ __('strings.lb_nothing') }}";
+                }else{
+                    secondFunction = getSubjectFunction(preWeekSubjectSecondId);
+                    resultSecondText = secondFunction.hwork_output_second;
+                    secondResult = resultSecondText.replace(subjectReg,preWeekSubjectSecondTitle);
+                    secondResult = secondResult.replace(nowWeekReg,_preWeekTitle);
+                    //secondResult = secondResult.replace(preWeekReg,_preWeekTitle);
+                }
+            }else{
+                // 다음 요일 건들은 이전 요일 건을 가져온다.
+                let preDaySubjectFirstTitle = $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(sibling -1).find("option:selected").text();
+                let preDaySubjectFirstId = $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(sibling -1).find("option:selected").val();
+                let preDaySubjectFirstCode = $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(sibling -1).find("option:selected").data("code");
+
+                let preDaySubjectSecondTitle = $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(sibling -1).find("option:selected").text();
+                let preDaySubjectSecondId = $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(sibling -1).find("option:selected").val();
+                let preDaySubjectSecondCode = $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(sibling -1).find("option:selected").data("code");
+
+                if (preDaySubjectFirstCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
+                    firstResult = "{{ __('strings.lb_nothing') }}";
+                }else{
+                    firstFunction = getSubjectFunction(preDaySubjectFirstId);
+                    resultFirstText = firstFunction.hwork_output_first;
+
+                    firstResult = resultFirstText.replace(subjectReg,preDaySubjectFirstTitle);
+                    firstResult = firstResult.replace(nowWeekReg,_nowWeekTitle);
+                    //firstResult = firstResult.replace(preWeekReg,_preWeekTitle);
+                }
+
+                if (preDaySubjectSecondCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
+                    secondResult = "{{ __('strings.lb_nothing') }}";
+                }else{
+                    secondFunction = getSubjectFunction(preDaySubjectSecondId);
+                    resultSecondText = secondFunction.hwork_output_first;
+                    secondResult = resultSecondText.replace(subjectReg,preDaySubjectSecondTitle);
+                    secondResult = secondResult.replace(nowWeekReg,_nowWeekTitle);
+                    //secondResult = secondResult.replace(preWeekReg,_preWeekTitle);
+                }
+            }
+
+            return firstResult + " / " + secondResult;
+        }
+
+        // get Subject Function
+        function getSubjectFunction(subjectId){
+            let myFunction;
+            $.each(subject_function,function (i,obj){
+                if (String.valueOf(obj.id) === String.valueOf(subjectId)){
+                    myFunction = obj;
+                    return false;
+                }
+            });
+            return myFunction;
         }
 
         // 제출과제
-        function outputWork(sibling,subjectId,subjectName){
+        function outputWork(order,sibling,subjectId,subjectName){ // order: 제출과제 순서(첫수업,두번째수업) , sibling : 요일 순서, subjectId : 과목 아이디, subjectName : 과목 제목
             let nowFunction;
             $.each(subject_function,function (i,obj){
                 if (String.valueOf(obj.id) === String.valueOf(subjectId)){
@@ -1169,15 +1273,13 @@
                     return false;
                 }
             });
-            let resultText = nowFunction.hwork_dt;
+            let resultText;
+            let resultTextFirst = nowFunction.hwork_output_first;
+            let resultTextSecond    = nowFunction.hwork_output_second;
+            let resultTextFirstBook = nowFunction.hwork_opt3;
+            let resultTextSecondBook    = nowFunction.hwork_opt4;
 
-            if (resultText === undefined) return;
-
-            let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
-            let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
-            let preWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[10]["tag"] }}");    // pre Week
-
-            subjectName = getClassContext(subjectName);
+            subjectName = getClassContext(subjectName); // () 표시 삭제를 위함.
 
             if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked")){
                 if ($(".fn_sel_sdl").eq(nowPanelIndex).val() === ""){
@@ -1190,9 +1292,28 @@
                     case "{{ \App\Models\Configurations::$BMS_BS_CODE_DIRECT }}":
                         return resultText = $(".fn_classes").eq(nowPanelIndex).find(".fn_dt_direct_text").eq(sibling).val();
                         break;
-                    case "{{ \App\Models\Configurations::$BMS_BS_CODE_BOOK }}":
+                    case "{{ \App\Models\Configurations::$BMS_BS_CODE_BOOK }}": // 익힘책
+                        if (order === 0){
+                            resultText = resultTextFirstBook;
+                        }else{
+                            resultText = resultTextSecondBook;
+                        }
+
+                        resultText = resultText.replace(subjectReg,subjectName);
+                        resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
+                        resultText = resultText.replace(preWeekReg,_preWeekTitle);
+                        return resultText;
                         break;
-                    default:
+                    case "{{ \App\Models\Configurations::$BMS_BS_CODE_NEXT }}": // 다음 등원일 제출.. outputWorkOther 로 대치
+
+                        break;
+                    default:    // 해당하는 수업 시간 제출
+                        if (order === 0){
+                            resultText  = resultTextFirst;
+                        }else if (order === 1){
+                            resultText  = resultTextSecond;
+                        }
+
                         resultText = resultText.replace(subjectReg,subjectName);
                         resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
                         resultText = resultText.replace(preWeekReg,_preWeekTitle);
@@ -1200,6 +1321,18 @@
                         break;
                 }
             }
+        }
+
+        // 이전 주 정보 가져오기.
+        function getWeeksInfo(){
+            let options = $("#up_now_week option");
+            let allValues = $.map(options, function(option){
+                if (option.value !== ""){
+                    return option.text;
+                }
+            });
+
+            return allValues;
         }
 
         // 전송하기 버튼 클릭 시

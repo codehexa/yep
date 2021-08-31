@@ -368,6 +368,7 @@ return [
     "lb_nothing"    => "없음",
     "err_select_sdl_code"   => "SDL 제출을 확인하세요",
     "err_dt_area_check"   => "DT 범위를 확인하세요",
+    "str_check_workbook"    => "문법 속성을 지닌 과목을 선택하면 Workbook 옵션을 참조하세요",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",

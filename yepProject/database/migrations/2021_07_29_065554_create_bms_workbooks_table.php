@@ -18,6 +18,7 @@ class CreateBmsWorkbooksTable extends Migration
             $table->timestamps();
             $table->string('bw_title');
             $table->integer('bw_index')->unsigned()->default(0);
+            $table->string('bw_text')->nullable()->comment('실제 교재과제에 포함되는 내용');
         });
     }
 
