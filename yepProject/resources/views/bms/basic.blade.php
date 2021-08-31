@@ -1057,13 +1057,19 @@
 
                 // 과제 : 제출과제
                 _drawingText += "{{ __('strings.lb_bms_output_work_print') }}";
-                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked") ||
+                    (checkLastWeek() && $(".fn_chk_sdl").eq(nowPanelIndex).is(":checked") && $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code") === "{{ \App\Models\Configurations::$BMS_BS_CODE_NEXT }}")
+                ){  // 휴원이거나 마지막 주 일 경우.
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else {
                     // 1교시 영역
-                    _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
-                    _drawingText += " / ";
-                    _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked") && $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code") === "{{ \App\Models\Configurations::$BMS_BS_CODE_DIRECT }}"){
+                        _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    }else{
+                        _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                        _drawingText += " / ";
+                        _drawingText += outputWork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    }
                 }
                 _drawingText += "\r\n\r\n";
             });
@@ -1078,6 +1084,15 @@
             $(".fn_draw_panel_ta").eq(nowPanelIndex).val(_drawingText);
 
         }   // 여기까지 내부 영역 텍스트 그리기
+
+        // 마지막 주 점검.
+        function checkLastWeek(){
+            let _maxWeek = $("#up_now_week option:last").val();
+            if ($("#up_now_week").val() === _maxWeek){
+                return true;
+            }
+            return false;
+        }
 
         // 수업 내용 가져오기
         function getClassContext(txt){

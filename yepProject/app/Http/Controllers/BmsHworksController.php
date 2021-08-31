@@ -13,17 +13,7 @@ use Illuminate\Support\Collection;
 class BmsHworksController extends Controller
 {
     //
-    public function index($sgId=''){
-
-        $settings = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
-        $limit = $settings->set_value;
-        if ($sgId != ''){
-            $data = BmsHworks::where('hwork_sgid','=',$sgId)->orderBy('id','asc')->paginate($limit);
-        }else{
-            $data = BmsHworks::orderBy('id','asc')->paginate($limit);
-        }
-
-
+    public function index(){
         $schoolGrades = schoolGrades::orderBy("scg_index","asc")->get();
         $codes = Configurations::$BMS_PAGE_FUNCTION_KEYS;
         $collections = new Collection();
@@ -32,7 +22,7 @@ class BmsHworksController extends Controller
         }
 
         return view("bms.hworks",[
-            "data"  => $data,"schoolGrades"=>$schoolGrades,'codes'=>$collections
+            "schoolGrades"=>$schoolGrades,'codes'=>$collections
         ]);
     }
 
@@ -85,5 +75,55 @@ class BmsHworksController extends Controller
         }
 
         return view('bms.hworks_input',['functions'=>$collections,'sgrades'=>$schoolGrades,'subjects'=>$subjects,'data'=>$data]);
+    }
+
+    public function getSubjects(Request $request){
+        $sgId = $request->get('_sgId');
+        $data = BmsSubjects::where('sg_id','=',$sgId)->orderBy('subject_index','asc')->get();
+
+        $hworks = [];
+
+        $nullWork = ["hwork_content"=>null,"hwork_dt"=>null,"hwork_book"=>null,"hwork_output_first"=>null,"hwork_output_second"=>null,"hwork_opt1"=>null,"hwork_opt2"=>null,"hwork_opt3"=>null,"hwork_opt4"=>null];
+
+        foreach($data as $datum){
+            $clsid = $datum->id;
+            $hwork = BmsHworks::where('hwork_sgid','=',$sgId)
+                ->where('hwork_class','=',$clsid)->first();
+            if (isset($hwork)){
+                $hworks[] = ["clsId"=>$clsid,"hdata"=>$hwork];
+            }else{
+                $hworks[] = ["clsId"=>$clsid,"hdata"=>$nullWork];
+            }
+        }
+
+        return response()->json(['data'=>$data,'items'=>$hworks]);
+    }
+
+    public function storeClass(Request $request){
+        $sgId = $request->get("saved_sg_id");
+        $subjectId = $request->get("up_subject_id");
+
+        $content = $request->get('up_content');
+        $dt = $request->get('up_dt');
+        $book = $request->get("up_book");
+        $output_first = $request->get("up_output_first");
+        $output_second = $request->get('up_output_second');
+        $opt1 = $request->get("up_opt1");
+        $opt2 = $request->get("up_opt2");
+        $opt3 = $request->get("up_opt3");
+        $opt4 = $request->get("up_opt4");
+
+        $standard = ['hwork_class'=>$subjectId,'hwork_sgid'=>$sgId];
+        $values = [
+            'hwork_content'=>$content,'hwork_dt'=>$dt,'hwork_book'=>$book,'hwork_output_first'=>$output_first,'hwork_output_second'=>$output_second,
+            'hwork_opt1'=>$opt1,'hwork_opt2'=>$opt2,'hwork_opt3'=>$opt3,'hwork_opt4'=>$opt4
+            ];
+        $save = BmsHworks::updateOrCreate($standard,$values);
+
+        if (isset($save)){
+            return response()->json(['result'=>'true']);
+        }else{
+            return response()->json(['result'=>'false']);
+        }
     }
 }

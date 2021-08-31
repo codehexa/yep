@@ -172,6 +172,7 @@ Route::prefix('bms')->group(function(){
     Route::get("/hworkInput/{hwid?}",[\App\Http\Controllers\BmsHworksController::class, 'inputPage']);
     Route::post("/hworkSave",[\App\Http\Controllers\BmsHworksController::class, "addClass"]);
     Route::post("/hworkStore",[\App\Http\Controllers\BmsHworksController::class, "storeClass"]);
+    Route::post("/getHworkSubjects",[\App\Http\Controllers\BmsHworksController::class, "getSubjects"]);
 
     Route::post("/addCurrculum",[\App\Http\Controllers\BmsCurriculumsController::class, "addCurri"]);
     Route::post("/saveCurriculumJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveCurriculum"]);

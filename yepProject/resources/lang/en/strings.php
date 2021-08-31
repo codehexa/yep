@@ -448,6 +448,7 @@ return [
     "fn_all_check"  => "전체 선택",
     "fn_all_uncheck"    => "전체 해제",
     "fn_toggle" => "반전",
+    "fn_inputs" => "입력 항목",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",
