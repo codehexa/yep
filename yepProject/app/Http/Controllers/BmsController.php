@@ -28,20 +28,20 @@ class BmsController extends Controller
         $bmsStudyDays = BmsDays::orderBy('days_index','asc')->get();
         $bmsStudyTimes = BmsStudyTimes::orderBy('time_index','asc')->get();
         $bmsCurriculums = BmsCurriculums::orderBy('bcur_index','asc')->get();
-        $bmsSubjects = BmsSubjects::orderBy('subject_index','asc')->get();
         $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
         $bmsWorkbooks = BmsWorkbooks::orderBy('bw_index','asc')->get();
         $bmsWeeks = BmsWeeks::orderBy('bmw_index','asc')->get();
 
         return view('bms.settings',[
             "bmsStudyTypes"=>$bmsStudyTypes,"bmsStudyDays"=>$bmsStudyDays,"bmsStudyTimes"=>$bmsStudyTimes,
-            "bmsCurriculums"=>$bmsCurriculums,"bmsSubjects"=>$bmsSubjects,
+            "bmsCurriculums"=>$bmsCurriculums,
             "schoolGrades"=>$schoolGrades,"bmsWorkbooks"=>$bmsWorkbooks,"bmsWeeks"=>$bmsWeeks
         ]);
     }
 
     public function addStudyTypesJs(Request $request){
-        $name = $request->get("up_name");
+        $name = $request->get("up_study_type_title");
+        $zoom = $request->get("up_study_type_zoom");
 
         $check = BmsStudyTypes::where('study_title','like',$name)->first();
         if (is_null($check)){
@@ -50,6 +50,7 @@ class BmsController extends Controller
             $new = new BmsStudyTypes();
             $new->study_title = $name;
             $new->study_type_index = $count;
+            $new->show_zoom = $zoom;
 
             try {
                 $new->save();
@@ -61,7 +62,7 @@ class BmsController extends Controller
     }
 
     public function saveSortStudyTypes(Request $request){
-        $sortData = $request->get("sortData");
+        $sortData = $request->get("_vals");
 
         $arr = explode(",",$sortData);
         for ($i=0; $i < sizeof($arr); $i++){
@@ -76,6 +77,7 @@ class BmsController extends Controller
     public function saveStudyTypeJs(Request $request){
         $id = $request->get("upId");
         $val = $request->get("upVal");
+        $zoom = $request->get("upZoom");
 
         $check = BmsStudyTypes::where('study_title','=',$val)->count();
         if ($check > 0)return response()->json(['result'=>'false']);
@@ -91,13 +93,56 @@ class BmsController extends Controller
         }
     }
 
+    public function storeStudyTypeJs(Request $request){
+        $id = $request->get("upId");
+        $val = $request->get("upVal");
+        $zoom = $request->get("upZoom");
+
+        $data = BmsStudyTypes::find($id);
+
+        $data->study_title = $val;
+        $data->show_zoom = $zoom;
+
+        try {
+            $data->save();
+            return response()->json(['result'=>'true']);
+        }catch (\Exception $exception){
+            return response()->json(['result'=>'false']);
+        }
+    }
+
+    public function deleteStudyTypeJs(Request $request){
+        $dels = $request->get("_dels");
+
+        $delsArray = explode(",",$dels);
+        try {
+            $data = BmsStudyTypes::whereIn('id',$delsArray)->delete();
+
+            $dataAll = BmsStudyTypes::orderBy('study_type_index','asc')->get();
+
+            $n = 0;
+
+            foreach ($dataAll as $datum){
+                $datum->study_type_index = $n;
+                $n++;
+                $datum->save();
+            }
+            return response()->json(['result'=>'true']);
+        }catch (\Exception $exception){
+            return response()->json(['result'=>'false']);
+        }
+
+    }
+
     public function addStudyDayJs(Request $request){
-        $title = $request->get("up_day");
+        $title = $request->get("up_days_title");
+        $cnt = $request->get("up_days_count");
 
         $check = BmsDays::where('days_title','=',$title)->first();
         if (is_null($check)) {
             $d = new BmsDays();
             $d->days_title = $title;
+            $d->days_count = $cnt;
 
             $count = BmsDays::count();
             $d->days_index = $count;
@@ -113,8 +158,8 @@ class BmsController extends Controller
         }
     }
 
-    public function saveSortStudyDaysJs(Request $request){
-        $list = $request->get("sortData");
+    public function sortStudyDayJs(Request $request){
+        $list = $request->get("dels");
         $arr = explode(",",$list);
 
         for($i=0; $i < sizeof($arr); $i++ ){
@@ -129,12 +174,14 @@ class BmsController extends Controller
     public function saveStudyDayJs(Request $request){
         $upId = $request->get("upId");
         $upTxt = $request->get("upTxt");
+        $upCnt = $request->get("upCnt");
 
         $check = BmsDays::where('days_title','=',$upTxt)->count();
-        if ($check > 0) return response()->json(['result'=>'false']);
+        if ($check > 1) return response()->json(['result'=>'false']);
 
         $d = BmsDays::find($upId);
         $d->days_title = $upTxt;
+        $d->days_count = $upCnt;
 
         try {
             $d->save();
@@ -144,8 +191,20 @@ class BmsController extends Controller
         }
     }
 
+    public function deleteStudyDayJs(Request $request){
+        $dels = $request->get("dels");
+        $delArray = explode(",",$dels);
+
+        try {
+            BmsDays::whereIn('id',$delArray)->delete();
+            return response()->json(['result'=>'true']);
+        }catch (\Exception $exception){
+            return response()->json(['result'=>'false']);
+        }
+    }
+
     public function addStudyTimeJs(Request $request){
-        $upTxt = $request->get("upTxt");
+        $upTxt = $request->get("up_stime_title");
 
         $check = BmsStudyTimes::where('time_title','=',$upTxt)->first();
         if (is_null($check)){
@@ -165,8 +224,8 @@ class BmsController extends Controller
     }
 
     public function saveStudyTimeJs(Request $request){
-        $upId = $request->get("upId");
-        $upTxt = $request->get("upTxt");
+        $upId = $request->get("_id");
+        $upTxt = $request->get("_title");
 
         $check = BmsStudyTimes::where('time_title','=',$upTxt)->count();
         if ($check > 0) {
@@ -185,8 +244,22 @@ class BmsController extends Controller
 
     }
 
+    public function deleteStudyTimeJs(Request $request){
+        $dels = $request->get("_dels");
+
+        $delArray = explode(",",$dels);
+
+        try {
+            BmsStudyTimes::whereIn('id',$delArray)->delete();
+
+            return response()->json(['result'=>'true']);
+        }catch (\Exception $exception){
+            return response()->json(['result'=>'false']);
+        }
+    }
+
     public function saveSortStudyTimesJs(Request $request){
-        $list = $request->get("sortData");
+        $list = $request->get("_ids");
 
         $arr = explode(",",$list);
 
@@ -198,4 +271,6 @@ class BmsController extends Controller
 
         return response()->json(['result'=>'true']);
     }
+
+
 }

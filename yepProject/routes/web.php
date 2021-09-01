@@ -159,11 +159,15 @@ Route::prefix('bms')->group(function(){
     Route::post("/addStudyTypesJs",[\App\Http\Controllers\BmsController::class, "addStudyTypesJs"]);
     Route::post("/saveSortStudyTypes",[\App\Http\Controllers\BmsController::class, "saveSortStudyTypes"]);
     Route::post("/saveStudyTypeJs",[\App\Http\Controllers\BmsController::class, "saveStudyTypeJs"]);
+    Route::post("/storeStudyTypeJs",[\App\Http\Controllers\BmsController::class, "storeStudyTypeJs"]);
+    Route::post("/deleteStudyTypeJs",[\App\Http\Controllers\BmsController::class, "deleteStudyTypeJs"]);
     Route::post("/addStudyDayJs",[\App\Http\Controllers\BmsController::class, "addStudyDayJs"]);
-    Route::post("/saveSortStudyDaysJs",[\App\Http\Controllers\BmsController::class, "saveSortStudyDaysJs"]);
     Route::post("/saveStudyDayJs",[\App\Http\Controllers\BmsController::class, "saveStudyDayJs"]);
+    Route::post("/sortStudyDayJs",[\App\Http\Controllers\BmsController::class, "sortStudyDayJs"]);
+    Route::post("/deleteStudyDayJs",[\App\Http\Controllers\BmsController::class, "deleteStudyDayJs"]);
     Route::post("/addStudyTimeJs", [\App\Http\Controllers\BmsController::class, "addStudyTimeJs"]);
     Route::post("/saveStudyTimeJs", [\App\Http\Controllers\BmsController::class, "saveStudyTimeJs"]);
+    Route::post("/deleteStudyTimeJs", [\App\Http\Controllers\BmsController::class, "deleteStudyTimeJs"]);
     Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
 
     Route::get("/sending",[\App\Http\Controllers\BmsSendingController::class, "index"]);
@@ -176,6 +180,7 @@ Route::prefix('bms')->group(function(){
 
     Route::post("/addCurrculum",[\App\Http\Controllers\BmsCurriculumsController::class, "addCurri"]);
     Route::post("/saveCurriculumJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveCurriculum"]);
+    Route::post("/deleteCurriculumJs",[\App\Http\Controllers\BmsCurriculumsController::class, "deleteCurriculum"]);
     Route::post("/saveSortCurriculumsJs",[\App\Http\Controllers\BmsCurriculumsController::class, "saveSortCurriculumsJs"]);
     Route::post("/addHworks",[\App\Http\Controllers\BmsHworksController::class, "addClass"]);
     Route::post("/addBmsSubject",[\App\Http\Controllers\BmsSubjectsController::class, "addSubject"]);

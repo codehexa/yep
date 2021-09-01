@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BmsCurriculums;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +24,9 @@ class DatabaseSeeder extends Seeder
             BmsStudyTypesSeeder::class,
             BmsStudyBooksSeeder::class,
             BmsSdlSeeder::class,
+            BmsDaysSeeder::class,
+            BmsStudyTimesSeeder::class,
+            BmsCurriculumsSeeder::class,
         ]);
     }
 }

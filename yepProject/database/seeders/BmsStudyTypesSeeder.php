@@ -22,13 +22,18 @@ class BmsStudyTypesSeeder extends Seeder
                 'show_zoom' => 'Y'
             ],
             [
-                'study_title' => "대면 수업",
+                'study_title' => "Zoom 온라인 수업 과 대면수업",
                 'study_type_index'  => 1,
+                'show_zoom' => 'Y'
+            ],
+            [
+                'study_title' => "대면 수업",
+                'study_type_index'  => 2,
                 'show_zoom' => 'N'
             ],
             [
                 'study_title' => "수업",
-                'study_type_index'  => 2,
+                'study_type_index'  => 3,
                 'show_zoom' => 'N'
             ],
         ]);

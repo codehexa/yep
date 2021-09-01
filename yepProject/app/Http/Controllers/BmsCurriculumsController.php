@@ -9,7 +9,7 @@ class BmsCurriculumsController extends Controller
 {
     //
     public function addCurri(Request $request){
-        $cTitle = $request->get("up_curriculum");
+        $cTitle = $request->get("up_curri_title");
 
         $check = BmsCurriculums::where('bcur_title','=',$cTitle)->count();
 
@@ -32,11 +32,11 @@ class BmsCurriculumsController extends Controller
     }
 
     public function saveCurriculum(Request $request){
-        $id = $request->get("cId");
-        $title = $request->get("cTitle");
+        $id = $request->get("_id");
+        $title = $request->get("_title");
 
         $check = BmsCurriculums::where('bcur_title','=',$title)->count();
-        if ($check > 0){
+        if ($check > 1){
             return response()->json(['result'=>'false','msg'=>'has_pre_title']);
         }else{
             $d = BmsCurriculums::find($id);
@@ -53,7 +53,7 @@ class BmsCurriculumsController extends Controller
     }
 
     public function saveSortCurriculumsJs(Request $request){
-        $ids = $request->get("sortData");
+        $ids = $request->get("_ids");
 
         $arr = explode(",",$ids);
 
@@ -64,5 +64,17 @@ class BmsCurriculumsController extends Controller
         }
 
         return response()->json(['result'=>'true']);
+    }
+
+    public function deleteCurriculum(Request $request){
+        $ids = $request->get("_dels");
+        $delArray = explode(",",$ids);
+
+        try {
+            BmsCurriculums::whereIn("id",$delArray)->delete();
+            return response()->json(["result"=>"true"]);
+        }catch (\Exception $exception){
+            return response()->json(["result"=>"false"]);
+        }
     }
 }

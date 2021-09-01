@@ -296,7 +296,9 @@ return [
     "lb_bms_setting"    => "Setting",
     "lb_week_name"  => "Week",
     "lb_study"  => "수업",
+    "lb_study_title"    => "수업 이름",
     "lb_study_days"   => "수업 요일",
+    "lb_days_count" => "수업 일수",
     "lb_yoil_title" => "요일",
     "lb_study_times"    => "수업 시간",
     "lb_save_sort"  => "순서 저장 완료",
@@ -364,11 +366,17 @@ return [
     "err_no_date_to_send"   => "전송할 대상이 없습니다",
     "str_send_title"    => ":CLASS_NAME 반 :NUMBER 명에게 :COUNT 차 전송합니다",
     "lb_zoom_check" => "Zoom 수업",
+    "lb_select_zoom_type"   => "zoom 코드 표시 여부를 학인하세요",
     "err_zoom_check_again"  => "Zoom 관련 항목을 다시 한번 확인하세요",
     "lb_nothing"    => "없음",
     "err_select_sdl_code"   => "SDL 제출을 확인하세요",
     "err_dt_area_check"   => "DT 범위를 확인하세요",
     "str_check_workbook"    => "문법 속성을 지닌 과목을 선택하면 Workbook 옵션을 참조하세요",
+    "lb_options"    => "셋팅 옵션",
+    "str_input_days_count"  => "수업 일수를 입력하세요",
+    "str_input_study_time"  => "수업 시간을 입력하세요",
+    "str_select_times_to_delete"    => "삭제할 수업 시간을 선택하세요",
+    "str_input_curri_name"  => "과정을 입력하세요",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
@@ -382,7 +390,7 @@ return [
     "lb_input_array"    => "반복 형태",
     "lb_input_function" => "함수 형태",
 
-    /* 교제 관리 */
+    /* 교재 관리 */
     "lb_hwork_input_title"    => "교제 관리 입력",
     "str_select_sgrade" => "구분을 선택하세요",
     "str_input_content" => "수업내용을 입력하세요",
@@ -465,6 +473,7 @@ return [
     "err_select_teacher"    => "선생님을 선택하세요",
     "err_fail_to_delete"    => "삭제하는데 실패했습니다",
     "err_nothing_to_delete" => "삭제할 대상이 없습니다",
+    "err_select_to_delete"  => "삭제할 대상을 선택하세요",
     "err_call_to_dev"   => "개발자에게 문의하세요.(CODE: :CODE)",
     "err_cannot_saving" => "진행 중이라 더 이상 진행할 수 없습니다",
     "err_cannot_sent"   => "이미 완료된 단계라서 더 이상 진행할 수 없습니다",
