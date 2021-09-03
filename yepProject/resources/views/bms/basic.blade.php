@@ -341,7 +341,7 @@
                             <button class="btn btn-outline-primary fn_make_class"><i class="fa fa-bread-slice"></i> {{ __('strings.lb_make_class') }}</button>
                             <button class="btn btn-outline-primary fn_save"><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
                             <button class="btn btn-outline-primary fn_preview"><i class="fa fa-binoculars"></i> {{ __('strings.fn_preview') }}</button>
-                            <i class="fa fa-spin fa-spinner d-none excute_loader"></i>
+                            <i class="fa fa-spin fa-spinner d-none excute_loader mt-2 ml-2"></i>
                         </div>
 
                     </div>
@@ -404,7 +404,6 @@
                 <div class="form-group ml-2">
                     <label>{{ __('strings.lb_dt_title') }}</label>
                     <select class="form-control form-control-sm fn_up_class_dt">
-                        <option value="" >{{ __('strings.fn_select_item') }}</option>
                         <option value="Y" @{{if bms_sii_dt == 'Y' }} selected @{{/if}}>{{ __('strings.fn_been') }}</option>
                         <option value="N" @{{if bms_sii_dt == 'N' }} selected @{{/if}}>{{ __('strings.fn_not_been') }}</option>
                     </select>
@@ -1038,7 +1037,9 @@
 
                 // DT 범위
                 _drawingText += "2. {{ __('strings.lb_bms_dt') }} : ";
-                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked") ||
+                    $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_dt").eq(i).val() === "N"
+                ) {
                     // 1교시 영역
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else{

@@ -170,7 +170,7 @@ Route::prefix('bms')->group(function(){
     Route::post("/deleteStudyTimeJs", [\App\Http\Controllers\BmsController::class, "deleteStudyTimeJs"]);
     Route::post("/saveSortStudyTimesJs", [\App\Http\Controllers\BmsController::class, "saveSortStudyTimesJs"]);
 
-    Route::get("/sending",[\App\Http\Controllers\BmsSendingController::class, "index"]);
+    Route::get("/sending/{year?}/{month?}",[\App\Http\Controllers\BmsSendLogController::class, "index"]);
     /* hwork manage */
     Route::get("/hworks/{sgid?}",[\App\Http\Controllers\BmsHworksController::class, "index"]);
     Route::get("/hworkInput/{hwid?}",[\App\Http\Controllers\BmsHworksController::class, 'inputPage']);

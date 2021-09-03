@@ -380,6 +380,13 @@ return [
     "str_select_times_to_delete"    => "삭제할 수업 시간을 선택하세요",
     "str_input_curri_name"  => "과정을 입력하세요",
     "lb_workbook_text"  => "workbook 내용",
+    "lb_send_log_title"   => "전송 로그",
+    "lb_search_condition"  => "검색 조건",
+    "lb_month"  => " 월",
+    "lb_send_log_context"  => "전송 내용",
+
+    /* send log */
+    "lb_list_log_guide" => "시행자 명 : :NAME , 시행일자 : :SENT , 사용포인트 : :POINT , 결과코드 : :RESULT_CODE",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
