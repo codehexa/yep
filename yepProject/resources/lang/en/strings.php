@@ -368,6 +368,7 @@ return [
     "err_no_date_to_send"   => "전송할 대상이 없습니다",
     "str_send_title"    => ":CLASS_NAME 반 :NUMBER 명에게 :COUNT 차 전송합니다",
     "lb_zoom_check" => "Zoom 수업",
+    "lb_zoom_id"    => "Zoom ID",
     "lb_select_zoom_type"   => "zoom 코드 표시 여부를 학인하세요",
     "err_zoom_check_again"  => "Zoom 관련 항목을 다시 한번 확인하세요",
     "lb_nothing"    => "없음",

@@ -110,7 +110,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="up_zoom_id" class="col-md-4 col-form-label text-md-right">{{ __('strings.lb_password_2') }}</label>
+                                <label for="up_zoom_id" class="col-md-4 col-form-label text-md-right">{{ __('strings.lb_zoom_id') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="up_zoom_id" type="text" class="form-control " name="up_zoom_id"  >
