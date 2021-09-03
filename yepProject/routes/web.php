@@ -22,7 +22,16 @@ Route::post("/regDo",[\App\Http\Controllers\MyRegisterController::class, "regDo"
 Route::get("/regDone",[\App\Http\Controllers\MyRegisterController::class, "regDone"]);
 Route::get("/passwdReset",[\App\Http\Controllers\MyRegisterController::class, "passwdReset"]);
 Route::post("/passwdResetDo",[\App\Http\Controllers\MyRegisterController::class, "passwdResetDo"]);
+
 Auth::routes();
+
+/*
+ * user manage
+ */
+Route::get("/myInfo",[\App\Http\Controllers\MyInfoController::class, "info"]);
+Route::post("/myInfoEdit",[\App\Http\Controllers\MyInfoController::class, "modify"]);
+Route::get("/myPasswdChange",[\App\Http\Controllers\MyInfoController::class, "pwChange"]);
+Route::post("/myPwEdit",[\App\Http\Controllers\MyInfoController::class, "pwChangeDo"]);
 
 Route::group(['middleware' => ['adminPower']],function() {
     Route::get("/settings",[\App\Http\Controllers\SettingsController::class, 'index']);

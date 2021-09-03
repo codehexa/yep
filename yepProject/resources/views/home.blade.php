@@ -42,6 +42,10 @@
                             @endswitch
                         </div>
                         <div class="list-group-item d-flex justify-content-between">
+                            <label>{{ __('strings.lb_zoom_id') }}</label>
+                            <span class="text-primary">{{ $user->zoom_id }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between">
                             <label>{{ __('strings.lb_last_login') }}</label>
                             <span class="text-primary">{{ $user->last_login }}</span>
                         </div>
@@ -59,6 +63,9 @@
                                 @break
                             @endswitch
                         </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="myInfo" class="btn btn-primary btn-sm"><i class="fa fa-user-edit"></i> {{ __('strings.lb_edit_private') }}</a>
                     </div>
                 </div>
             </div>
