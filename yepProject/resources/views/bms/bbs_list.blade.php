@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_program_title') }} </h5>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_bbs') }} </h5>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
@@ -26,42 +26,35 @@
     @endif
 
     <div class="mt-3">
-        <h6>{{ __('strings.lb_bbs_public') }} </h6>
-
-        <div class="mt-2 list-group">
-            @foreach ($allBbs as $aBbs)
-                <div class="list-group-item">
-                    <div class="mb-1">
-                        <small>{{ $aBbs->us_name }} <span class="text-secondary">{{ $aBbs->updated_at }}</span> </small>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $aBbs->bbs_title }} {{ $aBbs->bbs_hits == 0? "": "(".$aBbs->bbs_hits.")" }}</h6>
-                        <span class="badge badge-primary badge-pill">{{ $aBbs->bbs_added_count }}</span>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+        <a href="/bms/bbspost" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</a>
     </div>
 
     <div class="mt-3">
-        <h6>{{ __('strings.lb_bbs_academy') }} </h6>
-
         <div class="mt-2 list-group">
-            @foreach ($acBbs as $acBbsItem)
-                <div class="list-group-item">
-                    <div class="mb-1">
-                        <small>{{ $acBbsItem->us_name }} <span class="text-secondary">{{ $acBbsItem->updated_at }}</span> </small>
+            @foreach ($data as $datum)
+                <a href="/bms/bbsView/{{$datum->id}}" class="text-decoration-none">
+                    <div class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5>
+                                    @if ($datum->bbs_type == '0')
+                                        <i class="fa fa-flag"></i>
+                                    @endif
+                                    {{ $datum->bbs_title }}
+                                </h5>
+                                <span class="badge badge-primary badge-pill ml-2 mb-2">{{ $datum->bbs_added_count }}</span>
+                            </div>
+                            <small>{{ $datum->us_name }} <span class="text-secondary">{{ $datum->updated_at }}</span> </small>
+                        </div>
+                        <p class="mb-1 text-truncate">{{ $datum->bbs_content }}</p>
+                        <small>{{ __('strings.lb_id_and_hits',["ID"=>$datum->id,"HITS"=>$datum->bbs_hits]) }}</small>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $acBbsItem->bbs_title }} {{ $acBbsItem->bbs_hits == 0? "": "(".$acBbsItem->bbs_hits.")" }}</h6>
-                        <span class="badge badge-primary badge-pill">{{ $acBbsItem->bbs_added_count }}</span>
-                    </div>
-                </div>
+                </a>
             @endforeach
         </div>
 
         <div class="mt-2">
-            {{ $acBbs->links('pagination::bootstrap-4') }}
+            {{ $data->links('pagination::bootstrap-4') }}
         </div>
 
     </div>

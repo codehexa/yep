@@ -292,6 +292,8 @@ return [
     "lb_input_sms_bottom"   => "SMS 결과 페이지 하단 내용을 입력하세요",
 
     /* BMS */
+    "lb_bms_program_title"  => "수업공지 프로그램",
+    "lb_bms_bbs"    => "게시글 관리",
     "lb_bms_title"  => "수업공지",
     "lb_bms_setting"    => "Setting",
     "lb_week_name"  => "Week",
@@ -305,7 +307,7 @@ return [
     "lb_editor" => "에디터",
     "lb_semester"   => "Semester",
     "lb_bms_sheets_list"    => "에디터 시트 리스트",
-    "lb_bms_sending"    => "BMS 전송",
+    "lb_bms_sending"    => "전송 로그",
     "lb_bms_hworks" => "과제",
     "lb_bms_hworks_manage"  => "과제 관리",
     "lb_bms_hworks_information" => "과제 정보",
@@ -377,6 +379,7 @@ return [
     "str_input_study_time"  => "수업 시간을 입력하세요",
     "str_select_times_to_delete"    => "삭제할 수업 시간을 선택하세요",
     "str_input_curri_name"  => "과정을 입력하세요",
+    "lb_workbook_text"  => "workbook 내용",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",
@@ -408,6 +411,20 @@ return [
     "str_there_is_no_data"  => "자료가 없습니다",
     "str_do_you_want_to_delete_cant_recover" => "삭제를 하시겠습니까? 진행하면 회복할 수 없습니다",
     "use_hyphen"    => "'-' 포함 (예: 010-1234-5678)",
+
+    /* bbs */
+    "lb_bbs_public" => "전체 공지 게시글",
+    "lb_bbs_academy"    => "개별 학원 게시글",
+    "lb_bbs_list"   => "게시 리스트",
+    "lb_bbs_title"  => "제목",
+    "lb_bbs_type"   => "구분",
+    "lb_bbs_type_all"   => "전체 공지",
+    "lb_bbs_type_normal"   => "일반 게시글",
+    "guide_input_title" => "제목을 입력하세요",
+    "err_bbs_if_check_all"  => "전체 공지 글이 아닌 경우, 학원이름(관)을 선택하세요",
+    "lb_id_and_hits"    => "ID : :ID | 조회수 : :HITS",
+    "lb_add_comment"    => "댓글",
+    "lb_input_added"    => "댓글을 입력하세요",
 
     /* functions */
     "fn_home"   => "HOME",
@@ -444,6 +461,7 @@ return [
     "fn_send"   => "전송",
     "fn_sort_save"  => "순서저장",
     "fn_save_complete"  => "저장 완료",
+    "fn_delete_complete"    => "삭제 완료",
     "fn_save_false" => "저장 실패",
     "fn_processing" => "처리 중입니다. 잠시만 기다려 주세요",
     "fn_need_save"  => "저장 필요합니다",
@@ -458,6 +476,7 @@ return [
     "fn_all_uncheck"    => "전체 해제",
     "fn_toggle" => "반전",
     "fn_inputs" => "입력 항목",
+    "fn_go_first"   => "맨 처음으로",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",
@@ -482,5 +501,6 @@ return [
     "err_cant_use_it"   => "잘못된 경로로 접속하여 더 이상 진행할 수 없습니다. 정상적인 방법으로 접속하여 주세요",
     "err_no_student"    => "매칭되는 자료가 없습니다",
     "err_fail_to_new_add_dup"   => "기존 등록된 E-Mail 이 있습니다",
+    "err_input_title"   => "제목을 입력하세요",
 
 ];

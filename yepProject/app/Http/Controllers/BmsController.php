@@ -9,8 +9,10 @@ use App\Models\BmsStudyTypes;
 use App\Models\BmsSubjects;
 use App\Models\BmsWeeks;
 use App\Models\BmsWorkbooks;
+use App\Models\Configurations;
 use App\Models\schoolGrades;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BmsController extends Controller
 {
@@ -21,8 +23,19 @@ class BmsController extends Controller
     }
 
     public function index(){
-        return view('bms.index');
+
+        $bbsCtrl = new BmsBbsController();
+        $frontData = $bbsCtrl->getListForAll();
+
+        if (Auth::user()->power == Configurations::$USER_POWER_TEACHER){
+            $bbsData = $bbsCtrl->getDataInAcademy(Auth::user()->academy_id);
+        }else{
+            $bbsData = $bbsCtrl->getDataInAcademy('');
+        }
+
+        return view('bms.index',['allBbs'=>$frontData,'acBbs'=>$bbsData]);
     }
+
     public function settings(){
         $bmsStudyTypes = BmsStudyTypes::orderBy('study_type_index','asc')->get();
         $bmsStudyDays = BmsDays::orderBy('days_index','asc')->get();

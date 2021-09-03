@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_program_title') }} </h5>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_bbs') }} </h5>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
@@ -26,44 +26,60 @@
     @endif
 
     <div class="mt-3">
-        <h6>{{ __('strings.lb_bbs_public') }} </h6>
-
-        <div class="mt-2 list-group">
-            @foreach ($allBbs as $aBbs)
-                <div class="list-group-item">
-                    <div class="mb-1">
-                        <small>{{ $aBbs->us_name }} <span class="text-secondary">{{ $aBbs->updated_at }}</span> </small>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $aBbs->bbs_title }} {{ $aBbs->bbs_hits == 0? "": "(".$aBbs->bbs_hits.")" }}</h6>
-                        <span class="badge badge-primary badge-pill">{{ $aBbs->bbs_added_count }}</span>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+        <a href="/bms/bbs" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> {{ __('strings.fn_go_first') }}</a>
+        <a href="{{ url()->previous() }}" class="btn btn-primary btn-sm"><i class="fa fa-backward"></i> {{ __('strings.fn_backward') }}</a>
     </div>
 
     <div class="mt-3">
-        <h6>{{ __('strings.lb_bbs_academy') }} </h6>
+        <div class="list-group">
+            <div class="list-group-item">
+                <h5>{!! $data->bbs_type == \App\Models\Configurations::$BBS_TYPE_ALL? "<i class='fa fa-flag'></i> ":"" !!}{{ $data->bbs_title }}</h5>
+            </div>
+            <div class="list-group-item d-flex justify-content-between">
+                <label>{{ $data->us_name }} <span class="text-secondary">{{ $data->updated_at }}</span></label>
+                <span>{{ $data->academy_id == "0"? __('strings.lb_bbs_public'):$data->Academy->ac_name }}</span>
+                <span>{{ __('strings.lb_id_and_hits',["ID"=>$data->id,"HITS"=>$data->bbs_hits]) }}</span>
+            </div>
+            <div class="list-group-item" style="min-height: 40rem;">
+                {!! nl2br($data->bbs_content) !!}
+            </div>
+        </div>
+        @if ($data->us_id == \Illuminate\Support\Facades\Auth::user()->id)
+            <a href="/bms/bbsModify/{{ $data->id }}" id="btnModify" class="btn btn-primary btn-sm mt-3"><i class="fa fa-edit"></i> {{ __('strings.fn_modify') }}</a>
+        @endif
+        @if ($data->us_id == \Illuminate\Support\Facades\Auth::user()->id || \Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
+            <button id="btnDelete" class="btn btn-danger btn-sm mt-3"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+        @endif
+    </div>
 
-        <div class="mt-2 list-group">
-            @foreach ($acBbs as $acBbsItem)
+    <!-- comments -->
+    <div class="mt-3">
+        <h5>{{ __('strings.lb_add_comment') }}</h5>
+        <div class="mt-2 d-flex justify-content-between">
+            <input type="text" name="up_comment" id="up_comment" class="form-control form-control-sm"/>
+            <button id="btnAddDone" class="btn btn-primary btn-sm ml-1 text-nowrap">
+                <i class="fa fa-spin fa-spinner d-none" id="loadAdd"></i>
+                {{ __('strings.fn_okay') }}
+            </button>
+        </div>
+        <div class="list-group mt-2" id="listMents">
+            @foreach ($added as $ad)
                 <div class="list-group-item">
-                    <div class="mb-1">
-                        <small>{{ $acBbsItem->us_name }} <span class="text-secondary">{{ $acBbsItem->updated_at }}</span> </small>
+                    <div class="d-flex justify-content-between">
+                        <h6>{{ $ad->bc_comment }}</h6>
+                        @if (\Illuminate\Support\Facades\Auth::user()->id == $ad->us_id || \Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
+                        <a href="#" class="pe-auto fn_del" data-id="{{ $ad->id }}"><i class="fa fa-times " data-id="{{ $ad->id }}"></i></a>
+                        @endif
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $acBbsItem->bbs_title }} {{ $acBbsItem->bbs_hits == 0? "": "(".$acBbsItem->bbs_hits.")" }}</h6>
-                        <span class="badge badge-primary badge-pill">{{ $acBbsItem->bbs_added_count }}</span>
+
+                    <div class="d-flex justify-content-between">
+                        <small>{{ $ad->us_name }}</small>
+                        <small class="text-secondary">{{ $ad->updated_at }}</small>
                     </div>
                 </div>
             @endforeach
         </div>
-
-        <div class="mt-2">
-            {{ $acBbs->links('pagination::bootstrap-4') }}
-        </div>
-
+        <div class="mt-2">{{ $added->links('pagination::bootstrap-4') }}</div>
     </div>
 </div>
 
@@ -136,7 +152,7 @@
             </div>
             <div class="modal-body">
                 <p id="fn_confirm_body">{{ __('strings.str_do_you_want_to_delete_cant_recover') }}</p>
-                <form name="delFrm" id="delFrm" method="post" action="/delComments">
+                <form name="delFrm" id="delFrm" method="post" action="/bms/delAddedMent">
                     @csrf
                     <input type="hidden" name="del_id" id="del_id"/>
                 </form>
@@ -153,131 +169,94 @@
 @endsection
 
 @section('scripts')
+    <script id="mentTmpl" type="text/x-jquery-tmpl">
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <h6>${bc_comment}</h6>
+                @if (\Illuminate\Support\Facades\Auth::user()->id == $ad->us_id || \Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
+                <a href="#" class="pe-auto fn_del" data-id="${id}"><i class="fa fa-times " data-id="${id}"></i></a>
+                @endif
+            </div>
+            <div class="d-flex justify-content-between">
+                <small>${us_name}</small>
+                <small class="text-secondary">${updated_at}</small>
+            </div>
+        </div>
+    </script>
     <script type="text/javascript">
-
-        $(document).on("change","#section_grades",function (){
-            let curVal = $(this).val();
-
-            $("#grade_loader").removeClass("d-none");
-
-            if (curVal === ''){
-                location.href = "/comments";
-            }else{
-                location.href = "/comments/" + curVal;
-            }
-        });
-
-        $(document).on("change","#section_subject",function (){
-            let curVal = $(this).val();
-            let grade = $("#section_grades").val();
-
-            $("#subject_loader").removeClass("d-none");
-
-            if (curVal === ''){
-                location.href = "/comments/" + grade;
-            }else{
-                location.href = "/comments/" + grade + "/" + curVal;
-            }
-        });
-
-        $(document).on("click","#btn_add",function (){
+        //post
+        $(document).on("click","#btnAddDone",function (){
             event.preventDefault();
 
-            if ($("#section_grades").val() === ""){
-                showAlert("{{ __('strings.str_select_grade') }}");
+            if ($("#up_comment").val() === ""){
+                showAlert("{{ __('strings.lb_input_added') }}");
                 return;
             }
 
-            if ($("#section_subject").val() === ""){
-                showAlert("{{ __('strings.str_select_subject') }}");
-                return;
-            }
+            $("#loadAdd").removeClass("d-none");
 
-            $("#infoModalCenter").modal("show");
-            $("#btnDelete").addClass("d-none");
-            $("#sjFrm").attr({"action":"/setComments"});
+            $.ajax({
+                type:"POST",
+                url:"/bms/addMent",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "_txt":$("#up_comment").val(),
+                    "_parent":"{{ $data->id }}"
+                },
+                success:function (msg){
+                    if (msg.result === "true"){
+                        $("#loadAdd").addClass("d-none");
+                        $("#mentTmpl").tmpl(msg.data).prependTo($("#listMents"));
+                        $("#up_comment").val("");
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                        $("#loadAdd").addClass("d-none");
+                        return;
+                    }
+                },
+                error:function(e1,e2,e3){
+                    $("#loadAdd").addClass("d-none");
+                    showAlert(e2);
+                }
+            })
         });
 
-        // pre code
-        $(document).on("click","#btnCmSubmit",function (){
+        // comment delete
+        $(document).on("click",".fn_del",function (){
+            //
             event.preventDefault();
-
-            if ($("#up_min_score").val() === ""){
-                showAlert("{{ __('strings.lb_insert_min_score') }}");
-                return;
-            }
-
-            if ($("#up_max_score").val() === ""){
-                showAlert("{{ __('strings.lb_insert_max_score') }}");
-                return;
-            }
-
-            if ($("#up_comments").val() === ""){
-                showAlert("{{ __('strings.str_insert_opinion') }}");
-                return;
-            }
-
-            $("#fn_loading").removeClass("d-none");
-
-            $("#cmFrm").submit();
-        });
-
-
-        $(document).on("click","#btnDelete",function (){
-            event.preventDefault();
-            $("#del_id").val($("#cm_id").val());
+            $("#del_id").val($(this).data("id"));
             $("#confirmModalCenter").modal("show");
         });
 
         $(document).on("click","#btnDeleteDo",function (){
-            event.preventDefault();
-            $("#delFrm").submit();
             $("#confirm_spin").removeClass("d-none");
-        });
-
-        $(document).on("click",".fn_item",function (){
-            event.preventDefault();
-            $("#infoModalCenter").modal("show");
-            $("#btnDelete").removeClass("d-none");
-            $("#fn_loading").removeClass("d-none");
-
-            let clId = $(this).attr("fn_id");
-            $("#up_cm_id").val(clId);
-
-            // 여기까지 작업 중.
-
             $.ajax({
                 type:"POST",
-                url:"/getCommentJson",
+                url:"/bms/delAddedMent",
                 dataType:"json",
-                data:{
-                    "_token":$("input[name='_token']").val(),
-                    "cid":clId
-                },
-                success:function (msg){
+                data:$("#delFrm").serialize(),
+                success:function(msg){
                     if (msg.result === "true"){
-                        $("#cm_id").val(msg.data.id);
-                        $("#sj_id").val(msg.data.sj_id);
-                        $("#sg_id").val(msg.data.scg_id);
-                        $("#up_min_score").val(msg.data.min_score);
-                        $("#up_max_score").val(msg.data.max_score);
-                        $("#up_comments").val(msg.data.opinion);
-
-                        $("#cmFrm").prop({"action":"/storeComment"});
-
-                        $("#fn_loading").addClass("d-none");
+                        $(".fn_del").each(function(i,obj){
+                            if ($(obj).data("id") === msg.data.id){
+                                $(obj).parent().parent().remove();
+                            }
+                        });
                     }else{
-                        showAlert("{{ __('strings.err_get_info') }}");
-                        $("#fn_loading").addClass("d-none");
-                        return;
+                        showAlert("{{ __('strings.fn_save_false') }}");
                     }
-                    //$("#opinion_spin").addClass("d-none");
+                    $("#confirmModalCenter").modal("hide");
+                    $("#confirm_spin").addClass("d-none");
                 },
                 error:function(e1,e2,e3){
                     showAlert(e2);
                 }
             })
         });
+
+        // add
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

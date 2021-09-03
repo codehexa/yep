@@ -153,4 +153,9 @@ class Configurations extends Model
         ["code"=>"1","title"=>"GRAMMAR"],
         ["code"=>"2","title"=>"NOTHING"],
     ];
+
+    // Bbs list limit
+    public static $BBS_LIMIT    = 20;
+    public static $BBS_TYPE_ALL  = "0";
+    public static $BBS_TYPE_NORMAL  = "1";
 }

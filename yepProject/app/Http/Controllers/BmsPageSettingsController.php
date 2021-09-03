@@ -46,9 +46,12 @@ class BmsPageSettingsController extends Controller
         $nAcademy->code = Configurations::$BMS_SMS_TAG_ACADEMY_INFO; $nAcademy->title = Configurations::$BMS_SMS_TAG_ACADEMY_INFO_TITLE;
 
         $fieldsCollection->push($nGreeting);
+        /*
+         * 이하 필요치 않음.
         $fieldsCollection->push($nClassName);
         $fieldsCollection->push($nBookWork);
         $fieldsCollection->push($nOutput);
+        */
         $fieldsCollection->push($nNotice);
         $fieldsCollection->push($nAcademy);
 

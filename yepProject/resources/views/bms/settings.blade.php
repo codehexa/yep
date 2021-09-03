@@ -231,13 +231,39 @@
                     <div class="list-group fn_list">
                         @foreach ($bmsWorkbooks as $bmsWorkbook)
                             <div class="list-group-item d-flex justify-content-between">
-                                <input type="hidden" name="bw_ids[]" value="{{ $bmsWorkbook->id }}"/>
-                                <input type="text" name="up_bw_title[]" class="form-control" value="{{ $bmsWorkbook->bw_title }}"/>
+                                <input type="checkbox" name="bw_ids[]" class="mt-2 mr-2" value="{{ $bmsWorkbook->id }}"/>
+                                <input type="text" name="up_bw_title[]" class="form-control mr-2" value="{{ $bmsWorkbook->bw_title }}"/>
+                                <input type="text" name="up_bw_text[]" class="form-control" value="{{ $bmsWorkbook->bw_text }}"/>
                                 <button class="btn btn-sm btn-outline-info text-nowrap fn_bw_modify ml-2" fn_id="{{ $bmsWorkbook->id }}">
-                                    <i class="fa fa-edit"></i> {{ __('strings.fn_modify') }}
+                                    <i class="fa fa-edit"></i> {{ __('strings.fn_save') }}
                                 </button>
                             </div>
                         @endforeach
+                    </div>
+
+                    <div class="mt-2 btn-group">
+                        <button class="btn btn-sm btn-primary" id="btnBookNew"><i class="fa fa-plus"></i> {{ __('strings.fn_add') }}</button>
+                        <button class="btn btn-sm btn-info" id="btnBookSort"><i class="fa fa-save"></i> {{ __('strings.fn_sort_save') }}</button>
+                        <button class="btn btn-sm btn-danger" id="btnBookDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+                        <i class="fa fa-spin fa-spinner d-none ml-1 mt-2" id="loadDelBook" ></i>
+                    </div>
+
+                    <div class="mt-3 d-none" id="panelBookInfo">
+                        <form id="BookNewFrm" name="BookNewFrm" method="post">
+                            @csrf
+                            <h6>{{ __('strings.lb_workbook') }} {{ __('strings.fn_add') }}</h6>
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <h6 class="mt-2">{{ __('strings.lb_workbook') }}</h6>
+                                    <input type="text" name="up_book_title" id="up_book_title" class="form-control form-control-sm"/>
+                                    <h6 class="mt-2">{{ __('strings.lb_workbook_text') }}</h6>
+                                    <input type="text" name="up_book_text" id="up_book_text" class="form-control form-control-sm"/>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-2" id="btnBookSave"><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
+                            <i class="fa fa-spinner fa-spin d-none" id="loadBook"></i>
+                            <button class="btn btn-secondary mt-2" id="btnBookCancel"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -375,6 +401,17 @@
             <input type="checkbox" name="scurri_ids[]" class="mt-2 mr-2 fn_chk_curri" value="${id}"/>
             <input type="text" name="up_curri_title[]" class="form-control" value="${bcur_title}"/>
             <button class="btn btn-sm btn-outline-info text-nowrap fn_curri_modify ml-2" fn_id="${id}">
+                <i class="fa fa-edit"></i> {{ __('strings.fn_save') }}
+            </button>
+        </div>
+    </script>
+
+    <script id="bookTmpl" type="text/x-jquery-tmpl">
+        <div class="list-group-item d-flex justify-content-between">
+            <input type="checkbox" name="bw_ids[]" class="mt-2 mr-2" value="${id}"/>
+            <input type="text" name="up_bw_title[]" class="form-control mr-2" value="${bw_title}"/>
+            <input type="text" name="up_bw_text[]" class="form-control" value="${bw_text}"/>
+            <button class="btn btn-sm btn-outline-info text-nowrap fn_bw_modify ml-2" fn_id="${id}">
                 <i class="fa fa-edit"></i> {{ __('strings.fn_save') }}
             </button>
         </div>
@@ -996,6 +1033,155 @@
                     showAlert(e2);
                     $("#loadDelCurri").addClass("d-none");
                     return;
+                }
+            })
+        });
+
+        // workbook
+        $(document).on("click","#btnBookNew",function (){
+            event.preventDefault();
+            $("#panelBookInfo").removeClass("d-none");
+            $("#up_book_title").val("");
+            $("#up_book_text").val("");
+        });
+
+        // update
+        $(document).on("click",".fn_bw_modify",function (){
+            event.preventDefault();
+
+            let _index = $(".fn_bw_modify").index($(this));
+            let _nowId = $(".fn_bw_modify").eq(_index).attr("fn_id");
+            let _nowTitle = $("input[name='up_bw_title[]']").eq(_index).val();
+            let _nowText = $("input[name='up_bw_text[]']").eq(_index).val();
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/storeWorkbook",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "_upId":_nowId,
+                    "_upTitle":_nowTitle,
+                    "_upText":_nowText
+                },
+                success:function(msg){
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                    }
+                },
+                error:function(e1,e2,e3){
+                    showAlert(e2);
+                }
+            })
+        });
+
+        // insert new
+        $(document).on("click","#btnBookSave",function (){
+            event.preventDefault();
+
+            if ($("#up_book_title").val() === ""){
+                showAlert("{{ __('strings.lb_input_page_name') }}");
+                return;
+            }
+
+            $("#loadBook").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/addWorkbook",
+                dataType:"json",
+                data:$("#BookNewFrm").serialize(),
+                success:function(msg){
+                    //
+                    $("#loadBook").addClass("d-none");
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                        $("#bookTmpl").tmpl(msg.data).appendTo($(".fn_list").eq(4));
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                    }
+                },
+                error:function(e1,e2,e3){
+                    showAlert(e2);
+                    $("#loadBook").addClass("d-none");
+                }
+            })
+        });
+
+        // delete
+        $(document).on("click","#btnBookDelete",function (){
+            event.preventDefault();
+            let _ids = [];
+
+            $.each($("input[name='bw_ids[]']:checked"),function(i,obj){
+                _ids.push($(obj).val());
+            });
+
+            if (_ids.length <= 0){
+                showAlert("{{ __('strings.err_select_to_delete') }}");
+                return;
+            }
+
+            $("#loadDelBook").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/deleteWorkbook",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "_ids":_ids.toString()
+                },
+                success:function(msg){
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_delete_complete') }}");
+                        $.each($("input[name='bw_ids[]']:checked"),function(i,obj){
+                            $(obj).parent().remove();
+                        });
+                        $("#loadDelBook").addClass("d-none");
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                        $("#loadDelBook").addClass("d-none");
+                        return;
+                    }
+                }
+            })
+        });
+
+        // sort save
+        $(document).on("click","#btnBookSort",function (){
+            event.preventDefault();
+
+            let _ids = [];
+
+            $("input[name='bw_ids[]']").each(function(i,obj){
+                $(obj).prop("checked",true);
+                _ids.push($(obj).val());
+            });
+
+            $("#loadDelBook").removeClass("d-none");
+
+            $.ajax({
+                type:"POST",
+                url:"/bms/saveSortWorkbook",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "_dels":_ids.toString()
+                },
+                success:function (msg){
+                    if (msg.result === "true"){
+                        showAlert("{{ __('strings.fn_save_complete') }}");
+                    }else{
+                        showAlert("{{ __('strings.fn_save_false') }}");
+                    }
+                    $("#loadDelBook").addClass("d-none");
+                },
+                error:function(e1,e2,e3){
+                    showAlert(e2);
+                    $("#loadDelBook").addClass("d-none");
                 }
             })
         })

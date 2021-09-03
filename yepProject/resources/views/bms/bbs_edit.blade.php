@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_program_title') }} </h5>
+    <h5><i class="fa fa-wind"></i> {{ __('strings.lb_bms_bbs') }} </h5>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
@@ -26,44 +26,57 @@
     @endif
 
     <div class="mt-3">
-        <h6>{{ __('strings.lb_bbs_public') }} </h6>
-
-        <div class="mt-2 list-group">
-            @foreach ($allBbs as $aBbs)
-                <div class="list-group-item">
-                    <div class="mb-1">
-                        <small>{{ $aBbs->us_name }} <span class="text-secondary">{{ $aBbs->updated_at }}</span> </small>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $aBbs->bbs_title }} {{ $aBbs->bbs_hits == 0? "": "(".$aBbs->bbs_hits.")" }}</h6>
-                        <span class="badge badge-primary badge-pill">{{ $aBbs->bbs_added_count }}</span>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+        <a href="/bms/bbs" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> {{ __('strings.lb_bbs_list') }}</a>
     </div>
 
     <div class="mt-3">
-        <h6>{{ __('strings.lb_bbs_academy') }} </h6>
-
-        <div class="mt-2 list-group">
-            @foreach ($acBbs as $acBbsItem)
-                <div class="list-group-item">
-                    <div class="mb-1">
-                        <small>{{ $acBbsItem->us_name }} <span class="text-secondary">{{ $acBbsItem->updated_at }}</span> </small>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $acBbsItem->bbs_title }} {{ $acBbsItem->bbs_hits == 0? "": "(".$acBbsItem->bbs_hits.")" }}</h6>
-                        <span class="badge badge-primary badge-pill">{{ $acBbsItem->bbs_added_count }}</span>
-                    </div>
+        <form name="postFrm" id="postFrm" method="post" action="/bms/storeBbs">
+            <input type="hidden" name="up_id" id="up_id" value="{{ $data->id }}"/>
+            @csrf
+            <div class="list-group">
+                <div class="list-group-item d-flex justify-content-between">
+                    <label for="up_academy" class="text-nowrap form-check-label mt-2 mr-2">{{ __('strings.lb_academy_name') }}</label>
+                    <select name="up_academy" id="up_academy" class="form-control">
+                        @if (\Illuminate\Support\Facades\Auth::user()->power == \App\Models\Configurations::$USER_POWER_TEACHER)
+                            @foreach ($academies as $academy)
+                                <option value="{{ $academy->id }}"
+                                        @if ($data->academy_id == $academy->id)
+                                            selected
+                                        @endif
+                                >{{ $academy->ac_name }}</option>
+                            @endforeach
+                        @else
+                            <option value="0">{{ __('strings.fn_all') }}</option>
+                            @foreach ($academies as $academy)
+                                <option value="{{ $academy->id }}"
+                                    @if ($data->academy_id == $academy->id)
+                                        selected
+                                    @endif
+                                >{{ $academy->ac_name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
                 </div>
-            @endforeach
-        </div>
-
-        <div class="mt-2">
-            {{ $acBbs->links('pagination::bootstrap-4') }}
-        </div>
-
+                @if (\Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
+                    <div class="list-group-item form-check">
+                        <label for="up_type_all" class="form-check-label mr-4">{{ __('strings.lb_bbs_type_all') }}</label>
+                        <input type="checkbox" name="up_type_all" id="up_type_all" value="{{ \App\Models\Configurations::$BBS_TYPE_ALL }}" class="form-check-input"
+                               @if ($data->bbs_type == \App\Models\Configurations::$BBS_TYPE_ALL)
+                                   checked
+                               @endif
+                        />
+                    </div>
+                @endif
+                <div class="list-group-item">
+                    <input type="text" name="up_title" id="up_title" class="form-control " placeholder="{{ __('strings.guide_input_title') }}" value="{{ $data->bbs_title }}"/>
+                </div>
+                <div class="list-group-item">
+                    <textarea name="up_comment" id="up_comment" class="form-control" style="height: 40rem">{{ $data->bbs_content }}</textarea>
+                </div>
+            </div>
+        </form>
+        <button id="btnSubmit" class="btn btn-primary btn-sm mt-3"><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
+        <i class="fa fa-spinner fa-spin d-none mt-2 ml-2" id="loadPost"></i>
     </div>
 </div>
 
@@ -154,129 +167,23 @@
 
 @section('scripts')
     <script type="text/javascript">
-
-        $(document).on("change","#section_grades",function (){
-            let curVal = $(this).val();
-
-            $("#grade_loader").removeClass("d-none");
-
-            if (curVal === ''){
-                location.href = "/comments";
-            }else{
-                location.href = "/comments/" + curVal;
-            }
-        });
-
-        $(document).on("change","#section_subject",function (){
-            let curVal = $(this).val();
-            let grade = $("#section_grades").val();
-
-            $("#subject_loader").removeClass("d-none");
-
-            if (curVal === ''){
-                location.href = "/comments/" + grade;
-            }else{
-                location.href = "/comments/" + grade + "/" + curVal;
-            }
-        });
-
-        $(document).on("click","#btn_add",function (){
+        //post
+        $(document).on("click","#btnSubmit",function (){
             event.preventDefault();
 
-            if ($("#section_grades").val() === ""){
-                showAlert("{{ __('strings.str_select_grade') }}");
+            if ($("#up_type_all") !== undefined && !$("#up_type_all").is(":checked") && $("#up_academy").val() === "0"){
+                showAlert("{{ __('strings.err_bbs_if_check_all') }}");
                 return;
             }
 
-            if ($("#section_subject").val() === ""){
-                showAlert("{{ __('strings.str_select_subject') }}");
+            if ($("#up_title").val() === ""){
+                showAlert("{{ __('strings.err_input_title') }}");
                 return;
             }
 
-            $("#infoModalCenter").modal("show");
-            $("#btnDelete").addClass("d-none");
-            $("#sjFrm").attr({"action":"/setComments"});
-        });
+            $("#loadPost").removeClass("d-none");
 
-        // pre code
-        $(document).on("click","#btnCmSubmit",function (){
-            event.preventDefault();
-
-            if ($("#up_min_score").val() === ""){
-                showAlert("{{ __('strings.lb_insert_min_score') }}");
-                return;
-            }
-
-            if ($("#up_max_score").val() === ""){
-                showAlert("{{ __('strings.lb_insert_max_score') }}");
-                return;
-            }
-
-            if ($("#up_comments").val() === ""){
-                showAlert("{{ __('strings.str_insert_opinion') }}");
-                return;
-            }
-
-            $("#fn_loading").removeClass("d-none");
-
-            $("#cmFrm").submit();
-        });
-
-
-        $(document).on("click","#btnDelete",function (){
-            event.preventDefault();
-            $("#del_id").val($("#cm_id").val());
-            $("#confirmModalCenter").modal("show");
-        });
-
-        $(document).on("click","#btnDeleteDo",function (){
-            event.preventDefault();
-            $("#delFrm").submit();
-            $("#confirm_spin").removeClass("d-none");
-        });
-
-        $(document).on("click",".fn_item",function (){
-            event.preventDefault();
-            $("#infoModalCenter").modal("show");
-            $("#btnDelete").removeClass("d-none");
-            $("#fn_loading").removeClass("d-none");
-
-            let clId = $(this).attr("fn_id");
-            $("#up_cm_id").val(clId);
-
-            // 여기까지 작업 중.
-
-            $.ajax({
-                type:"POST",
-                url:"/getCommentJson",
-                dataType:"json",
-                data:{
-                    "_token":$("input[name='_token']").val(),
-                    "cid":clId
-                },
-                success:function (msg){
-                    if (msg.result === "true"){
-                        $("#cm_id").val(msg.data.id);
-                        $("#sj_id").val(msg.data.sj_id);
-                        $("#sg_id").val(msg.data.scg_id);
-                        $("#up_min_score").val(msg.data.min_score);
-                        $("#up_max_score").val(msg.data.max_score);
-                        $("#up_comments").val(msg.data.opinion);
-
-                        $("#cmFrm").prop({"action":"/storeComment"});
-
-                        $("#fn_loading").addClass("d-none");
-                    }else{
-                        showAlert("{{ __('strings.err_get_info') }}");
-                        $("#fn_loading").addClass("d-none");
-                        return;
-                    }
-                    //$("#opinion_spin").addClass("d-none");
-                },
-                error:function(e1,e2,e3){
-                    showAlert(e2);
-                }
-            })
+            $("#postFrm").submit();
         });
 
         function showAlert(str){

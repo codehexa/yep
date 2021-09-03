@@ -49,13 +49,6 @@
                 </div>
             @endforeach
         </div>
-        <div class="mt-2">
-            <div class="btn btn-group btn-sm">
-                <button class="btn btn-primary btn-sm" id="btnSortSave"><i class="fa fa-save"></i> {{ __('strings.fn_sort_save') }}</button>
-                <span id="sortLoader" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
-            </div>
-
-        </div>
 
         <div class="mt-3">
             <h6>{{ __('strings.lb_page_input_form') }}</h6>

@@ -190,6 +190,7 @@ Route::prefix('bms')->group(function(){
     Route::post("/addWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "addWorkbook"]);
     Route::post("/saveSortWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "saveSortWorkbooks"]);
     Route::post("/storeWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "storeWorkbook"]);
+    Route::post("/deleteWorkbook",[\App\Http\Controllers\BmsWorkbooksController::class, "deleteWorkbook"]);
 
     /* 세팅 */
     Route::get("/basic",[\App\Http\Controllers\BmsBasicController::class, "index"]);
@@ -216,6 +217,16 @@ Route::prefix('bms')->group(function(){
     Route::post("/pageStoreSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "storeSetting"]);
     Route::post("/saveSort",[\App\Http\Controllers\BmsPageSettingsController::class, "saveSort"]);
     Route::post("/delPageSetting",[\App\Http\Controllers\BmsPageSettingsController::class, "deleteDo"]);
+
+    /* bms BBS */
+    Route::get("/bbs",[\App\Http\Controllers\BmsBbsController::class, "index"]);
+    Route::get("/bbspost",[\App\Http\Controllers\BmsBbsController::class, "post"]);
+    Route::post("/addBbs",[\App\Http\Controllers\BmsBbsController::class, "add"]);
+    Route::post("/addMent",[\App\Http\Controllers\BmsBbsController::class, "addMent"]);
+    Route::get("/bbsView/{id?}",[\App\Http\Controllers\BmsBbsController::class,"view"]);
+    Route::get("/bbsModify/{id?}",[\App\Http\Controllers\BmsBbsController::class,"edit"]);
+    Route::post("/storeBbs",[\App\Http\Controllers\BmsBbsController::class, "modify"]);
+    Route::post("/delAddedMent",[\App\Http\Controllers\BmsBbsController::class, "delMent"]);
 });
 
 /* SMS 외부에서 확인하는 라우트 */
