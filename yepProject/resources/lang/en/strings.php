@@ -295,7 +295,7 @@ return [
     "lb_bms_program_title"  => "수업공지 프로그램",
     "lb_bms_bbs"    => "게시글 관리",
     "lb_bms_title"  => "수업공지",
-    "lb_bms_setting"    => "Setting",
+    "lb_bms_setting"    => "기본값관리",
     "lb_week_name"  => "Week",
     "lb_study"  => "수업",
     "lb_study_title"    => "수업 이름",
