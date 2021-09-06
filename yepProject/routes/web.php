@@ -247,4 +247,5 @@ Route::post("/sms/views",[\App\Http\Controllers\SmsViewController::class, "viewD
 Route::get("/manuals/show_manual/{n}",[\App\Http\Controllers\ManualsController::class, "showDown"]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get("/mail",[\App\Http\Controllers\TempController::class, "mail"]);
 
