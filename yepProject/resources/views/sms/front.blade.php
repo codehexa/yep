@@ -63,6 +63,7 @@
                         >{{ $schoolGrade->scg_name }}</option>
                     @endforeach
                 </select>
+                <i class="fa fa-spin fa-spinner d-none ml-2 mt-1" id="loadAcademy"></i>
             </div>
 
             <span id="fn_class_loader" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
@@ -565,7 +566,7 @@
                 return;
             }
 
-            $("#loaderModalCenter").modal("show");
+            $("#loadAcademy").removeClass("d-none");
 
             $.ajax({
                 type:"POST",
@@ -593,12 +594,11 @@
                         //console.log("add week : " + obj.weeks);
                     });
 
-
-                    $("#loaderModalCenter").modal("hide");
+                    $("#loadAcademy").addClass("d-none");
                 },
                 error:function (e1,e2,e3){
                     showAlert(e2);
-                    $("#loaderModalCenter").modal("hide");
+                    $("#loadAcademy").addClass("d-none");
                     return;
                 }
             })
