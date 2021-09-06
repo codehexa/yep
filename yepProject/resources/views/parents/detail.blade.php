@@ -141,8 +141,6 @@
                     @endforeach
                 </div>
                 <!-- wordian -->
-                wordian :
-                {{ dd($wordians) }}
                 @if (sizeof($wordians) > 0)
                     <h5 class="mt-3">{{ __('strings.lb_wordian_title') }} </h5>
                     <div class="list-group">
