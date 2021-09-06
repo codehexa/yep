@@ -315,6 +315,8 @@
                 }
             }
 
+            console.log("item len : " + JSON.stringify(itemsArray));
+
             /*
             for (let i =0; i < $(".fn_input").length; i++){
                 console.log("root group id :" + grpId + " , cur group : " + $(".fn_input").eq(i).attr("fn_group"));
