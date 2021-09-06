@@ -19,6 +19,7 @@ class MyRegisterController extends Controller
         $email = $request->get("email");
         $usPasswd = $request->get("password");
         $usPasswd2 = $request->get("password_2");
+        $zoomId = $request->get("up_zoom_id");
 
         if ($usPasswd != $usPasswd2){
             return redirect()->back()->withErrors(["msg"=>"PASSWORD_NOT_MATCH"]);
@@ -36,6 +37,7 @@ class MyRegisterController extends Controller
             $user->password = Hash::make($usPasswd);
             $user->power = Configurations::$USER_POWER_TEACHER;
             $user->live = "N";
+            $user->zoom_id = $zoomId;
 
             try {
                 $user->save();
