@@ -84,7 +84,7 @@ class SmsJobController extends Controller
         $RHakgis = [];
 
         if ($year != "" && $gradeId != ""){
-            $RHakgis = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)->where('show','=','Y')->orderBy('hakgi_name','asc')->get();
+            $RHakgis = Hakgi::where('school_grade','=',$gradeId)->where('show','=','Y')->orderBy('hakgi_name','asc')->get();
         }
 
         $MaxWeeks = 0;
@@ -156,7 +156,7 @@ class SmsJobController extends Controller
                 }
             }
 
-            $hakgiData = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)
+            $hakgiData = Hakgi::where('school_grade','=',$gradeId)
                 ->where('show','=','Y')->orderBy('hakgi_name','asc')->get();
             $hakgiDatum = Hakgi::find($hakgi);
             $hakgiMax = $hakgiDatum->weeks;
@@ -255,7 +255,7 @@ class SmsJobController extends Controller
         $hakgi = new \stdClass();
 
         if ($year != ""){
-            $hakgi = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)
+            $hakgi = Hakgi::where('school_grade','=',$gradeId)
                 ->where('show','=','Y')
                 ->orderBy('hakgi_name','asc')->get();
         }
