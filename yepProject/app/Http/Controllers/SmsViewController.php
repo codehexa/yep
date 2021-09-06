@@ -78,7 +78,9 @@ class SmsViewController extends Controller
                     ->first();
 
                 $teacherSays[] = $studentNowScore->opinion;
-                $wordians[] = $studentNowScore->wordian;
+                if (!is_null($studentNowScore->wordian)){
+                    $wordians[] = $studentNowScore->wordian;
+                }
 
                 $studentPreScore = null;
                 if ($week > 1){
