@@ -273,7 +273,7 @@
             let maxScore = $(this).attr("max");
             let minScore = $(this).attr("min");
 
-
+            console.log("now val : " + $(this).val());
 
             if (!chkMax) {
                 if (parseInt($(this).val()) > parseInt($(this).attr("max"))) {
