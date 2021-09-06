@@ -124,6 +124,7 @@
                                         <input type="number"
                                                name="score_{{ $num }}[]" id="f_{{ $num }}_{{ $i }}_{{ $data[$i]["id"] }}" value="{{ $data[$i][$field_name] }}"
                                                max="{{ $item->sj_max_score }}" min="0"
+                                               data-subjectId="{{ $item->id }}"
                                                fn_group="{{ $item->sj_parent_id }}"
                                                fn_row="{{ $i }}"
                                                @if ($item->sj_type == "T")
@@ -264,6 +265,7 @@
 
         let hakgiData = [];
         let selInput;
+        let nowRowId = -1;  // 현재 입력 중인 row 인덱스
         $(document).on("keyup",".fn_input",function () {
             //console.log("row Total (Y or N) : " + $(this).attr("fn_total") + " / group : " + $(this).attr("fn_group"));
             let grpId = $(this).attr("fn_group");
@@ -272,6 +274,8 @@
             let nowVal = $(this).val();
             let maxScore = $(this).attr("max");
             let minScore = $(this).attr("min");
+
+            nowRowId = nowRow;
 
             console.log("now val : " + $(this).val());
 
