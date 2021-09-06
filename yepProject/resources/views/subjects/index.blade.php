@@ -279,6 +279,7 @@
                 success:function(msg){
                     if (msg.result === "true"){
                         $("#loadingModalCenter").hide();
+                        console.log("modal hide");
                     }else{
                         $("#loadingModalCenter").hide();
                         showAlert("{{ __('strings.err_fail_to_update') }}");
