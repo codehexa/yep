@@ -137,7 +137,7 @@
                             @endif
                         @endforeach
                         <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion"/> </td>
-                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" value="{{ $data[$i]["wordian"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian"/> </td>
+                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" value="{{ is_null($data[$i]["wordian"]) ? "":$data[$i]["wordian"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian"/> </td>
                         <td>
                             @if ($data[$i]["sent"] == "N")
                                 <div class="btn-group-sm btn-group">

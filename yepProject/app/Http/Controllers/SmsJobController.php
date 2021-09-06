@@ -551,7 +551,6 @@ class SmsJobController extends Controller
             }
         }
 
-        dd($data);
         return view("sms.input",["paperInfo"=>$smsPaper,"spId"=>$spId,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble]);
     }
 
