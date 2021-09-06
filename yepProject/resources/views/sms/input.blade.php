@@ -312,6 +312,7 @@
                     // 서브 과목 임.
                     //itemsArray.push($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i));
                     itemsArray.push($(nowItem));
+                    console.log("sub items push");
                 }
             }
 
