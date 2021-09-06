@@ -28,6 +28,7 @@
 
     <div class="mt-3">
         <h6 class="text-info">{{ __('strings.str_must_make_total') }}</h6>
+        <h5 id="guideTxt" class="d-none text-danger">{{ __('strings.str_waiting_to_update') }}</h5>
     </div>
 
     <div class="mt-3 form-group">
@@ -267,7 +268,7 @@
         });
 
         function updateOrderNow(orders){
-            $("#loadingModalCenter").modal('show');
+            $("#guideTxt").removeClass('d-none');
             $.ajax({
                 type:"post",
                 url:"/updateOrderSubjects",
@@ -278,9 +279,9 @@
                 },
                 success:function(msg){
                     if (msg.result === "true"){
-                        $("#loadingModalCenter").modal('hide');
+                        $("#guideTxt").addClass('d-none');
                     }else{
-                        $("#loadingModalCenter").modal('hide');
+                        $("#guideTxt").addClass('d-none');
                         showAlert("{{ __('strings.err_fail_to_update') }}");
                         return;
                     }
