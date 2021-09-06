@@ -124,7 +124,7 @@
                                         <input type="number"
                                                name="score_{{ $num }}[]" id="f_{{ $num }}_{{ $i }}_{{ $data[$i]["id"] }}" value="{{ $data[$i][$field_name] }}"
                                                max="{{ $item->sj_max_score }}" min="0"
-                                               data-sjid="{{ $item->id }}"
+                                               data-sjid="{{ $item->sj_id }}"
                                                fn_group="{{ $item->sj_parent_id }}"
                                                fn_row="{{ $i }}"
                                                @if ($item->sj_type == "T")
