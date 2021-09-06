@@ -61,7 +61,7 @@ class Configurations extends Model
     public static $SMS_SEND_VIEW_N  = "N";
 
     public static $SMS_REPLACE_NAME = "'학생이름'";
-    public static $SMS_PAGE_URL = "http://yep.localhost/sms/viewpage/";
+    public static $SMS_PAGE_URL = "http://yepmanager.co.kr/sms/viewpage/";
 
     // Manual file name
     public static $MANUAL_ADMIN = "storage/manuals/manual_admin.pdf";
