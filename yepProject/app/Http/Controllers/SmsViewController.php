@@ -183,7 +183,7 @@ class SmsViewController extends Controller
                 $dataSet[] = $formSet;
             }
 
-            //dd($teacherSays);
+            dd($wordians);
 
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
