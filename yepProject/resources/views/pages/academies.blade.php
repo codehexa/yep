@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <h5>{{ __('strings.lb_settings') }} &gt; {{ __('strings.lb_academy_manage') }}</h5>
-    <div class="mt-3"><a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_backward") }}</a></div>
+    <div class="mt-3"><a href="/settings" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-alt-circle-left"></i> {{ __("strings.fn_backward") }}</a></div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
