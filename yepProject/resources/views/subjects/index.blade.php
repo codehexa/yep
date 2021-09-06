@@ -278,10 +278,9 @@
                 },
                 success:function(msg){
                     if (msg.result === "true"){
-                        $("#loadingModalCenter").hide();
-                        console.log("modal hide");
+                        $("#loadingModalCenter").modal('hide');
                     }else{
-                        $("#loadingModalCenter").hide();
+                        $("#loadingModalCenter").modal('hide');
                         showAlert("{{ __('strings.err_fail_to_update') }}");
                         return;
                     }
