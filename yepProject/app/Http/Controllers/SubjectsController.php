@@ -80,7 +80,7 @@ class SubjectsController extends Controller
             try {
                 $subject->save();
 
-                if ($parent > 0){
+                if ($parent != '' && $parent > 0){
                     $parentSubject = Subjects::find($parent);
                     $parentSubject->has_child = "Y";
                     $parentSubject->save();
@@ -97,7 +97,7 @@ class SubjectsController extends Controller
 
                 return redirect("/subjects/{$sgrade}");
             }catch (\Exception $e){
-                dd($e);
+                //dd($e);
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
             }
         }
