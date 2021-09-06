@@ -123,6 +123,10 @@
                             <label for="up_password_2">{{ __('strings.lb_password_2') }}</label>
                             <input type="password" name="up_password_2" id="up_password_2" class="form-control" placeholder="{{ __('strings.str_insert_password_2') }}"/>
                         </div>
+                        <div class="list-group-item">
+                            <label for="up_zoom_id">{{ __('strings.lb_zoom_id') }}</label>
+                            <input type="text" name="up_zoom_id" id="up_zoom_id" class="form-control" placeholder="{{ __('strings.str_insert_zoom_id') }}"/>
+                        </div>
                     </div>
                 </form>
             </div>
