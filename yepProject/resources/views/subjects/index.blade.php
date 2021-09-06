@@ -262,12 +262,12 @@
                     let nowOrder = $(this).sortable("toArray").toString();
                     //console.log("update ... order :" + nowOrder);
                     updateOrderNow(nowOrder);
-                    $("#loadingModalCenter").modal("show");
                 }
             });
         });
 
         function updateOrderNow(orders){
+            $("#loadingModalCenter").modal('show');
             $.ajax({
                 type:"post",
                 url:"/updateOrderSubjects",
