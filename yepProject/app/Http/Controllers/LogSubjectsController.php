@@ -23,7 +23,7 @@ class LogSubjectsController extends Controller
         $logSubject->sj_old = $old;
         $logSubject->sj_new = $new;
         $logSubject->writer_id = $user->id;
-        $logSubject->sj_field = $field;
+        $logSubject->log_field = $field;
 
         $logSubject->save();
     }

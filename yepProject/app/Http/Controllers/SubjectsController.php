@@ -95,12 +95,9 @@ class SubjectsController extends Controller
                 $logCtrl = new LogSubjectsController();
                 $logCtrl->addLog($logMode,$logTarget,$logOld,$logNew,$logField);
 
-                dd("subject ID: " . $subject->id);
-
                 return redirect("/subjects/{$sgrade}");
             }catch (\Exception $e){
-                dd($e);
-                //return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
+                return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
             }
         }
     }

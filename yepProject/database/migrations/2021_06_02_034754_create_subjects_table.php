@@ -19,7 +19,7 @@ class CreateSubjectsTable extends Migration
             $table->timestamps();
             $table->string("sj_title");
             $table->integer("sj_max_score");
-            $table->string("sj_desc");
+            $table->string("sj_desc")->nullable();
             $table->bigInteger("sg_id")->unsigned()->default(0)->comment("school_grades.id");
             $table->bigInteger('parent_id')->unsigned()->default(0);
             $table->integer('depth')->unsigned()->default(0);
