@@ -128,7 +128,7 @@
                                                data-group="{{ $item->sj_parent_id }}"
                                                data-depth="{{ $item->sj_depth }}"
                                                fn_row="{{ $i }}"
-                                               data-hasChild="{{ $item->sj_has_child }}"
+                                               data-haschild="{{ $item->sj_has_child }}"
                                                @if ($item->sj_type == "T")
                                                    fn_total="Y"
                                                @else
@@ -269,7 +269,6 @@
         let selInput;
         $(document).on("keyup",".fn_input",function () {
             //console.log("row Total (Y or N) : " + $(this).attr("fn_total") + " / group : " + $(this).attr("fn_group"));
-            let grpId = $(this).attr("fn_group");
             let isTotal = $(this).attr("fn_total");
             let nowRow = $(this).attr("fn_row");
             let nowVal = $(this).val();
@@ -278,60 +277,62 @@
             let nowSubjectId = $(this).data("sjid");
             let nowItem = $(this);
 
-            console.log("now val : " + $(this).val());
+            console.log('now val : ' + nowVal);
 
             // 100 점제 환산 처리
             if (!chkMax) {
-                if (parseInt($(this).val()) > parseInt($(this).attr("max"))) {
+                if (parseInt(nowVal) > parseInt(maxScore)) {
                     showAlert("{{__('strings.lb_you_input_over_point')}}");
                     $(this).val(maxScore);
                     console.log("max score : " + chkMax);
                     return;
                 }
 
-                if (parseInt($(this).val()) < parseInt($(this).attr("min"))) {
+                if (parseInt(nowVal) < parseInt(minScore)) {
                     showAlert("{{__('strings.lb_you_input_under_point')}}");
                     $(this).val(minScore);
                     return;
                 }
             }
 
-            selInput = $(this);
             let itemsArray = [];    // group 묶음 아이템들...
-            let savedSjId = -1; // 최초 아이템 항목.
+
+            let _start  = "Y";
             for (let i=0; i < $(".fn_tbody_tr").eq(nowRow).find(".fn_input").length; i++){
-                if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("group") === "0" && $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("hasChild") === "N"){
-                    // 개별 과목 임. 즉 서브 과목이 없음.
-                    itemsArray = [];
-                    itemsArray.push($(nowItem));
-                } else if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("group") === "0" && $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("hasChild") === "Y"){
-                    // 대표 과목 임. 즉 서브 과목이 있음.
-                    itemsArray = [];
-                    itemsArray.push($(nowItem));
-                } else if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("group") !== "0" && $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("hasChild") === "N"){
-                    // 서브 과목 임.
-                    //itemsArray.push($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i));
-                    itemsArray.push($(nowItem));
-                    console.log("sub items push");
-                }
-            }
+                let _depth = $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("depth");
+                let _total = $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).attr("fn_total");
 
-            console.log("item len : " + JSON.stringify(itemsArray));
+                console.log("_total : " + _total + ", _depth : " + _depth);
 
-            /*
-            for (let i =0; i < $(".fn_input").length; i++){
-                console.log("root group id :" + grpId + " , cur group : " + $(".fn_input").eq(i).attr("fn_group"));
-                if ($(".fn_input").eq(i).attr("fn_group") === grpId && $(".fn_input").eq(i).attr("fn_row") === nowRow){
-                    itemsArray.push($(".fn_input").eq(i));
+                if (_total === "N" && _depth === 0){
+                    _total = "Y";
                 }
-            }*/
 
-            if (itemsArray.length > 1){
-                let sumVal = 0;
-                for (let j=0; j < itemsArray.length -1; j++){
-                    sumVal += parseInt(itemsArray[j].val());
+                itemsArray.push({
+                    "score":$(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).val(),
+                    "depth":_depth,
+                    "start":_start,
+                    "end":_total
+                });
+                if (_total === "Y"){
+                    _start = "Y";
+                }else{
+                    _start = "N";
                 }
-                itemsArray[itemsArray.length -1].val(sumVal);
+            }   // end for
+
+            let _nowSum = 0;
+            for (let i=0; i < itemsArray.length; i++){
+                let _item = itemsArray[i];
+                if (_item.start === "Y" && _item.end === "N"){
+                    _nowSum = parseInt(_item.score);
+                } else if (_item.start === "N" && _item.end === "N"){
+                    _nowSum += parseInt(_item.score);
+                } else if (_item.start === "N" && _item.end === "Y"){
+                    $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).val(_nowSum);
+                } else {
+                    _nowSum = 0;
+                }
             }
         });
 
@@ -350,8 +351,6 @@
                     }else{
                         $(this).val(tmp);
                     }
-
-                    //console.log("now : " + nowVal + " tmp : " + tmp);
                 }
             }
         });
