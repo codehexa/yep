@@ -550,6 +550,8 @@ class SmsJobController extends Controller
                 $data[] = $checkScore->toArray();
             }
         }
+
+        dd($data);
         return view("sms.input",["paperInfo"=>$smsPaper,"spId"=>$spId,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble]);
     }
 
