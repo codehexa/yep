@@ -275,6 +275,7 @@
 
             console.log("now val : " + $(this).val());
 
+            // 100 점제 환산 처리
             if (!chkMax) {
                 if (parseInt($(this).val()) > parseInt($(this).attr("max"))) {
                     showAlert("{{__('strings.lb_you_input_over_point')}}");
@@ -293,7 +294,7 @@
             selInput = $(this);
             let itemsArray = [];
             for (let i =0; i < $(".fn_input").length; i++){
-                //console.log("root group id :" + grpId + " , cur group : " + $(".fn_input").eq(i).attr("fn_group"));
+                console.log("root group id :" + grpId + " , cur group : " + $(".fn_input").eq(i).attr("fn_group"));
                 if ($(".fn_input").eq(i).attr("fn_group") === grpId && $(".fn_input").eq(i).attr("fn_row") === nowRow){
                     itemsArray.push($(".fn_input").eq(i));
                 }
