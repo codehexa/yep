@@ -125,8 +125,10 @@
                                                name="score_{{ $num }}[]" id="f_{{ $num }}_{{ $i }}_{{ $data[$i]["id"] }}" value="{{ $data[$i][$field_name] }}"
                                                max="{{ $item->sj_max_score }}" min="0"
                                                data-sjid="{{ $item->sj_id }}"
-                                               fn_group="{{ $item->sj_parent_id }}"
+                                               data-group="{{ $item->sj_parent_id }}"
+                                               data-depth="{{ $item->sj_depth }}"
                                                fn_row="{{ $i }}"
+                                               data-hasChild="{{ $item->sj_has_child }}"
                                                @if ($item->sj_type == "T")
                                                    fn_total="Y"
                                                @else
@@ -274,6 +276,7 @@
             let maxScore = $(this).attr("max");
             let minScore = $(this).attr("min");
             let nowSubjectId = $(this).data("sjid");
+            let nowItem = $(this);
 
             console.log("now val : " + $(this).val());
 
@@ -297,8 +300,18 @@
             let itemsArray = [];    // group 묶음 아이템들...
             let savedSjId = -1; // 최초 아이템 항목.
             for (let i=0; i < $(".fn_tbody_tr").eq(nowRow).find(".fn_input").length; i++){
-                if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("sjid") === savedSjId){
-                    itemsArray.push($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i));
+                if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("group") === "0" && $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("hasChild") === "N"){
+                    // 개별 과목 임. 즉 서브 과목이 없음.
+                    itemsArray = [];
+                    itemsArray.push($(nowItem));
+                } else if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("group") === "0" && $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("hasChild") === "Y"){
+                    // 대표 과목 임. 즉 서브 과목이 있음.
+                    itemsArray = [];
+                    itemsArray.push($(nowItem));
+                } else if ($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("group") !== "0" && $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("hasChild") === "N"){
+                    // 서브 과목 임.
+                    //itemsArray.push($(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i));
+                    itemsArray.push($(nowItem));
                 }
             }
 
