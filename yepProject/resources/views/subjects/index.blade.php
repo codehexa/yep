@@ -278,9 +278,9 @@
                 },
                 success:function(msg){
                     if (msg.result === "true"){
-                        $("#loadingModalCenter").modal("hide");
+                        $("#loadingModalCenter").hide();
                     }else{
-                        $("#loadingModalCenter").modal("hide");
+                        $("#loadingModalCenter").hide();
                         showAlert("{{ __('strings.err_fail_to_update') }}");
                         return;
                     }
