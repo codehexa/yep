@@ -119,6 +119,7 @@
                         @endforeach
                     @endif
                 </select>
+                <i class="fa fa-spinner fa-spin d-none ml-2 mt-1" id="loadHakgi"></i>
             </div>
 
             <div class="form-group">
@@ -387,7 +388,7 @@
                 return;
             }
 
-            $("#loaderModalCenter").modal("show");
+            $("#loadHakgi").removeClass("d-none");
 
             $.ajax({
                 type:"POST",
@@ -412,11 +413,11 @@
                         $("<option value='" + obj.id + "'>" + obj.hakgi_name + "</option>").appendTo($("#section_hakgi"));
                     });
 
-                    $("#loaderModalCenter").modal("hide");
+                    $("#loadHakgi").addClass("d-none");
                 },
                 error:function (e1,e2,e3){
                     showAlert(e2);
-                    $("#loaderModalCenter").modal("hide");
+                    $("#loadHakgi").addClass("d-none");
                     return;
                 }
             });
@@ -609,14 +610,11 @@
             if ($(this).val() === ""){
                 return;
             }
-            //$("#loaderModalCenter").modal("show");
 
             let nowSelHakgi = $(this).val();
-            //console.log(typeof(nowSelHakgi));
             let maxWeek = 0;
             for(let i=0; i < hakgiData.length; i++){
                 let nowHakgiDataId = hakgiData[i].id;
-                console.log(typeof(nowHakgiDataId));
                 if (parseInt(nowSelHakgi) === nowHakgiDataId){
                     maxWeek = hakgiData[i].weekCnt;
                     break;

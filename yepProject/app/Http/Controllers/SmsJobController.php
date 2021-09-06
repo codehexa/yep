@@ -387,7 +387,7 @@ class SmsJobController extends Controller
         $gradeId = $request->get("grade_id");
         $year = $request->get("year");
 
-        $data = Hakgi::where('year','=',$year)->where('school_grade','=',$gradeId)
+        $data = Hakgi::where('school_grade','=',$gradeId)
             ->where('show','=','Y')
             ->orderBy('hakgi_name','asc')
             ->get();
