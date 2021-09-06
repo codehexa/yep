@@ -184,4 +184,28 @@ class UsersController extends Controller
             return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
         }
     }
+
+    public function stopUser(Request $request){
+        $id = $request->get("up_id");
+
+        $userObj = User::find($id);
+        $userObj->live = "N";
+
+        $user = Auth::user();
+
+        try {
+            $user_id = $user->id;
+            $target_id = $id;
+            $field_name = "LIVE";
+            $old_value = $userObj->live;
+            $new_value = "N";
+            $userObj->save();
+            $logUserCtrl = new LogUsersController();
+            $logUserCtrl->addLog($user_id,$target_id,$field_name,$old_value,$new_value);
+
+            return redirect("/userManage");
+        }catch (\Exception $exception){
+            return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
+        }
+    }
 }

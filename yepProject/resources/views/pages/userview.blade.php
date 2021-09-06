@@ -10,6 +10,9 @@
                 @case ("NO_HAS_POWER_ADMIN")
                 <h4 class="text-center text-danger"> {{ __('strings.err_need_admin_power') }}</h4>
                 @break
+                @case ("FAIL_TO_MODIFY")
+                <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_modify') }}</h4>
+                @break
             @endswitch
         @endforeach
     @endif
@@ -92,16 +95,22 @@
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="functionModalLongTitle">{{ __('strings.lb_function') }}</h5>
+                <h5 class="modal-title" id="functionModalLongTitle">{{ __('strings.lb_confirm') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
+                <form name="confirmFrm" id="confirmFrm" method="post" action="/userStopDo">
+                    @csrf
+                    <input type="hidden" name="up_id" id="up_id" value="{{ $data->id }}"/>
+                </form>
+                <h5>{{ __('strings.str_do_u_stop_him') }}</h5>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-check-circle"></i> {{ __('strings.fn_okay') }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+                <button type="button" class="btn btn-primary" id="btnStopDo"><i class="fa fa-check-circle"></i> {{ __('strings.fn_okay') }}</button>
+                <i class="fa fa-spinner fa-spin d-none" id="loadConfirm"></i>
             </div>
         </div>
     </div>
@@ -140,6 +149,20 @@
         $(document).on("click",".fn_user",function (){
             event.preventDefault();
             $(this).parent().children("div").toggleClass("d-none");
+        });
+
+        // stop
+        $(document).on("click","#btnStop",function (){
+            event.preventDefault();
+            $("#functionModalCenter").modal("show");
+        });
+
+        // stop Do
+        $(document).on("click","#btnStopDo",function (){
+            event.preventDefault();
+
+            $("#loadConfirm").removeClass("d-none");
+            $("#confirmFrm").submit();
         });
 
         function showAlert(str){

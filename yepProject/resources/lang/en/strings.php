@@ -72,6 +72,7 @@ return [
     "lb_change_password_title"    => "비밀번호를 변경합니다",
     "str_insert_new_password"   => "변경할 비밀번호를 입력하세요",
     "str_insert_re_password"    => "변경할 비밀번호를 다시 확인하세요",
+    "str_do_u_stop_him" => "해당 사용자를 중지 하겠습니까?",
 
     /* 학원 관리 */
     "lb_academy_manage" => "학원 관리",
