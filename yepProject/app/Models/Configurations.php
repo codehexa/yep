@@ -63,6 +63,7 @@ class Configurations extends Model
     public static $SMS_SEND_RESULTS_READY   = "READY";
     public static $SMS_SEND_RESULTS_SENDING   = "SENDING";
     public static $SMS_SEND_RESULTS_SENT   = "SENT";
+    public static $SMS_SEND_RESULTS_FALSE   = "FALSE";
     public static $SMS_SEND_VIEW_Y  = "Y";
     public static $SMS_SEND_VIEW_N  = "N";
 

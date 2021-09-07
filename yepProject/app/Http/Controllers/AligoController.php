@@ -42,11 +42,14 @@ class AligoController extends Controller
 
         $jsonDecode = json_decode($res);
 
+        $result = $jsonDecode->result_code;
+        dd($result);
+
         return $jsonDecode->{'result_code'};
     }
 
     public function sendScoreResults(){
-        $smsSend = SmsSendResults::where('ssr_status','=',Configurations::$SMS_SEND_RESULTS_READY)
+        $smsSend = SmsSendResults::where('ssr_status','=',Configurations::$SMS_SEND_RESULTS_FALSE)
             ->orderBy('id','asc')->take(Configurations::$BMS_MAX_MASS_SIZE)->get();
 
         // if Local PC
