@@ -42,10 +42,7 @@ class AligoController extends Controller
 
         $jsonDecode = json_decode($res);
 
-        $result = $jsonDecode->result_code;
-        dd($result);
-
-        return $jsonDecode->{'result_code'};
+        return $jsonDecode->result_code;
     }
 
     public function sendScoreResults(){
@@ -67,15 +64,7 @@ class AligoController extends Controller
 
             $res = $this->singleSend($receiver,$message,$title,$destination);
 
-            echo $res;
-            die();
-            $results = json_decode($res,true);
-
-
-            $resultCode = $results["result_code"];
-
-
-            if($resultCode == "1"){
+            if($res == "1"){
                 $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_SENT;
                 $sms->save();
             }else{
