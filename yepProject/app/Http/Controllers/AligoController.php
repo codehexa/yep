@@ -44,12 +44,11 @@ class AligoController extends Controller
 
     public function sendScoreResults(){
         $smsSend = SmsSendResults::where('ssr_status','=',Configurations::$SMS_SEND_RESULTS_READY)
-            ->orderBy('id','asc')->take(Configurations::$BMS_MAX_MASS_SIZE);
+            ->orderBy('id','asc')->take(Configurations::$BMS_MAX_MASS_SIZE)->get();
 
         $pageSet = SmsPageSettings::first();
         $greeting = $pageSet->greeting;
 
-        dd($smsSend);
 
         foreach ($smsSend as $sms){
             $receiver = $sms->sms_tel_no;
