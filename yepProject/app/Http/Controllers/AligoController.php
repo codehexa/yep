@@ -40,10 +40,9 @@ class AligoController extends Controller
         $res = curl_exec($cinit);
         curl_close($cinit);
 
-        dd($res);
-        return $res["result_code"];
+        $jsonDecode = json_decode($res);
 
-        //return $res;
+        return $jsonDecode->{'result_code'};
     }
 
     public function sendScoreResults(){
