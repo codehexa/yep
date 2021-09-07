@@ -10,6 +10,7 @@ use App\Models\Students;
 use App\Models\TestForms;
 use App\Models\TestFormsItems;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SmsViewController extends Controller
 {
@@ -36,7 +37,10 @@ class SmsViewController extends Controller
         $upCode = $request->get("up_code");
         $upTel = $request->get("up_parent_tel");
 
-        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
+        $upCode = "etpbvm6ikk";
+
+        $smsPapers = SmsPapers::orderBy('id','asc')->where('sp_code','=',$upCode)->get();
+
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
@@ -54,7 +58,7 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
             $student_id = $student->id;
-            $smsSettings = SmsPageSettings::first();
+            $smsSettings = DB::table('sms_page_settings')->where('id','1')->first();
             $smsPaperFirst = $smsPapers->first();
 
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
@@ -70,6 +74,8 @@ class SmsViewController extends Controller
                 $year = $sPaper->year;
                 $week = $sPaper->week;
 
+                $nowJsData = [];
+
                 $testFormData = TestForms::find($tfId);
                 $testFormChildData = TestFormsItems::where('tf_id','=',$tfId)->orderBy('sj_index','asc')->get();
                 $studentNowScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
@@ -81,6 +87,7 @@ class SmsViewController extends Controller
                 if (!is_null($studentNowScore->wordian)){
                     $wordians[] = $studentNowScore->wordian;
                 }
+
 
                 $studentPreScore = null;
                 if ($week > 1){
@@ -102,81 +109,54 @@ class SmsViewController extends Controller
                 //dd($testFormChildData);
                 $parent_subject_title = "";
                 $saved_parent_id = -1;
-                $stack = 0;
+                $stack = 1;
+                $score_N = 0;
+
 
                 for ($i=0; $i < sizeof($testFormChildData); $i++){
                     $cItem = $testFormChildData[$i];
+                    $scoreFieldName = "score_".$score_N;
+                    if (is_null($studentPreScore)) {
+                        $preScore = "0";
+                    }else{
+                        $preScore = $preScore = $studentPreScore->$scoreFieldName;
+                    }
+                    if (is_null($studentNowScore)){
+                        $nowScore = "0";
+                    }else{
+                        $nowScore = $studentNowScore->$scoreFieldName;
+                    }
 
-                    if ($cItem->sj_has_child == "Y"){   // 대표 과목 .
-                        //$cItems[] = ["id"=>$cItem->id,"title"=>$cItem->sj_title,"scorefield"=>"NULL","pre_score"=>"","now_score"=>"","innerData"=>$innerData,"opinion"=>""];
-                        $parent_subject_title = $cItem->sj_title;
-                        //$subjectTitles[] = $cItem->sj_title;
-                    }else{  // 이너 과목
-                        $nowScoreField = "score_".$subjectN;
-                        if ($cItem->sj_type == "N" && $cItem->sj_depth == "1"){
-                            $preScore = "0";
-                            if (!is_null($studentPreScore)){
-                                $preScore = $studentPreScore->$nowScoreField;
+                    $parent_title = "";
+                    if ($cItem->sj_depth == "1"){
+                        $parent_title = "";
+                    }
+
+
+                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){   // 대표 혹은 셀프
+                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
+                        $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
+                        $nowJsData[$score_N]["id"]   = $cItem->id;
+                        $nowJsData[$score_N]["stack"]    = $stack;
+                        $stack++;
+                        $score_N++;
+                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){    // inner
+                        for ($k = 0; $k < sizeof($testFormChildData); $k++){
+                            if ($testFormChildData[$k]["id"] == $cItem->sj_parent_id){
+                                $parent_title = $testFormChildData[$k]->sj_title;
+                                break;
                             }
-                            $nowScore = $studentNowScore->$nowScoreField;
-                            $subjectId = $cItem->sj_id;
-                            $nowOpinion = $this->getOpinion($subjectId,$nowScore);
-                            $opinionsAll[$opinionN][] = ["subject"=>$parent_subject_title."-".$cItem->sj_title,"opinion"=>$nowOpinion];
-                            //$innerData[] = ["id"=>$cItem->id,"title"=>$parent_subject_title."-".$cItem->sj_title,"scorefield"=>$nowScoreField,"pre_score"=>$preScore,"now_score"=>$nowScore,"opinion"=>$nowOpinion];
-
-                            if ($saved_parent_id != $cItem->sj_parent_id){
-                                $stack++;
-                                $saved_parent_id = $cItem->sj_parent_id;
-                            }
-                            $jsData[$opinionN][] = ["stack"=>$stack,"labels"=>$parent_subject_title."-".$cItem->sj_title,"scores"=>$preScore.",".$nowScore];
-
-                        }elseif ($cItem->sj_type == "T" && $cItem->sj_depth == "1"){
-                            $parentId = $cItem->sj_parent_id;
-                            //$key = array_search($parentId,array_column($cItems,'id'));
-                            $preScore = "0";
-                            if (!is_null($studentPreScore)){
-                                $preScore = $studentPreScore->$nowScoreField;
-                            }
-
-                            $nowScore = $studentNowScore->$nowScoreField;
-                            $subjectId = $cItem->sj_id;
-                            $nowOpinion = $this->getOpinion($subjectId,$nowScore);
-                            //$opinions[] = ["subject"=>$cItem->sj_title,"opinion"=>$nowOpinion];
-/*
-                            $cItems[$key]['scorefield'] = $nowScoreField;
-                            $cItems[$key]['now_score'] = $nowScore;
-                            $cItems[$key]['pre_score'] = $preScore;
-                            $cItems[$key]['innerData']  = $innerData;
-                            $cItems[$key]['opinion']    = $nowOpinion;
-                            $innerData = [];*/
-                        }elseif ($cItem->sj_type == "N" && $cItem->sj_depth == "0"){
-                            //$innerData = [];
-                            $preScore = "0";
-
-                            if (!is_null($studentPreScore)){
-                                $preScore = $studentPreScore->$nowScoreField;
-                            }
-
-                            $nowScore = $studentNowScore->$nowScoreField;
-                            $subjectId = $cItem->sj_id;
-                            $nowOpinion = $this->getOpinion($subjectId,$nowScore);
-                            $opinionsAll[$opinionN][] = ["subject"=>$cItem->sj_title,"opinion"=>$nowOpinion];
-
-                            //$subjectTitles[] = $cItem->sj_title;
-
-                            if ($saved_parent_id != $cItem->sj_parent_id){
-                                $stack++;
-                                $saved_parent_id = $cItem->sj_parent_id;
-                            }
-
-                            $jsData[$opinionN][] = ["stack"=>$stack,"labels"=>$cItem->sj_title,"scores"=>$preScore.",".$nowScore];
-
-                            //$cItems[] = ["id"=>$cItem->id,"title"=>$cItem->sj_title,"scorefield"=>$nowScoreField,"pre_score"=>$preScore,"now_score"=>$nowScore,"innerData"=>$innerData,"opinion"=>$nowOpinion];
                         }
-
-                        $subjectN++;
+                        $nowJsData[$score_N]["labels"]   = $parent_title." > ".$cItem->sj_title;
+                        $nowJsData[$score_N]["scores"]   = "{$preScore},{$nowScore}";
+                        $nowJsData[$score_N]["id"]   = $cItem->id;
+                        $nowJsData[$score_N]["stack"]    = $stack;
+                        $score_N++;
                     }
                 }
+
+                $jsData[] = $nowJsData;
+
                 $opinionN++;
                 $formSet = [];
                 $formSet['exam']    = $testFormData->exam;

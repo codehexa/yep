@@ -155,10 +155,13 @@
                 <h6 class="text-white text-center">{{ $settings->sps_opt_2 }}</h6>
             </div>
         </div>
+
         <script type="text/javascript">
             $(document).ready(function (){
                 printChart();
             });
+
+
 
             function printChart(){
                 @for($i=0; $i < sizeof($jsData); $i++){
@@ -173,7 +176,7 @@
                             datasets: [
                                 @for($j = 0; $j < sizeof($jsData[$i]); $j++)
                                 {
-                                    label: '{{ $jsData[$i][$j]['labels'] }}',
+                                    label: '{!! $jsData[$i][$j]['labels'] !!}',
                                     data: [{{ $jsData[$i][$j]['scores'] }}],
                                     backgroundColor: getRandomeColor({{ $jsData[$i][$j]['stack'] }}),
                                     borderColor: 'rgba(0, 0, 0, 0.2)',
