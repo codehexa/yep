@@ -47,7 +47,7 @@ class SmsViewController extends Controller
             $clId = $smsPaper->cl_id;
         }
 
-        dd($smsPapers);
+        dd($request);
 
         $student = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->first();
 
