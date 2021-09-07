@@ -57,9 +57,10 @@ class AligoController extends Controller
             $destination = $receiver."|".$sms->Student->student_name;
 
             $res = $this->singleSend($receiver,$message,$title,$destination);
-            $resultCode = $res->result_code;
+            $results = json_decode($res);
 
-            echo "result code : {$resultCode}";
+            $resultCode = $results["result_code"];
+
             if($resultCode == "1"){
                 $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_SENT;
                 $sms->save();
