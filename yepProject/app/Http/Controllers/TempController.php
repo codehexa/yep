@@ -79,7 +79,7 @@ class TempController extends Controller
         $smsCtrl = new AligoController();
         $tel = $user->tel;
         $name = $user->name;
-        $tel = preg_replace("/-/g","",$tel);
+        $tel = preg_replace("/-/","",$tel);
         $msg = trans('strings.str_password_email_text',["PASSWD"=>$newPasswd]);
         $msg_type = "SMS";
         $title = trans('strings.lb_password_reset');
