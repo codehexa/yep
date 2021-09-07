@@ -27,8 +27,6 @@ class BmsController extends Controller
         $bbsCtrl = new BmsBbsController();
         $frontData = $bbsCtrl->getListForAll();
 
-        dd($frontData);
-
         if (Auth::user()->power == Configurations::$USER_POWER_TEACHER){
             $bbsData = $bbsCtrl->getDataInAcademy(Auth::user()->academy_id);
         }else{
