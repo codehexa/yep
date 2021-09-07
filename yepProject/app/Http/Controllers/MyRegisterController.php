@@ -78,7 +78,6 @@ class MyRegisterController extends Controller
                 $destination = $tel.":".$name;
                 $send = $aligoCtrl->singleSend($tel,$msg,$msg_type,$title,$destination);
 
-                dd($send);
 /*
                 $logUserCtrl = new LogUsersController();
                 $logUserCtrl->addLog($check->id,$check->id,'password','LOSE','비밀번호변경');*/
