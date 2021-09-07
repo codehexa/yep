@@ -52,6 +52,8 @@ class TempController extends Controller
         $sms['user_id'] = $userId;
         $sms['key'] = $key;
 
+        dd($sms['key']);
+
         $sms['msg'] = $msg;
         $sms['receiver']    = $receiver;
         $sms['destination'] = $destination;
