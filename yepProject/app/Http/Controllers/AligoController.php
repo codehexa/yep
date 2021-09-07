@@ -7,6 +7,7 @@ use App\Models\SmsPageSettings;
 use App\Models\SmsSendResults;
 use App\Models\TestAreas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AligoController extends Controller
 {
@@ -39,15 +40,17 @@ class AligoController extends Controller
         $res = curl_exec($cinit);
         curl_close($cinit);
 
-        return $res;
+        return $res->result_code;
+
+        //return $res;
     }
 
     public function sendScoreResults(){
         $smsSend = SmsSendResults::where('ssr_status','=',Configurations::$SMS_SEND_RESULTS_READY)
             ->orderBy('id','asc')->take(Configurations::$BMS_MAX_MASS_SIZE)->get();
 
-        $pageSet = SmsPageSettings::first();
-        $greeting = $pageSet->greeting;
+        $pageSet = SmsPageSettings::latest()->first();
+        $greeting = $pageSet->greetings;
 
 
         foreach ($smsSend as $sms){
@@ -57,9 +60,14 @@ class AligoController extends Controller
             $destination = $receiver."|".$sms->Student->student_name;
 
             $res = $this->singleSend($receiver,$message,$title,$destination);
-            $results = json_decode($res);
+
+            echo $res;
+            die();
+            $results = json_decode($res,true);
+
 
             $resultCode = $results["result_code"];
+
 
             if($resultCode == "1"){
                 $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_SENT;

@@ -122,6 +122,15 @@
       <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/maatwebsite/excel" />
       <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/myclabs/php-enum" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/dflydev/dot-access-data" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/nette/utils" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/nette/schema" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/league/config" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/symfony/polyfill-php81" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/theseer/tokenizer 2" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/symfony/var-dumper 2" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/symfony/polyfill-mbstring 2" />
+      <excludeFolder url="file://$MODULE_DIR$/yepProject/vendor/symfony/polyfill-php80 2" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

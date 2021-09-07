@@ -116,6 +116,15 @@
       <path value="$PROJECT_DIR$/yepProject/vendor/maatwebsite/excel" />
       <path value="$PROJECT_DIR$/yepProject/vendor/psr/http-factory" />
       <path value="$PROJECT_DIR$/yepProject/vendor/myclabs/php-enum" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/dflydev/dot-access-data" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/nette/utils" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/nette/schema" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/league/config" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/theseer/tokenizer 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/symfony/var-dumper 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/symfony/polyfill-mbstring 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/symfony/polyfill-php80 2" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
