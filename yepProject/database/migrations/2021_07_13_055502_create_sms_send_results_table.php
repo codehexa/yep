@@ -20,7 +20,7 @@ class CreateSmsSendResultsTable extends Migration
             $table->bigInteger('class_id')->unsigned()->default(0);
             $table->char('sms_paper_code',10)->index();
             $table->mediumText('sms_msg')->nullable();
-            $table->enum('ssr_status',['READY','SENDING','SENT'])->default('READY');
+            $table->enum('ssr_status',['READY','FALSE','SENT'])->default('READY');
             $table->string('sms_tel_no')->nullable();
             $table->enum('ssr_view',['Y','N'])->default('N');
         });

@@ -14,4 +14,8 @@ class SmsSendResults extends Model
         "student_id","class_id","sms_paper_code","sms_msg",
         "ssr_status","sms_tel_no","ssr_view"
     ];
+
+    public function Student(){
+        return $this->hasOne(Students::class,"id","student_id");
+    }
 }

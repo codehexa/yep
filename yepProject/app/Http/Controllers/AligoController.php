@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Configurations;
+use App\Models\SmsPageSettings;
+use App\Models\SmsSendResults;
 use App\Models\TestAreas;
 use Illuminate\Http\Request;
 
@@ -41,10 +43,27 @@ class AligoController extends Controller
     }
 
     public function sendScoreResults(){
-        $d = new TestAreas();
+        $smsSend = SmsSendResults::where('ssr_status','=',Configurations::$SMS_SEND_RESULTS_READY)
+            ->orderBy('id','asc')->take(Configurations::$BMS_MAX_MASS_SIZE);
 
-        $d->ta_name = "now test";
+        $pageSet = SmsPageSettings::first();
+        $greeting = $pageSet->greeting;
 
-        $d->save();
+        foreach ($smsSend as $sms){
+            $receiver = $sms->sms_tel_no;
+            $message = $sms->sms_msg;
+            $title =$greeting;
+            $destination = $receiver."|".$sms->Student->student_name;
+
+            $res = $this->singleSend($receiver,$message,$title,$destination);
+            $resultCode = $res->result_code;
+            if($resultCode == "1"){
+                $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_SENT;
+                $sms->save();
+            }else{
+                $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_FALSE;
+                $sms->save();
+            }
+        }
     }
 }

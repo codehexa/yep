@@ -88,7 +88,7 @@ class Configurations extends Model
     public static $BMS_SENT_MESSAGE_READY   = "READY";
 
     public static $BMS_SHEET_INFO_SENT_DATE_READY = "READY";
-    public static $BMS_SHEET_INFO_SENT_DATE_SENDING = "SENDING";
+    public static $BMS_SHEET_INFO_SENT_DATE_FALSE = "FALSE";
     public static $BMS_SHEET_INFO_SENT_DATE_SENT = "SENT";
 
     public static $ACADEMY_PRESIDENT_CALL   = "PRESIDENT_CALL";
