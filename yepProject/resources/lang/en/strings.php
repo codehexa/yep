@@ -36,9 +36,9 @@ return [
     /* Password reset */
     "lb_password_reset" => "비밀번호 재설정",
     "str_new_password_send" => "임의의 비밀번호를 만들어서 등록된 전화번호로 전송됩니다",
-    "str_password_change_done"  => "임의의 비밀번호를 만들어서 등록된 전자우편 주소로 전송하였습니다",
+    "str_password_change_done"  => "임의의 비밀번호를 만들어서 등록된 전화번호로 전송하였습니다",
     "str_password_email_title"  => "비밀번호가 변경 되었습니다.",
-    "str_password_email_text"   => "안녕하세요.\r\n귀하께서는 비밀번호를 재설정 요청하였습니다. \r\n변경된 비밀번호는  \"  :PASSWD   \" 입니다.",
+    "str_password_email_text"   => "안녕하세요.\r\n귀하께서는 비밀번호를 재설정 요청하였습니다. \r\n변경된 비밀번호는  :PASSWD 입니다.",
 
     /* Register */
     "lb_register"   => "운영자 등록",
