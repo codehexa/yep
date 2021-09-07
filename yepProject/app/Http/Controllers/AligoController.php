@@ -49,6 +49,8 @@ class AligoController extends Controller
         $pageSet = SmsPageSettings::first();
         $greeting = $pageSet->greeting;
 
+        dd($smsSend);
+
         foreach ($smsSend as $sms){
             $receiver = $sms->sms_tel_no;
             $message = $sms->sms_msg;
