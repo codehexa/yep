@@ -39,6 +39,11 @@ class Configurations extends Model
 
     public static $EMAIL_SENDER = "noreply@yep.org";
 
+    /* Aligo */
+    public static $ALIGO_HOST   = "https://apis.aligo.in/send";
+    public static $ALIGO_PORT   = "443";
+    public static $YEP_SENDER_TEL   = "1544-0709";
+
 
     /* excel file upload ... in filesystems.php   name: excels */
     public static $EXCEL_FOLDER = "excels";

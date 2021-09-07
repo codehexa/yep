@@ -35,10 +35,10 @@ return [
 
     /* Password reset */
     "lb_password_reset" => "비밀번호 재설정",
-    "str_new_password_send" => "임의의 비밀번호를 만들어서 등록된 이메일 주소로 전송됩니다",
+    "str_new_password_send" => "임의의 비밀번호를 만들어서 등록된 전화번호로 전송됩니다",
     "str_password_change_done"  => "임의의 비밀번호를 만들어서 등록된 전자우편 주소로 전송하였습니다",
     "str_password_email_title"  => "비밀번호가 변경 되었습니다.",
-    "str_password_email_text"   => "안녕하세요.<br/>귀하께서는 비밀번호를 재설정 요청하였습니다. <br/><br/>변경된 비밀번호는  \"  :PASSWD   \" 입니다.",
+    "str_password_email_text"   => "안녕하세요.\r\n귀하께서는 비밀번호를 재설정 요청하였습니다. \r\n변경된 비밀번호는  \"  :PASSWD   \" 입니다.",
 
     /* Register */
     "lb_register"   => "운영자 등록",
@@ -47,6 +47,7 @@ return [
     "str_insert_password"   => "비밀번호를 입력하세요",
     "str_insert_password_2" => "비밀번호를 다시 확인하세요",
     "str_insert_email"  => "E-mail Address 를 입력하세요",
+    "str_guide_tel" => "비밀번호 분실 시 확인 번호를 수신하는 휴대전화 번호.",
 
     /* password change */
     "lb_current_password"   => "현재 비밀번호를 입력하세요",

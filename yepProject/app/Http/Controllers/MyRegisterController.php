@@ -20,6 +20,7 @@ class MyRegisterController extends Controller
         $usPasswd = $request->get("password");
         $usPasswd2 = $request->get("password_2");
         $zoomId = $request->get("up_zoom_id");
+        $tel = $request->get("up_tel");
 
         if ($usPasswd != $usPasswd2){
             return redirect()->back()->withErrors(["msg"=>"PASSWORD_NOT_MATCH"]);
@@ -35,6 +36,7 @@ class MyRegisterController extends Controller
             $user->name = $usName;
             $user->email = $email;
             $user->password = Hash::make($usPasswd);
+            $user->tel = $tel;
             $user->power = Configurations::$USER_POWER_TEACHER;
             $user->live = "N";
             $user->zoom_id = $zoomId;
@@ -43,7 +45,6 @@ class MyRegisterController extends Controller
                 $user->save();
                 return redirect("/regDone");
             }catch (\Exception $exception){
-                dd($exception);
                 return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
             }
         }
@@ -67,7 +68,14 @@ class MyRegisterController extends Controller
             try {
                 $check->update(['password'=>Hash::make($newPasswd)]);
 
-                $this->sendEmail($email,$newPasswd);
+                //$this->sendEmail($email,$newPasswd);
+                $aligoCtrl = new AligoController();
+                $tel = $check->tel;
+                $msg = trans('strings.str_password_email_text',["PASSWD"=>$newPasswd]);
+                $msg_type = "SMS";
+                $title = trans('strings.lb_password_reset');
+                $destination = $tel.":".$name;
+                $send = $aligoCtrl->singleSend($tel,$msg,$msg_type,$title,$destination);
 
                 $logUserCtrl = new LogUsersController();
                 $logUserCtrl->addLog($check->id,$check->id,'password','LOSE','비밀번호변경');
