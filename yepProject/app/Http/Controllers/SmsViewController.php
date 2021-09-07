@@ -37,8 +37,6 @@ class SmsViewController extends Controller
         $upCode = $request->get("up_code");
         $upTel = $request->get("up_parent_tel");
 
-        $upCode = "etpbvm6ikk";
-
         $smsPapers = SmsPapers::orderBy('id','asc')->where('sp_code','=',$upCode)->get();
 
         if (is_null($smsPapers)){
