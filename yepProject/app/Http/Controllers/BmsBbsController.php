@@ -28,7 +28,7 @@ class BmsBbsController extends Controller
     }
 
     public function getListForAll(){
-        return BmsBbs::where('bbs_type','=',Configurations::$BBS_TYPE_ALL)->orderBy('id','desc')->get();
+        return BmsBbs::where('bbs_type','=',Configurations::$BBS_TYPE_ALL)->latest()->get();
     }
 
     public function index(){
