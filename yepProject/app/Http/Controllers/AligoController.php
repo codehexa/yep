@@ -57,6 +57,8 @@ class AligoController extends Controller
 
             $res = $this->singleSend($receiver,$message,$title,$destination);
             $resultCode = $res->result_code;
+
+            echo "result code : {$resultCode}";
             if($resultCode == "1"){
                 $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_SENT;
                 $sms->save();

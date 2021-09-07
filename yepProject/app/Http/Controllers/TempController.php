@@ -74,7 +74,7 @@ class TempController extends Controller
 
         return $res;
         */
-        $newPasswd = "a891dfasdf";
+        /*$newPasswd = "a891dfasdf";
         $user = User::find(4);
         $smsCtrl = new AligoController();
         $tel = $user->tel;
@@ -86,6 +86,9 @@ class TempController extends Controller
         $destination = $tel.":".$name;
         $send = $smsCtrl->singleSend($tel,$msg,$msg_type,$title,$destination);
 
-        dd($send);
+        dd($send);*/
+
+        $aligoCtrl = new AligoController();
+        $aligoCtrl->sendScoreResults();
     }
 }
