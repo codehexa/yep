@@ -71,7 +71,7 @@ class MyRegisterController extends Controller
                 //$this->sendEmail($email,$newPasswd);
                 $aligoCtrl = new AligoController();
                 $tel = $check->tel;
-                $tel = preg_replace("/-/g","",$tel);
+                $tel = preg_replace("/-/","",$tel);
                 $msg = trans('strings.str_password_email_text',["PASSWD"=>$newPasswd]);
                 $msg_type = "SMS";
                 $title = trans('strings.lb_password_reset');

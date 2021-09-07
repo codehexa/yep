@@ -15,8 +15,9 @@ class AligoController extends Controller
         $userId = env("ALIGO_ID");
         $sender = Configurations::$YEP_SENDER_TEL;
         $msg = $message;
-
+/*
         $msg = iconv("UTF-8","EUC-KR",$msg);
+        $title = iconv("utf-8","euc-kr",$title);*/
 
         $sms['user_id'] = $userId;
         $sms['key'] = $key;
