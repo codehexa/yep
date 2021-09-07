@@ -68,6 +68,8 @@ class MyRegisterController extends Controller
             try {
                 $check->update(['password'=>Hash::make($newPasswd)]);
 
+                dd($check);
+
                 //$this->sendEmail($email,$newPasswd);
                 $aligoCtrl = new AligoController();
                 $tel = $check->tel;
