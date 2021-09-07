@@ -42,7 +42,7 @@ class Configurations extends Model
     /* Aligo */
     public static $ALIGO_HOST   = "https://apis.aligo.in/send/";
     public static $ALIGO_PORT   = "443";
-    public static $YEP_SENDER_TEL   = "1544-0709";
+    public static $YEP_SENDER_TEL   = "031-8077-2113";
 
 
     /* excel file upload ... in filesystems.php   name: excels */
