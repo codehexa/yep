@@ -73,14 +73,12 @@ class MyRegisterController extends Controller
                 $tel = $check->tel;
                 $tel = preg_replace("/-/","",$tel);
                 $msg = trans('strings.str_password_email_text',["PASSWD"=>$newPasswd]);
-                $msg_type = "SMS";
                 $title = trans('strings.lb_password_reset');
                 $destination = $tel.":".$name;
-                $send = $aligoCtrl->singleSend($tel,$msg,$msg_type,$title,$destination);
+                $send = $aligoCtrl->singleSend($tel,$msg,$title,$destination);
 
-/*
                 $logUserCtrl = new LogUsersController();
-                $logUserCtrl->addLog($check->id,$check->id,'password','LOSE','비밀번호변경');*/
+                $logUserCtrl->addLog($check->id,$check->id,'password','LOSE','비밀번호변경');
 
                 return view("passwdResetDone",["send"=>$send]);
 

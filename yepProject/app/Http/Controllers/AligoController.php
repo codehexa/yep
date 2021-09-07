@@ -8,33 +8,23 @@ use Illuminate\Http\Request;
 class AligoController extends Controller
 {
     //
-    public function singleSend($receiver,$message,$msg_type,$title,$destination){
+    public function singleSend($receiver,$message,$title,$destination){
         $url = Configurations::$ALIGO_HOST;
         $port = Configurations::$ALIGO_PORT;
         $key = env("ALIGO_KEY");
         $userId = env("ALIGO_ID");
         $sender = Configurations::$YEP_SENDER_TEL;
         $msg = $message;
-/*
-        $msg = iconv("UTF-8","EUC-KR",$msg);
-        $title = iconv("utf-8","euc-kr",$title);*/
 
         $sms['user_id'] = $userId;
         $sms['key'] = $key;
-/*
-        $_POST["msg"] = $msg;
-        $_POST["receiver"] = $receiver; // 수신 번호
-        $_POST['destination']   = $destination; // 수신인 %고객명% 치환
-        $_POST["sender"] = $sender;
-        $_POST["subject"]   = $title;
-        $_POST["msg_type"]  = $msgType; // SMS, LMS, MMS*/
 
         $sms['msg'] = $msg;
         $sms['receiver']    = $receiver;
         $sms['destination'] = $destination;
         $sms['sender']  = $sender;
         $sms['title']   = $title;
-        $sms['msg_type']    = $msg_type;
+        $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
 
         $cinit = curl_init();
         curl_setopt($cinit, CURLOPT_PORT, $port);
