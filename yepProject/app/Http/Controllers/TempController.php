@@ -46,7 +46,6 @@ class TempController extends Controller
         $sender = Configurations::$YEP_SENDER_TEL;
         $msg = $message;
 
-        dd($userId);
 
         $msg = iconv("UTF-8","EUC-KR",$msg);
 
