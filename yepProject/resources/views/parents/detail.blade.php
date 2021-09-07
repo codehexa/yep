@@ -109,7 +109,7 @@
                                     {{ $dataSet[$i]['testTitle'] }}
                             </h5>
                             <div class="d-flex justify-content-center">
-                                <canvas id="chart_{{ $i }}" style="width: 50vw; height:30vh" role="img"></canvas>
+                                <canvas id="chart_{{ $i }}" style="width: 80vw; height:30vh" role="img"></canvas>
                             </div>
 
                         </div>
