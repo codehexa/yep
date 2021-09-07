@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Configurations;
+use App\Models\TestAreas;
 use Illuminate\Http\Request;
 
 class AligoController extends Controller
@@ -37,5 +38,13 @@ class AligoController extends Controller
         curl_close($cinit);
 
         return $res;
+    }
+
+    public function sendScoreResults(){
+        $d = new TestAreas();
+
+        $d->ta_name = "now test";
+
+        $d->save();
     }
 }
