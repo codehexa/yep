@@ -249,4 +249,5 @@ Route::get("/manuals/show_manual/{n}",[\App\Http\Controllers\ManualsController::
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get("/mail",[\App\Http\Controllers\TempController::class, "mail"]);
+Route::get("/sms",[\App\Http\Controllers\TempController::class, "sms"]);
 
