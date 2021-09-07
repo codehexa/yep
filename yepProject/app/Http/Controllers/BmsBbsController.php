@@ -8,6 +8,7 @@ use App\Models\BmsBbsComments;
 use App\Models\Configurations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BmsBbsController extends Controller
 {
@@ -27,12 +28,14 @@ class BmsBbsController extends Controller
     }
 
     public function getListForAll(){
-        return BmsBbs::where('bbs_type','=',Configurations::$BBS_TYPE_ALL)->orderBy('id','desc')->take(Configurations::$BBS_LIMIT);
+        return BmsBbs::where('bbs_type','=',Configurations::$BBS_TYPE_ALL)->orderBy('id','desc')->take(Configurations::$BBS_LIMIT)->get();
     }
 
     public function index(){
         $data = BmsBbs::orderBy('bbs_type','asc')->orderBy('id','desc')->paginate(Configurations::$BBS_LIMIT);
+        //$data = DB::table('bms_bbs')->select('*')->paginate(Configurations::$BBS_LIMIT);
 
+        //dd($data);
         return view('bms.bbs_list',['data'=>$data]);
     }
 
@@ -57,6 +60,8 @@ class BmsBbsController extends Controller
 
         if ($upType == "") {
             $upType = Configurations::$BBS_TYPE_NORMAL;
+        }else{
+            $upType = Configurations::$BBS_TYPE_ALL;
         }
 
         $bbs = new BmsBbs();

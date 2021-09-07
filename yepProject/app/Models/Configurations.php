@@ -71,9 +71,9 @@ class Configurations extends Model
     public static $SMS_PAGE_URL = "http://yepmanager.co.kr/sms/viewpage/";
 
     // Manual file name
-    public static $MANUAL_ADMIN = "storage/manuals/manual_admin.pdf";
-    public static $MANUAL_MANAGER = "storage/manuals/manual_manager.pdf";
-    public static $MANUAL_TEACHER = "storage/manuals/manual_teacher.pdf";
+    public static $MANUAL_ADMIN = "storage/manuals/manual_admin.zip";
+    public static $MANUAL_MANAGER = "storage/manuals/manual_manager.zip";
+    public static $MANUAL_TEACHER = "storage/manuals/manual_teacher.zip";
 
     // BMS
     // 수업 종류
@@ -163,6 +163,6 @@ class Configurations extends Model
 
     // Bbs list limit
     public static $BBS_LIMIT    = 20;
-    public static $BBS_TYPE_ALL  = "0";
-    public static $BBS_TYPE_NORMAL  = "1";
+    public static $BBS_TYPE_ALL  = "ALL";
+    public static $BBS_TYPE_NORMAL  = "NORMAL";
 }

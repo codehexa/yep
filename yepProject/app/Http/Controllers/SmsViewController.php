@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comments;
+use App\Models\Configurations;
 use App\Models\SmsPageSettings;
 use App\Models\SmsPapers;
 use App\Models\SmsScores;
+use App\Models\SmsSendResults;
 use App\Models\Students;
 use App\Models\TestForms;
 use App\Models\TestFormsItems;
@@ -58,6 +60,11 @@ class SmsViewController extends Controller
             $student_id = $student->id;
             $smsSettings = SmsPageSettings::first();
             $smsPaperFirst = $smsPapers->first();
+
+            $smsSendResult = SmsSendResults::where('sms_paper_code','=',$upCode)
+                ->where('student_id','=',$student_id)->first();
+            $smsSendResult->ssr_view = Configurations::$SMS_SEND_VIEW_Y;
+            $smsSendResult->save();
 
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
 
