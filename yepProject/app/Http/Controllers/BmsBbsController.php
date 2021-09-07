@@ -20,9 +20,9 @@ class BmsBbsController extends Controller
     public function getDataInAcademy($acid=''){
         if ($acid != ''){
             return BmsBbs::where('academy_id','=',$acid)
-                ->where('bbs_type','=',Configurations::$BBS_TYPE_NORMAL)->orderBy('id','desc')->paginate(Configurations::$BBS_LIMIT);
+                ->where('bbs_type','=',Configurations::$BBS_TYPE_NORMAL)->latest()->paginate(Configurations::$BBS_LIMIT);
         }else{
-            return BmsBbs::where('bbs_type','=',Configurations::$BBS_TYPE_NORMAL)->orderBy('id','desc')->paginate(Configurations::$BBS_LIMIT);
+            return BmsBbs::where('bbs_type','=',Configurations::$BBS_TYPE_NORMAL)->latest()->paginate(Configurations::$BBS_LIMIT);
         }
 
     }
@@ -32,7 +32,7 @@ class BmsBbsController extends Controller
     }
 
     public function index(){
-        $data = BmsBbs::orderBy('bbs_type','asc')->orderBy('id','desc')->paginate(Configurations::$BBS_LIMIT);
+        $data = BmsBbs::orderBy('bbs_type','asc')->latest()->paginate(Configurations::$BBS_LIMIT);
         //$data = DB::table('bms_bbs')->select('*')->paginate(Configurations::$BBS_LIMIT);
 
         //dd($data);
@@ -86,7 +86,7 @@ class BmsBbsController extends Controller
         $data = BmsBbs::find($id);
         $data->increment('bbs_hits',1);
 
-        $added = BmsBbsComments::where('bbs_id','=',$id)->orderBy('id','desc')->paginate(Configurations::$BBS_LIMIT);
+        $added = BmsBbsComments::where('bbs_id','=',$id)->latest()->paginate(Configurations::$BBS_LIMIT);
 
         return view('bms.bbs_view',['data'=>$data,'added'=>$added]);
     }
