@@ -56,7 +56,7 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
             $student_id = $student->id;
-            $smsSettings = DB::table('sms_page_settings')->where('id','1')->first();
+            $smsSettings = SmsPageSettings::first();
             $smsPaperFirst = $smsPapers->first();
 
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
