@@ -37,7 +37,7 @@ class SmsViewController extends Controller
         $upCode = $request->get("up_code");
         $upTel = $request->get("up_parent_tel");
 
-        $smsPapers = SmsPapers::orderBy('id','asc')->where('sp_code','=',$upCode)->get();
+        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
 
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
