@@ -40,7 +40,8 @@ class AligoController extends Controller
         $res = curl_exec($cinit);
         curl_close($cinit);
 
-        return $res->result_code;
+        dd($res);
+        return $res["result_code"];
 
         //return $res;
     }
