@@ -49,7 +49,10 @@ class AligoController extends Controller
         $smsSend = SmsSendResults::where('ssr_status','=',Configurations::$SMS_SEND_RESULTS_READY)
             ->orderBy('id','asc')->take(Configurations::$BMS_MAX_MASS_SIZE)->get();
 
-        $pageSet = SmsPageSettings::latest()->first();
+        // if Local PC
+        //$pageSet = SmsPageSettings::latest()->first();
+        $pageSet = SmsPageSettings::first();
+
         $greeting = $pageSet->greetings;
 
 
