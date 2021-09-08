@@ -1189,7 +1189,7 @@
             });
 
             let toChangeText = $(".fn_sel_dt").eq(nowPanelIndex).find("option:selected").data("txt");
-            if (nowFunction === null){
+            if (nowFunction.hwork_dt === undefined){
                 return "{{ __('strings.err_cant_set_function') }}";
             }
             let resultText = nowFunction.hwork_dt;
