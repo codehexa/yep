@@ -939,15 +939,15 @@
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject,.fn_up_class_first_teacher,.fn_up_class_second_teacher, .fn_pre_week_first, .fn_pre_week_second"));
 
             $.each(subjects,function(i,obj){
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject"));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject"));
             });
 
             $.each(subjects,function(i,obj){
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first").eq(nowPanelIndex));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first").eq(nowPanelIndex));
             });
 
             $.each(subjects,function(i,obj){
-                $("<option value='" + obj.id + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second").eq(nowPanelIndex));
+                $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second").eq(nowPanelIndex));
             });
 
             $.each(teachers,function(i,obj){
