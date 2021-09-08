@@ -768,6 +768,11 @@
         $(document).on("click","#btnLoad",function (){
             event.preventDefault();
 
+            if ($("#up_academy").val() === "" || $("#up_school_grade").val() === "" || $("#up_hakgi").val() === "" || $("#up_teacher").val() === ""){
+                showAlert("{{ __('strings.err_set_to_load') }}");
+                return;
+            }
+
             nowPanelIndex = -1;
             dataArray = []; // 초기 화
             subjects = [];
@@ -1194,7 +1199,10 @@
             }
             let resultText = nowFunction.hwork_dt;
 
-            if (resultText === undefined) return;
+            if (resultText === undefined) {
+                console.log("NONONONON");
+                return;
+            }
 
             let subjectReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[3]["tag"] }}"); // SubjectName
             let nowWeekReg = new RegExp("{{ \App\Models\Configurations::$BMS_PAGE_FUNCTION_KEYS[9]["tag"] }}");    // now Week
