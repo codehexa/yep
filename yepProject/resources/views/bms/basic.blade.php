@@ -874,7 +874,7 @@
                 for (let s=0; s < yoilNameText.length; s++){
                     $(".fn_forms_list").eq(i).find(".fn_yoil_name").eq(s).text(yoilNameText.substr(s,1));
                 }   // 요일 프린트
-                if (dataArray[i]["subItems"] !== undefined){
+                if (dataArray[i]["subItems"] !== undefined && dataArray[i]["subItems"] !== null){
                     for (let j=0; j < dataArray[i]["subItems"].length; j++){
                         $(".fn_forms_list").eq(i).find(".fn_forms_list_inner_child").find(".fn_up_class_first_subject").eq(j).val(dataArray[i]["subItems"][j].bms_sii_first_class);
                         $(".fn_forms_list").eq(i).find(".fn_forms_list_inner_child").find(".fn_up_class_first_teacher").eq(j).val(dataArray[i]["subItems"][j].bms_sii_first_teacher);
