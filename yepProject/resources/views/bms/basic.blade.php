@@ -835,7 +835,7 @@
             for (let i=0; i < dataArray.length; i++){
                 $("#bmsForm").tmpl(dataArray[i]).appendTo($("#formPanel"));
                 let nowObj = dataArray[i];
-                if (nowObj.subItems !== undefined){
+                if (nowObj.subItems !== undefined && nowObj.subItems !== null){
                     $("#yoilForm").tmpl(nowObj.subItems).appendTo($(".fn_classes").eq(i));
                 }
             }
