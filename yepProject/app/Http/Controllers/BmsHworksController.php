@@ -13,6 +13,10 @@ use Illuminate\Support\Collection;
 class BmsHworksController extends Controller
 {
     //
+    public function __construct(){
+        return $this->middleware('auth');
+    }
+
     public function index(){
         $schoolGrades = schoolGrades::orderBy("scg_index","asc")->get();
         $codes = Configurations::$BMS_PAGE_FUNCTION_KEYS;
