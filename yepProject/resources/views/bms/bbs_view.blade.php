@@ -173,9 +173,7 @@
         <div class="list-group-item">
             <div class="d-flex justify-content-between">
                 <h6>${bc_comment}</h6>
-                @if (\Illuminate\Support\Facades\Auth::user()->id == $ad->us_id || \Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
                 <a href="#" class="pe-auto fn_del" data-id="${id}"><i class="fa fa-times " data-id="${id}"></i></a>
-                @endif
             </div>
             <div class="d-flex justify-content-between">
                 <small>${us_name}</small>

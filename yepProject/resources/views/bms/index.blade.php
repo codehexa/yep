@@ -35,7 +35,7 @@
                         <small>{{ $aBbs->us_name }} <span class="text-secondary">{{ $aBbs->updated_at }}</span> </small>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $aBbs->bbs_title }} {{ $aBbs->bbs_hits == 0? "": "(".$aBbs->bbs_hits.")" }}</h6>
+                        <a href="bbsView/{{ $aBbs->id }}" class="btn-link"><h6>{{ $aBbs->bbs_title }} {{ $aBbs->bbs_hits == 0? "": "(".$aBbs->bbs_hits.")" }}</h6></a>
                         <span class="badge badge-primary badge-pill">{{ $aBbs->bbs_added_count }}</span>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                         <small>{{ $acBbsItem->us_name }} <span class="text-secondary">{{ $acBbsItem->updated_at }}</span> </small>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <h6>{{ $acBbsItem->bbs_title }} {{ $acBbsItem->bbs_hits == 0? "": "(".$acBbsItem->bbs_hits.")" }}</h6>
+                        <a href="bbsView/{{ $acBbsItem->id }}" class="btn-link"><h6>{{ $acBbsItem->bbs_title }} {{ $acBbsItem->bbs_hits == 0? "": "(".$acBbsItem->bbs_hits.")" }}</h6></a>
                         <span class="badge badge-primary badge-pill">{{ $acBbsItem->bbs_added_count }}</span>
                     </div>
                 </div>

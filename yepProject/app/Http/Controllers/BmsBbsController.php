@@ -163,7 +163,13 @@ class BmsBbsController extends Controller
     public function delMent(Request $request){
         $delId = $request->get("del_id");
 
+        $user = Auth::user();
+
         $d = BmsBbsComments::find($delId);
+
+        if (!($user->id == $d->us_id || $user->power != Configurations::$USER_POWER_TEACHER)){
+            return response()->json(['result'=>'false']);
+        }
 
         try {
             $parentId = $d->bbs_id;
