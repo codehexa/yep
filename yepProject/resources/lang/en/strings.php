@@ -187,6 +187,7 @@ return [
     "lb_total_type" => "Total 여부",
     "lb_normal_subject" => "일반",
     "lb_total_subject"  => "Total",
+    "lb_select_function"    => "기능을 선택하세요",
 
     /* 원생 관리 */
     "lb_sms_manage" => "SMS 페이지 관리",
@@ -396,6 +397,10 @@ return [
     "lb_month"  => " 월",
     "lb_send_log_context"  => "전송 내용",
 
+    /* BMS 과목 관리 */
+    "lb_subject_manage" => "과목관리",
+    "lb_subject_info"  => "과목 정보",
+
     /* send log */
     "lb_list_log_guide" => "시행자 명 : :NAME , 시행일자 : :SENT , 사용포인트 : :POINT , 결과코드 : :RESULT_CODE",
 
@@ -480,6 +485,7 @@ return [
     "fn_sort_save"  => "순서저장",
     "fn_save_complete"  => "저장 완료",
     "fn_delete_complete"    => "삭제 완료",
+    "fn_delete_fail"    => "삭제 실패",
     "fn_save_false" => "저장 실패",
     "fn_processing" => "처리 중입니다. 잠시만 기다려 주세요",
     "fn_need_save"  => "저장 필요합니다",

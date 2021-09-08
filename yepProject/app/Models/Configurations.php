@@ -77,10 +77,10 @@ class Configurations extends Model
 
     // BMS
     // 수업 종류
-    public static $STUDY_TYPES  = [
-        ["title"=>"Zoom 온라인 수업","value"=>"0"],
-        ["title"=>"대면수업","value"=>"1"],
-        ["title"=>"수업","value"=>"2"]
+    public static $SUBJECT_FUNCTIONS  = [
+        ["title"=>"일반","value"=>"0"],
+        ["title"=>"문법형식","value"=>"1"],
+        ["title"=>"없음","value"=>"2"]
     ];
 
     public static $BMS_WEEKS_COUNT  = "12";
