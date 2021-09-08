@@ -824,12 +824,18 @@
                     subjects = msg.subjects;
                     teachers = msg.teachers;
                     subject_function = msg.functions;
+
+                    $("#formPanel").empty();
+
                     if (msg.functions.length === 0){
                         showAlert("{{ __('strings.err_first_set_hwork') }}");
+                        $("#formLoader").addClass("d-none");
+                        return;
+                    }else{
+                        drawLists();
+                        getSmsBasic();  // 기초 정보를 가져오는 함수
+                        $("#formLoader").addClass("d-none");
                     }
-                    drawLists();
-                    getSmsBasic();  // 기초 정보를 가져오는 함수
-                    $("#formLoader").addClass("d-none");
                 },
                 error:function (e1,e2,e3){
                     showAlert(e2);
@@ -840,7 +846,7 @@
 
         // 폼 리스트를 그리는 함수
         function  drawLists(){
-            $("#formPanel").children("div").remove();
+            $("#formPanel").empty();
 
             for (let i=0; i < dataArray.length; i++){
                 $("#bmsForm").tmpl(dataArray[i]).appendTo($("#formPanel"));
@@ -1282,6 +1288,9 @@
                     firstResult = resultFirstText.replace(subjectReg,preWeekSubjectFirstTitle);
                     firstResult = firstResult.replace(nowWeekReg,_preWeekTitle);
                     //firstResult = firstResult.replace(preWeekReg,_preWeekTitle);
+                    if (firstResult === "undefined"){
+                        firstResult = "{{ __('strings.err_cant_set_function') }}";
+                    }
                 }
 
                 if (preWeekSubjectSecondCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
@@ -1292,6 +1301,9 @@
                     secondResult = resultSecondText.replace(subjectReg,preWeekSubjectSecondTitle);
                     secondResult = secondResult.replace(nowWeekReg,_preWeekTitle);
                     //secondResult = secondResult.replace(preWeekReg,_preWeekTitle);
+                    if (secondResult === "undefined"){
+                        secondResult = "{{ __('strings.err_cant_set_function') }}";
+                    }
                 }
             }else{
                 // 다음 요일 건들은 이전 요일 건을 가져온다.
@@ -1312,6 +1324,9 @@
                     firstResult = resultFirstText.replace(subjectReg,preDaySubjectFirstTitle);
                     firstResult = firstResult.replace(nowWeekReg,_nowWeekTitle);
                     //firstResult = firstResult.replace(preWeekReg,_preWeekTitle);
+                    if (firstResult === "undefined"){
+                        firstResult = "{{ __('strings.err_cant_set_function') }}";
+                    }
                 }
 
                 if (preDaySubjectSecondCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
@@ -1322,6 +1337,9 @@
                     secondResult = resultSecondText.replace(subjectReg,preDaySubjectSecondTitle);
                     secondResult = secondResult.replace(nowWeekReg,_nowWeekTitle);
                     //secondResult = secondResult.replace(preWeekReg,_preWeekTitle);
+                    if (secondResult === "undefined"){
+                        secondResult = "{{ __('strings.err_cant_set_function') }}";
+                    }
                 }
             }
 

@@ -396,7 +396,7 @@ return [
     "lb_search_condition"  => "검색 조건",
     "lb_month"  => " 월",
     "lb_send_log_context"  => "전송 내용",
-    "err_first_set_hwork"   => "현재 과제 관리 데이터가 없습니다. 프로그램이 실행이 안될 수 있습니다",
+    "err_first_set_hwork"   => "현재 과제 관리 데이터가 없습니다. 프로그램 실행이 중지되었습니다.",
     "err_cant_set_function" => "과제관리에서 데이터 셋팅이 필요합니다",
     "err_set_to_load"   => "데이터를 불러오기 위해 기본 정보를 셋팅하세요",
 
