@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             BmsCurriculumsSeeder::class,
             SmsPageSettingSeeder::class,
             BmsWorkbookSeeder::class,
+            BmsPageSettingsSeeder::class,
         ]);
     }
 }
