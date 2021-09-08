@@ -45,7 +45,7 @@ class BmsBasicController extends Controller
         $studyBooks = BmsStudyBooks::orderBy('bsb_index','asc')->get();
         $sdls = BmsSdl::orderBy('bs_index','asc')->get();
         $workbooks = BmsWorkbooks::orderBy('bw_index','asc')->get();
-        $dts = BmsDts::orderBy('id','asc')->get();
+        $dts = BmsDts::oldest()->get();
         $settingsTel = Settings::where('set_code','=',Configurations::$ACADEMY_PRESIDENT_CALL)->first();
 
         return view('bms.basic',[
@@ -66,7 +66,7 @@ class BmsBasicController extends Controller
     public function getHakgis(Request $request){
         $gradeId = $request->get("up_grade_id");
 
-        $data = Hakgi::where('school_grade','=',$gradeId)->where('show','=','Y')->orderBy('id','asc')->get();
+        $data = Hakgi::where('school_grade','=',$gradeId)->where('show','=','Y')->oldest()->get();
 
         return response()->json(['data'=>$data]);
     }
