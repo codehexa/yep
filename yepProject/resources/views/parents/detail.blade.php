@@ -41,7 +41,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     </head>
     <body class="antialiased" >
-        <div id="app" class="relative items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:pt-0">
+        <div id="app" class="relative items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-100 sm:pt-0">
 
             <div class="p-1 bg-white d-flex justify-content-center shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="160" height="30" viewBox="0 0 1213 230">
