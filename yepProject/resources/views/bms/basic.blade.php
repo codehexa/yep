@@ -935,8 +935,20 @@
 
         function classNteacherSet(){
             let innerPanel = $(".fn_classes").eq(nowPanelIndex);
-            innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject,.fn_up_class_first_teacher,.fn_up_class_second_teacher, .fn_pre_week_first, .fn_pre_week_second").empty();
-            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject,.fn_up_class_first_teacher,.fn_up_class_second_teacher, .fn_pre_week_first, .fn_pre_week_second"));
+            innerPanel.find(".fn_up_class_first_subject").empty();
+            innerPanel.find(".fn_up_class_second_subject").empty();
+            innerPanel.find(".fn_up_class_first_teacher").empty();
+            innerPanel.find(".fn_up_class_second_teacher").empty();
+            innerPanel.find(".fn_pre_week_first").empty();
+            innerPanel.find(".fn_pre_week_second").empty();
+
+
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_subject"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_second_subject"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_teacher"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_second_teacher"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_pre_week_first"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_pre_week_second"));
 
             $.each(subjects,function(i,obj){
                 $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject"));
