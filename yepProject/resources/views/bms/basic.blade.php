@@ -769,6 +769,8 @@
             event.preventDefault();
 
             nowPanelIndex = -1;
+            dataArray = []; // 초기 화
+            subjects = [];
 
             $("#formLoader").removeClass("d-none");
 
@@ -830,7 +832,7 @@
 
         // 폼 리스트를 그리는 함수
         function  drawLists(){
-            $("#formPanel").empty();
+            $("#formPanel").children("div").remove();
 
             for (let i=0; i < dataArray.length; i++){
                 $("#bmsForm").tmpl(dataArray[i]).appendTo($("#formPanel"));
@@ -930,37 +932,42 @@
                 $("#yoilForm").tmpl(nTmplData).appendTo(targetInnerList);
             }
 
+            if (dataArray[nowPanelIndex].subItems.length <= 0){
+                for (let i=0; i < daysLen; i++){
+                    dataArray[nowPanelIndex].subItems.push({});
+                }
+            }
+
             classNteacherSet();
         });
 
         function classNteacherSet(){
             let innerPanel = $(".fn_classes").eq(nowPanelIndex);
-            innerPanel.find(".fn_up_class_first_subject").empty();
-            innerPanel.find(".fn_up_class_second_subject").empty();
-            innerPanel.find(".fn_up_class_first_teacher").empty();
-            innerPanel.find(".fn_up_class_second_teacher").empty();
-            innerPanel.find(".fn_pre_week_first").empty();
-            innerPanel.find(".fn_pre_week_second").empty();
-
+            $(innerPanel).find(".fn_up_class_first_subject").empty();
+            $(innerPanel).find(".fn_up_class_second_subject").empty();
+            $(innerPanel).find(".fn_up_class_first_teacher").empty();
+            $(innerPanel).find(".fn_up_class_second_teacher").empty();
+            /*$(innerPanel).find(".fn_pre_week_first").empty();
+            $(innerPanel).find(".fn_pre_week_second").empty();*/
 
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_subject"));
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_second_subject"));
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_first_teacher"));
             $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_up_class_second_teacher"));
-            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_pre_week_first"));
-            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_pre_week_second"));
+            /*$("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_pre_week_first"));
+            $("<option value=''>{{ __('strings.fn_select_item') }}</option>").appendTo(innerPanel.find(".fn_pre_week_second"));*/
 
             $.each(subjects,function(i,obj){
                 $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo(innerPanel.find(".fn_up_class_first_subject,.fn_up_class_second_subject"));
             });
-
+/*
             $.each(subjects,function(i,obj){
                 $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_first").eq(nowPanelIndex));
             });
 
             $.each(subjects,function(i,obj){
                 $("<option value='" + obj.id + "' data-code='" + obj.subject_function + "'>" + obj.subject_title + "</option>").appendTo($(".fn_pre_week_second").eq(nowPanelIndex));
-            });
+            });*/
 
             $.each(teachers,function(i,obj){
                 $("<option value='" + obj.id + "' data-zoom='" + obj.zoom_id + "'>" + obj.name + "</option>").appendTo(innerPanel.find(".fn_up_class_first_teacher,.fn_up_class_second_teacher"));
@@ -1025,23 +1032,31 @@
                 if ($(".fn_classes").eq(nowPanelIndex).find(".fn_yoil_check").eq(i).is(":checked")){
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else{
-                    _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 1 교시
-                    // zoom 수업 여부
-                    // 1교시
-                    if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
-                        _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
-                        _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
-                        _drawingText += ")" ;   // 1교시 줌 내용.
+                    if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").val() !== "" && $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code") === 2){
+                        _drawingText += "{{ __('strings.lb_nothing') }}";
+                    } else {
+                        _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 1 교시
+                        // zoom 수업 여부
+                        // 1교시
+                        if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
+                            _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").text(); // 선생님 이름
+                            _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
+                            _drawingText += ")" ;   // 1교시 줌 내용.
+                        }
                     }
 
                     // 2교시
                     _drawingText += " / ";
 
-                    _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 2 교시
-                    if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
-                        _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").text(); // 선생님 이름
-                        _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
-                        _drawingText += ")" ;   // 2교시 줌 내용.
+                    if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").val() !== "" && $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code") === 2){
+                        _drawingText += "{{ __('strings.lb_nothing') }}";
+                    }else{
+                        _drawingText += getClassContext($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text()) + "_" + _nowWeekTitle;  // 2 교시
+                        if ($(".fn_up_study").eq(nowPanelIndex).find("option:selected").data("zoom") === "Y" && $(".fn_classes").eq(nowPanelIndex).find(".fn_zoom_check").eq(i).is(":checked") === true){
+                            _drawingText += "(" + $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").text(); // 선생님 이름
+                            _drawingText += $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(i).find("option:selected").data("tel"); // 선생님 zoom id
+                            _drawingText += ")" ;   // 2교시 줌 내용.
+                        }
                     }
                 }
 
@@ -1055,10 +1070,18 @@
                     // 1교시 영역
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else{
-                    _drawingText += getDtArea(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").val() !== "" && $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code") === 2){
+                        _drawingText += "{{ __('strings.lb_nothing') }}";
+                    }else{
+                        _drawingText += getDtArea(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                    }
                     // 2교시 영역
                     _drawingText += " / ";
-                    _drawingText += getDtArea(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val() !== "" && $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code") === 2){
+                        _drawingText += "{{ __('strings.lb_nothing') }}";
+                    }else{
+                        _drawingText += getDtArea(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                    }
                     _drawingText += "\r\n";
                 }
 
@@ -1068,11 +1091,25 @@
                     _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                 }else{
                     // 1교시 영역
-                    _drawingText += getHwork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code"));
-                    // 2교시 영역
-                    _drawingText += " / ";
-                    _drawingText += getHwork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code"));
-                    _drawingText += "\r\n";
+                    if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val() === ""){
+                        _drawingText += "{{ __('strings.lb_nothing') }}";
+                    }else{
+                        if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code") === 2){
+                            _drawingText += "{{ __('strings.lb_nothing') }}";
+                        }else{
+                            _drawingText += getHwork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code"));
+                        }
+
+                        // 2교시 영역
+                        _drawingText += " / ";
+                        if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code") === 2){
+                            _drawingText += "{{ __('strings.lb_nothing') }}";
+                        }else{
+                            _drawingText += getHwork(i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text(),$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code"));
+                        }
+
+                        _drawingText += "\r\n";
+                    }
                 }
 
 
@@ -1090,9 +1127,19 @@
                     }else if ($(".fn_chk_sdl").eq(nowPanelIndex).is(":checked") && $(".fn_sel_sdl").eq(nowPanelIndex).find("option:selected").data("code") === "{{ \App\Models\Configurations::$BMS_BS_CODE_NEXT }}") {
                         _drawingText += outputWorkOther(i);
                     }else{
-                        _drawingText += outputWork(0,i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                        if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val() !== "" && $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code") === 2){
+                            _drawingText += "{{ __('strings.lb_nothing') }}";
+                        }else{
+                            _drawingText += outputWork(0,i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").text());
+                        }
+
                         _drawingText += " / ";
-                        _drawingText += outputWork(1,i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+
+                        if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val() !== "" && $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").data("code") === 2){
+                            _drawingText += "{{ __('strings.lb_nothing') }}";
+                        }else{
+                            _drawingText += outputWork(1,i,$(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).val(), $(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_subject").eq(i).find("option:selected").text());
+                        }
                     }
                 }
                 _drawingText += "\r\n\r\n";
@@ -1153,7 +1200,9 @@
             resultText = resultText.replace(subjectReg,subjectName);
             resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
             resultText = resultText.replace(preWeekReg,_preWeekTitle);
-            resultText = resultText.replace(dtReg,toChangeText);
+            if ($(".fn_chk_dt").eq(nowPanelIndex).is(":checked")){
+                resultText = resultText.replace(dtReg,toChangeText);
+            }
 
             return resultText;
         }

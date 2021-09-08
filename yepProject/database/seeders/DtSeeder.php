@@ -17,10 +17,12 @@ class DtSeeder extends Seeder
         //
         DB::table('bms_dt')->insert([
             [
-                'dt_title' => "있음"
+                'dt_title' => "단어만",
+                'dt_text'   => "",
             ],
             [
-                'dt_title' => "없음"
+                'dt_title' => "SDL 내용 및 단어",
+                'dt_text'   => "내용 및",
             ]
         ]);
     }
