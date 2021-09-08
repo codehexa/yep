@@ -819,8 +819,7 @@
                     subjects = msg.subjects;
                     teachers = msg.teachers;
                     subject_function = msg.functions;
-                    console.log("func : " + msg.functions);
-                    if (msg.functions === null){
+                    if (msg.functions.length === 0){
                         showAlert("{{ __('strings.err_first_set_hwork') }}");
                     }
                     drawLists();
