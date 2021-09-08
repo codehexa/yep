@@ -397,6 +397,7 @@ return [
     "lb_month"  => " 월",
     "lb_send_log_context"  => "전송 내용",
     "err_first_set_hwork"   => "현재 과제 관리 데이터가 없습니다. 프로그램이 실행이 안될 수 있습니다",
+    "err_cant_set_function" => "과제관리에서 데이터 셋팅이 필요합니다",
 
     /* BMS 과목 관리 */
     "lb_subject_manage" => "과목관리",
