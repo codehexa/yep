@@ -90,7 +90,7 @@ class AligoController extends Controller
             $sms['sender']  = $sender;
             $sms['user_id'] = $userId;
             $sms['key'] = $key;
-            $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
+            $sms['msg_type']    = "SMS";//Configurations::$ALIGO_MSG_TYPE;
 
             $msgRoot = $lmsDatum->bsl_send_text;
             $msgRoot = "abckdl";
