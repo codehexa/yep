@@ -82,16 +82,16 @@ class AligoController extends Controller
         $key = env("ALIGO_KEY");
         $userId = env("ALIGO_ID");
         $sender = Configurations::$YEP_SENDER_TEL;
-        $sms['sender']  = $sender;
-
 
         $lmsData = BmsSendLogs::where('bsl_result_msg','=',Configurations::$BMS_SENT_MESSAGE_READY)->get();
 
-        $sms['user_id'] = $userId;
-        $sms['key'] = $key;
-        $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
-
         foreach($lmsData as $lmsDatum){
+            $sms = [];
+            $sms['sender']  = $sender;
+            $sms['user_id'] = $userId;
+            $sms['key'] = $key;
+            $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
+
             $msgRoot = $lmsDatum->bsl_send_text;
             $msgTitleRoot = explode("/\r\n/",$msgRoot);
             $msgTitle = $msgTitleRoot[0];
@@ -125,7 +125,7 @@ class AligoController extends Controller
                 $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_SENT;
             }else{
                 $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_FALSE;
-                $lmsDatum->bsl_fault_msg = $jsonDecode->message;
+                $lmsDatum->bsl_fault_msg = $jsonDecode->message.$msgRoot;
             }
             $lmsDatum->save();
         }
