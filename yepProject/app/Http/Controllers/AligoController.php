@@ -93,10 +93,6 @@ class AligoController extends Controller
             $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
 
             $msgRoot = $lmsDatum->bsl_send_text;
-            $msgTitleRoot = explode("/\r\n/",$msgRoot);
-            $msgTitle = $msgTitleRoot[0];
-
-            $sms['title']   = $msgTitle;
 
             $tels = $lmsDatum->tels;
             $telsArray = explode(",",$tels);
