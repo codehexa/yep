@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function (){
             $aligoCtrl = new AligoController();
             $aligoCtrl->sendScoreResults();
+            $aligoCtrl->sendClassLms();
         })->everyMinute();
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BmsSendLogs;
 use App\Models\Configurations;
 use App\Models\SmsPageSettings;
 use App\Models\SmsSendResults;
@@ -71,6 +72,61 @@ class AligoController extends Controller
                 $sms->ssr_status = Configurations::$SMS_SEND_RESULTS_FALSE;
                 $sms->save();
             }
+        }
+    }
+
+    // 수업 공지 전송
+    public function sendClassLms(){
+        $url = Configurations::$ALIGO_HOST;
+        $port = Configurations::$ALIGO_PORT;
+        $key = env("ALIGO_KEY");
+        $userId = env("ALIGO_ID");
+        $sender = Configurations::$YEP_SENDER_TEL;
+        $sms['sender']  = $sender;
+
+
+        $lmsData = BmsSendLogs::where('bsl_result_msg','=',Configurations::$BMS_SENT_MESSAGE_READY)->get();
+
+        $sms['user_id'] = $userId;
+        $sms['key'] = $key;
+        $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
+
+        foreach($lmsData as $lmsDatum){
+            $msgRoot = $lmsDatum->bsl_send_text;
+            $msgTitleRoot = explode("/\r\n/",$msgRoot);
+            $msgTitle = $msgTitleRoot[0];
+
+            $sms['title']   = $msgTitle;
+
+            $tels = $lmsDatum->tels;
+            $telsArray = explode(",",$tels);
+            for ($i=0; $i < sizeof($telsArray); $i++){
+                $recN = $i + 1;
+                $recTel = $telsArray[$i];
+                $recTel = str_replace("-","",$recTel);
+                $sms['rec_'.$recN] = $recTel;
+                $sms['msg_'.$recN] = $msgRoot;
+            }
+            $sms['cnt'] = sizeof($telsArray);
+
+            $cinit = curl_init();
+            curl_setopt($cinit, CURLOPT_PORT, $port);
+            curl_setopt($cinit, CURLOPT_URL, $url);
+            curl_setopt($cinit, CURLOPT_POST, 1);
+            curl_setopt($cinit, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($cinit, CURLOPT_POSTFIELDS, $sms);
+            curl_setopt($cinit, CURLOPT_SSL_VERIFYPEER, FALSE);
+            $res = curl_exec($cinit);
+            curl_close($cinit);
+
+            $jsonDecode = json_decode($res);
+
+            if ($jsonDecode->result_code == "1"){
+                $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_SENT;
+            }else{
+                $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_FALSE;
+            }
+            $lmsDatum->save();
         }
     }
 }
