@@ -77,7 +77,7 @@ class AligoController extends Controller
 
     // 수업 공지 전송
     public function sendClassLms(){
-        $url = Configurations::$ALIGO_HOST;
+        $url = Configurations::$ALIGO_MASS_HOST;
         $port = Configurations::$ALIGO_PORT;
         $key = env("ALIGO_KEY");
         $userId = env("ALIGO_ID");
@@ -90,10 +90,9 @@ class AligoController extends Controller
             $sms['sender']  = $sender;
             $sms['user_id'] = $userId;
             $sms['key'] = $key;
-            $sms['msg_type']    = "SMS";//Configurations::$ALIGO_MSG_TYPE;
+            $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
 
             $msgRoot = $lmsDatum->bsl_send_text;
-            $msgRoot = "abckdl";
 
             $tels = $lmsDatum->tels;
             $telsArray = explode(",",$tels);
@@ -123,7 +122,7 @@ class AligoController extends Controller
                 $lmsDatum->bsl_sent_date = now();
             }else{
                 $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_FALSE;
-                $lmsDatum->bsl_fault_msg = $jsonDecode->message.$sms['msg_1'];
+                $lmsDatum->bsl_fault_msg = $jsonDecode->message;
                 $lmsDatum->bsl_aligo_result_code = $jsonDecode->result_code;
             }
             $lmsDatum->save();

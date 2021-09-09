@@ -41,6 +41,7 @@ class Configurations extends Model
 
     /* Aligo */
     public static $ALIGO_HOST   = "https://apis.aligo.in/send/";
+    public static $ALIGO_MASS_HOST   = "https://apis.aligo.in/send_mass/";
     public static $ALIGO_PORT   = "443";
     public static $YEP_SENDER_TEL   = "031-8077-2113";
     public static $ALIGO_MSG_TYPE   = "LMS";
