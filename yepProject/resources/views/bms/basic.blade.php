@@ -1106,7 +1106,7 @@
                 }else{
                     // 1교시 영역
                     if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).val() === ""){
-                        _drawingText += "{{ __('strings.lb_nothing') }}";
+                        _drawingText += "{{ __('strings.lb_nothing') }}\r\n";
                     }else{
                         if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_first_subject").eq(i).find("option:selected").data("code") === 2){
                             _drawingText += "{{ __('strings.lb_nothing') }}";
@@ -1288,9 +1288,6 @@
                     firstResult = resultFirstText.replace(subjectReg,preWeekSubjectFirstTitle);
                     firstResult = firstResult.replace(nowWeekReg,_preWeekTitle);
                     //firstResult = firstResult.replace(preWeekReg,_preWeekTitle);
-                    if (firstResult === "undefined"){
-                        firstResult = "{{ __('strings.err_cant_set_function') }}";
-                    }
                 }
 
                 if (preWeekSubjectSecondCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
@@ -1301,9 +1298,6 @@
                     secondResult = resultSecondText.replace(subjectReg,preWeekSubjectSecondTitle);
                     secondResult = secondResult.replace(nowWeekReg,_preWeekTitle);
                     //secondResult = secondResult.replace(preWeekReg,_preWeekTitle);
-                    if (secondResult === "undefined"){
-                        secondResult = "{{ __('strings.err_cant_set_function') }}";
-                    }
                 }
             }else{
                 // 다음 요일 건들은 이전 요일 건을 가져온다.
@@ -1324,9 +1318,7 @@
                     firstResult = resultFirstText.replace(subjectReg,preDaySubjectFirstTitle);
                     firstResult = firstResult.replace(nowWeekReg,_nowWeekTitle);
                     //firstResult = firstResult.replace(preWeekReg,_preWeekTitle);
-                    if (firstResult === "undefined"){
-                        firstResult = "{{ __('strings.err_cant_set_function') }}";
-                    }
+
                 }
 
                 if (preDaySubjectSecondCode.toString() === "{{ \App\Models\Configurations::$BMS_SUBJECT_FUNCTIONS[2]["code"] }}"){
@@ -1337,10 +1329,16 @@
                     secondResult = resultSecondText.replace(subjectReg,preDaySubjectSecondTitle);
                     secondResult = secondResult.replace(nowWeekReg,_nowWeekTitle);
                     //secondResult = secondResult.replace(preWeekReg,_preWeekTitle);
-                    if (secondResult === "undefined"){
-                        secondResult = "{{ __('strings.err_cant_set_function') }}";
-                    }
+
                 }
+            }
+
+            if (firstResult === "undefined"){
+                firstResult = "{{ __('strings.err_cant_set_function') }}";
+            }
+
+            if (secondResult === "undefined"){
+                secondResult = "{{ __('strings.err_cant_set_function') }}";
             }
 
             return firstResult + " / " + secondResult;
@@ -1384,7 +1382,11 @@
 
                 switch(_sdlCode){
                     case "{{ \App\Models\Configurations::$BMS_BS_CODE_DIRECT }}":
-                        return resultText = $(".fn_classes").eq(nowPanelIndex).find(".fn_dt_direct_text").eq(sibling).val();
+                        resultText = $(".fn_classes").eq(nowPanelIndex).find(".fn_dt_direct_text").eq(sibling).val();
+                        if (resultText === "undefined"){
+                            resultText = "{{ __('strings.err_cant_set_function') }}";
+                        }
+                        return resultText;
                         break;
                     case "{{ \App\Models\Configurations::$BMS_BS_CODE_BOOK }}": // 익힘책
                         if (order === 0){
@@ -1396,6 +1398,11 @@
                         resultText = resultText.replace(subjectReg,subjectName);
                         resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
                         resultText = resultText.replace(preWeekReg,_preWeekTitle);
+
+                        if (resultText === "undefined"){
+                            resultText = "{{ __('strings.err_cant_set_function') }}";
+                        }
+
                         return resultText;
                         break;
                     case "{{ \App\Models\Configurations::$BMS_BS_CODE_NEXT }}": // 다음 등원일 제출.. outputWorkOther 로 대치
@@ -1411,9 +1418,16 @@
                         resultText = resultText.replace(subjectReg,subjectName);
                         resultText = resultText.replace(nowWeekReg,_nowWeekTitle);
                         resultText = resultText.replace(preWeekReg,_preWeekTitle);
+
+                        if (resultText === "undefined"){
+                            resultText = "{{ __('strings.err_cant_set_function') }}";
+                        }
+
                         return resultText;
                         break;
                 }
+            }else{
+                return "{{ __('strings.lb_nothing') }}";
             }
         }
 
