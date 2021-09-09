@@ -125,6 +125,7 @@ class AligoController extends Controller
                 $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_SENT;
             }else{
                 $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_FALSE;
+                $lmsDatum->bsl_fault_msg = $jsonDecode->message;
             }
             $lmsDatum->save();
         }
