@@ -139,7 +139,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-group btn-group-sm">
-                    <i class="fa fa-users"></i> <span id="lbCount" class="mr-2">0</span>
+                    <i class="fa fa-users mt-1 mr-2"></i> <span id="lbCount" class="mr-2">0</span>
                     <button type="button" class="btn btn-outline-primary" id="chkAll"><i class="fa fa-check-square"></i> {{ __('strings.fn_all_check') }}</button>
                     <button type="button" class="btn btn-outline-secondary" id="unChkAll"><i class="fa fa-square"></i> {{ __('strings.fn_all_uncheck') }}</button>
                     <button type="button" class="btn btn-outline-info" id="chkReverse"><i class="fa fa-dot-circle"></i> {{ __('strings.fn_toggle') }}</button>
