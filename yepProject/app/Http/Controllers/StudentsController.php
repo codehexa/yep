@@ -115,7 +115,7 @@ class StudentsController extends Controller
                 //dd($vals);
 
                 $check = Students::where('abs_id','=',$absCode)->first();
-                if (isset($check)){
+                if (!isset($check)){
                     // new
                     dd("new");
                     $newStudent = new Students();
