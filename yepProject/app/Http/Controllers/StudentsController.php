@@ -118,6 +118,7 @@ class StudentsController extends Controller
 
                 if ($cnt <= 0){
                     // new
+                    dd($vals);
                     dd("new : ".$absCode);
                     $newStudent = new Students();
                     $newStudent->student_name = $name;
