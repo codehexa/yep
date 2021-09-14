@@ -129,6 +129,7 @@ class StudentsController extends Controller
                     $newStudent->abs_id = $absCode;
                     $newStudent->class_id = $clId;
                     $newStudent->teacher_name = $teacher;
+                    $newStudent->ac_id = $acId;
 
                     $newStudent->save();
 
@@ -158,6 +159,19 @@ class StudentsController extends Controller
                     $hasAbsId = $check->abs_id;
                     $hasClassId = $check->class_id;
                     $hasTeacher = $check->teacher_name;
+                    $hasAcId = $check->ac_id;
+
+                    if ($hasAcId != $acId){
+                        $check->ac_id = $acId;
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasAcId;
+                        $new = $acId;
+                        $field = "academy";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
 
                     if ($hasName != $name){
                         $check->student_name = $name;
