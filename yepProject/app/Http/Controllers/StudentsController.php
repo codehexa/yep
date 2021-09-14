@@ -141,7 +141,7 @@ class StudentsController extends Controller
                     $ctrl = new LogStudentsController();
                     $ctrl->addLog($mode,$target,$field,$old,$new);
 
-                }else{
+                }elseif ($cnt > 0 && $absCode != null){
                     $check = Students::where('abs_id','=',$absCode)->first();
                     $checkStudentId = $check->id;
 
