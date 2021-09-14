@@ -117,7 +117,7 @@ class StudentsController extends Controller
                 $cnt = Students::where('abs_id','=',$absCode)->count();
                 if ($cnt <= 0){
                     // new
-                    //dd("new");
+                    dd("new");
                     $newStudent = new Students();
                     $newStudent->student_name = $name;
                     $newStudent->student_tel = $tel;
