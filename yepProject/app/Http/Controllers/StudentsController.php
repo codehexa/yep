@@ -114,10 +114,10 @@ class StudentsController extends Controller
 
                 //dd($vals);
 
-                $check = Students::where('abs_id','=',$absCode)->count();
-                if ($check <= 0){
+                $cnt = Students::where('abs_id','=',$absCode)->count();
+                if ($cnt <= 0){
                     // new
-                    dd("new");
+                    //dd("new");
                     $newStudent = new Students();
                     $newStudent->student_name = $name;
                     $newStudent->student_tel = $tel;
@@ -141,6 +141,7 @@ class StudentsController extends Controller
                     $ctrl->addLog($mode,$target,$field,$old,$new);
 
                 }else{
+                    $check = Students::where('abs_id','=',$absCode)->first();
                     $checkStudentId = $check->id;
 
                     if (($key = array_search($checkStudentId, $forCheck)) !== false){
