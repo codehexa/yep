@@ -112,6 +112,8 @@ class StudentsController extends Controller
                 $teacher = $vals[10];
                 $absCode = $vals[14];
 
+                dd($vals);
+
                 $check = Students::where('abs_id','=',$absCode)->first();
                 if (is_null($check)){
                     // new
