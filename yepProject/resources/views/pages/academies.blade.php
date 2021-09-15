@@ -39,6 +39,7 @@
                     <th scope="col">#</th>
                     <th scope="col">{{ __('strings.lb_academy_name') }}</th>
                     <th scope="col">{{ __('strings.lb_tel') }}</th>
+                    <th scope="col">{{ __('strings.lb_code') }}</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -48,6 +49,7 @@
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ $datum->ac_name }}</td>
                     <td>{{ $datum->ac_tel }}</td>
+                    <td>{{ $datum->ac_code }}</td>
                     <td><a href="#" class="btn btn-primary btn-sm fn_item" fn_id="{{ $datum->id }}">{{ __('strings.lb_btn_manage') }}</a></td>
                 </tr>
             @endforeach
@@ -79,6 +81,10 @@
                     <div class="form-group">
                         <label for="up_tel">{{ __('strings.lb_tel') }}</label>
                         <input type="text" name="up_tel" id="up_tel" class="form-control" placeholder="{{ __('strings.str_insert_tel') }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="up_tel">{{ __('strings.lb_code') }}</label>
+                        <input type="text" name="up_code" id="up_code" class="form-control" placeholder="{{ __('strings.str_insert_code') }}"/>
                     </div>
                 </form>
             </div>
@@ -173,6 +179,7 @@
                         $("#up_id").val(acId);
                         $("#up_name").val(msg.data.ac_name);
                         $("#up_tel").val(msg.data.ac_tel);
+                        $("#up_code").val(msg.data.ac_code);
                         $("#acFrm").attr({"action":"{{ route('storeAcademy') }}"});
                         $("#fn_loading").addClass("d-none");
                         $("#del_id").val(acId);
@@ -201,6 +208,7 @@
             $("#infoModalCenter").modal("show");
             $("#acFrm").attr({"action":"{{ route('addAcademy') }}"});
             $("#up_name").val("");
+            $("#up_code").val("");
             $("#up_tel").val("");
         });
 
@@ -213,6 +221,11 @@
 
             if ($("#up_tel").val() === ""){
                 showAlert("{{ __('strings.str_insert_tel') }}");
+                return;
+            }
+
+            if ($("#up_code").val() === ""){
+                showAlert("{{ __('strings.str_insert_code') }}");
                 return;
             }
 

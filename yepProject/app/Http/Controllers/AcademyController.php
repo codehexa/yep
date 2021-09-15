@@ -27,6 +27,7 @@ class AcademyController extends Controller
     public function add(Request $request){
         $upName = $request->get("up_name");
         $upTel = $request->get("up_tel");
+        $upCode = $request->get("up_code");
 
         $academy = Academies::where("ac_name","=",$upName)->first();
 
@@ -34,6 +35,7 @@ class AcademyController extends Controller
             $academy = new Academies();
             $academy->ac_name = $upName;
             $academy->ac_tel = $upTel;
+            $academy->ac_code = $upCode;
         }else{
             return redirect()->back()->withErrors(['msg'=>'ALREADY_HAS']);
         }
@@ -71,11 +73,13 @@ class AcademyController extends Controller
         $id = $request->get("up_id");
         $name = $request->get("up_name");
         $tel = $request->get("up_tel");
+        $code = $request->get("up_code");
 
         $academy = Academies::find($id);
 
         $old_name = $academy->ac_name;
         $old_tel = $academy->ac_tel;
+        $old_code = $academy->ac_code;
 
         $academy->ac_name = $name;
         $academy->ac_tel    = $tel;

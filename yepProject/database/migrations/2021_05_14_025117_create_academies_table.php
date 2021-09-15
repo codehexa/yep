@@ -18,6 +18,7 @@ class CreateAcademiesTable extends Migration
             $table->timestamps();
             $table->string("ac_name");
             $table->string("ac_tel")->nullable();
+            $table->string("ac_code")->default('P')->comment('학원별 고유코드');
         });
     }
 

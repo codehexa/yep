@@ -11,6 +11,6 @@ class Academies extends Model
 
     protected $table = "academies";
     protected $fillable = [
-        "ac_name","ac_tel"
+        "ac_name","ac_tel","ac_code"
     ];
 }
