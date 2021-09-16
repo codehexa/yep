@@ -236,6 +236,9 @@ return [
 
 
     /* SMS 업무 */
+    "lb_sms_page_use_check"   => "사용 체크",
+    "lb_blog_guide" => "블로그 가이드 코멘트",
+    "lb_input_blog_guide"   => "블로그 가이드 코멘트를 입력하세요",
     "lb_sms_work_menu"  => "문자편지",
     "lb_sms_work_manage" => "SMS 업무",
     "lb_sms_work_input" => "SMS 내용 입력",

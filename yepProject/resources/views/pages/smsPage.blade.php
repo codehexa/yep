@@ -20,15 +20,25 @@
         <form name="frmSmsPage" id="frmSmsPage" method="post" action="/smsPageSetSave">
             @csrf
             <div class="list-group">
-                <div class="list-group-item">
-                    <label for="up_greetings">{{ __('strings.lb_greetings') }}</label>
+                <div class="list-group-item ">
+                    <div class="d-flex justify-content-between">
+                        <label for="up_greetings">{{ __('strings.lb_greetings') }}</label>
+                        <div class="form-check">
+                            <input type="checkbox" name="up_use_top" id="up_use_top" value="Y" class="form-check-input"
+                                   @if ($data->use_top == "Y")
+                                       checked
+                                   @endif
+                            />
+                            <label for="up_use_top" class="form-check-label">{{ __('strings.lb_sms_page_use_check') }}</label>
+                        </div>
+                    </div>
+
                     <input type="text" name="up_greetings" id="up_greetings" class="form-control" placeholder="{{ __('strings.lb_input_greetings') }}" value="{{ $data->greetings }}"/>
                 </div>
                 <div class="list-group-item">
-                    <label for="up_result_url">{{ __('strings.lb_result_url') }}</label>
+                    <label for="up_blog_guide">{{ __('strings.lb_blog_guide') }}</label>
                     <div class="input-group">
-                        <span class="input-group-text" id="basis_http1">http://</span>
-                        <input type="text" name="up_result_url" aria-describedby="basis_http1" id="up_result_url" class="form-control" placeholder="{{ __('strings.lb_input_result_url') }}" value="{{ $data->result_link_url }}"/>
+                        <input type="text" name="up_blog_guide"  id="up_blog_guide" class="form-control" placeholder="{{ __('strings.lb_input_blog_guide') }}" value="{{ $data->blog_guide }}"/>
                     </div>
                 </div>
                 <div class="list-group-item">
@@ -48,7 +58,18 @@
                     <small>{{ __('strings.lb_sms_define_name') }}</small>
                 </div>
                 <div class="list-group-item">
-                    <label for="up_teacher_say">{{ __('strings.lb_sms_page_bottom') }}</label>
+                    <div class="d-flex justify-content-between">
+                        <label for="up_teacher_say">{{ __('strings.lb_sms_page_bottom') }}</label>
+                        <div class="form-check">
+                            <input type="checkbox" name="up_use_bottom" id="up_use_bottom" class="form-check-input" value="Y"
+                                   @if ($data->use_bottom == "Y")
+                                       checked
+                                   @endif
+                            />
+                            <label for="up_use_bottom" class="form-check-label">{{ __('strings.lb_sms_page_use_check') }}</label>
+                        </div>
+                    </div>
+
                     <input type="text" name="up_sps_opt_2" id="up_sps_opt_2" class="form-control" placeholder="{{ __('strings.lb_input_sms_bottom') }}" value="{{ $data->sps_opt_2 }}"/>
                 </div>
             </div>

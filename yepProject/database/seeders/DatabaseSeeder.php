@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             SmsPageSettingSeeder::class,
             BmsWorkbookSeeder::class,
             BmsPageSettingsSeeder::class,
+            AcademiesSeeder::class,
         ]);
     }
 }
