@@ -85,14 +85,14 @@ class SmsViewController extends Controller
                 $testFormChildData = TestFormsItems::where('tf_id','=',$tfId)->orderBy('sj_index','asc')->get();
                 $studentNowScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                     ->where('sg_id','=',$sgId)
-                    ->where('year','=',$year)->where('week','=',$week)
+                    ->where('year','=',$year)
+                    ->where('week','=',$week)
                     ->first();
 
                 $teacherSays[] = $studentNowScore->opinion;
                 if (!is_null($studentNowScore->wordian)){
                     $wordians[] = $studentNowScore->wordian;
                 }
-
 
                 $studentPreScore = null;
                 if ($week > 1){
@@ -105,18 +105,10 @@ class SmsViewController extends Controller
                 $hasPreScore = "N";
                 if (!is_null($studentPreScore)) $hasPreScore = "Y";
 
-                //$cItems=[];
-
-                //$innerData = [];
-                //$subjectTitles = [];
-
-                // test items setting
-                //dd($testFormChildData);
                 $parent_subject_title = "";
                 $saved_parent_id = -1;
                 $stack = 1;
                 $score_N = 0;
-
 
                 for ($i=0; $i < sizeof($testFormChildData); $i++){
                     $cItem = $testFormChildData[$i];
@@ -124,7 +116,7 @@ class SmsViewController extends Controller
                     if (is_null($studentPreScore)) {
                         $preScore = "0";
                     }else{
-                        $preScore = $preScore = $studentPreScore->$scoreFieldName;
+                        $preScore = $studentPreScore->$scoreFieldName;
                     }
                     if (is_null($studentNowScore)){
                         $nowScore = "0";
@@ -138,13 +130,24 @@ class SmsViewController extends Controller
                     }
 
 
-                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){   // 대표 혹은 셀프
+                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T") {   // 대표 및 셀프
                         $nowJsData[$score_N]["labels"] = $cItem->sj_title;
                         $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
-                        $nowJsData[$score_N]["id"]   = $cItem->id;
-                        $nowJsData[$score_N]["stack"]    = $stack;
+                        $nowJsData[$score_N]["id"] = $cItem->id;
+                        $nowJsData[$score_N]["stack"] = $stack;
                         $stack++;
                         $score_N++;
+                        if ($cItem->testFormParent->exam == "N"){
+                            $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
+                            $opinionsAll[] = ["title" => $cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
+                        }
+                    }else if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "Y" && $cItem->sj_type != "T"){    // 과목 그룹 대표
+//                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
+//                        $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
+//                        $nowJsData[$score_N]["id"] = $cItem->id;
+//                        $nowJsData[$score_N]["stack"] = $stack;
+                        //$stack++;
+                        //$score_N++;
                     }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){    // inner
                         for ($k = 0; $k < sizeof($testFormChildData); $k++){
                             if ($testFormChildData[$k]["id"] == $cItem->sj_parent_id){
@@ -152,13 +155,20 @@ class SmsViewController extends Controller
                                 break;
                             }
                         }
-                        $nowJsData[$score_N]["labels"]   = $parent_title." > ".$cItem->sj_title;
+                        $nowJsData[$score_N]["labels"]   = $parent_title." / ".$cItem->sj_title;
                         $nowJsData[$score_N]["scores"]   = "{$preScore},{$nowScore}";
                         $nowJsData[$score_N]["id"]   = $cItem->id;
                         $nowJsData[$score_N]["stack"]    = $stack;
                         $score_N++;
+                        if ($cItem->testFormParent->exam == "N"){
+                            $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
+                            $opinionsAll[] = ["title" => $parent_title." / ".$cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
+                        }
+                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type == "T"){
+                        $stack++;
                     }
                 }
+
 
                 $jsData[] = $nowJsData;
 
@@ -191,11 +201,11 @@ class SmsViewController extends Controller
 
         if (!is_null($data)){
             if (is_null($data->opinion)) {
-                return "선생님 입력해 주세요.";
+                return Configurations::$SMS_OPINION_NONE;
             }
             return $data->opinion;
         }else{
-            return "DB에 없네요.";
+            return Configurations::$SMS_OPINION_NONE;
         }
     }
 

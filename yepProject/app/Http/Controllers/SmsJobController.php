@@ -208,9 +208,6 @@ class SmsJobController extends Controller
             $testForm = [];
         }
 
-        //dd($data);
-        //dd($hakgiData);
-
         return view("sms.index",["testForms"=>$testForms,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble,
             "academies"=>$academies, "schoolGrades"=>$schoolGrades, "classes"=>$classes,
             "rAcId"=>$acId,"rGradeId"=>$gradeId,"rClId"=>$classId,"rTfId"=>$tfId,

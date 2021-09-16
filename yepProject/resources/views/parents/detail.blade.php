@@ -75,7 +75,9 @@
             @endif
 
             <div class="mt-3 ml-3 mr-3">
+                @if ($settings->use_top == "Y")
                 <h4 class="text-center">{{ $settings->greetings }}</h4>
+                @endif
                 <div class="mt-3">
                     <div class="mt-3">
                         <div class="list-group">
@@ -121,15 +123,17 @@
                 <h5 class="mt-3">{{ __('strings.lb_test_analysis') }}</h5>
 
                 @for($i=0; $i < sizeof($scoreAnalysis); $i++)
-                    <h6 class="mt-2">{{ $dataSet[$i]['testTitle'] }}</h6>
-
                     <div class="list-group">
-                        @for ($j=0; $j < sizeof($scoreAnalysis[$i]); $j++)
-                            <div class="list-group-item">
-                                [{{ $scoreAnalysis[$i][$j]['subject'] }}]
-                                {{ $scoreAnalysis[$i][$j]['opinion'] }}
-                            </div>
-                        @endfor
+                    @if ($scoreAnalysis[$i]['opinion'] == \App\Models\Configurations::$SMS_OPINION_NONE)
+                        <div class="list-group-item">
+                            [{{ $scoreAnalysis[$i]['title'] }}] : {{ $scoreAnalysis[$i]['now_score'] }} / {{ $scoreAnalysis[$i]['max_score'] }}
+                        </div>
+                    @else
+                        <div class="list-group-item">
+                            [{{ $scoreAnalysis[$i]['title'] }}]
+                            {{ $scoreAnalysis[$i]['opinion'] }}
+                        </div>
+                    @endif
                     </div>
                 @endfor
 
@@ -149,11 +153,19 @@
                         @endforeach
                     </div>
                 @endif
+                <!-- blog -->
+                @if ($settings->blog_link_url != "")
+                    <div class="mt-2 pb-2">
+                        {{ $settings->blog_guide }} <a href="http://{{ $settings->blog_link_url }}">http://{{ $settings->blog_link_url }}</a>
+                    </div>
+                @endif
             </div>
 
+            @if ($settings->use_bottom == "Y")
             <div class="mt-5 bg-dark container-fluid p-4">
                 <h6 class="text-white text-center">{{ $settings->sps_opt_2 }}</h6>
             </div>
+            @endif
         </div>
 
         <script type="text/javascript">
