@@ -37,7 +37,8 @@ class Configurations extends Model
         ["name"=>"대학(교)","value"=>"U"],
     ];
 
-    public static $EMAIL_SENDER = "noreply@yep.org";
+    public static $EMAIL_SENDER = "noreply@yepmanager.co.kr";
+    public static $EMAIL_URL    = "yepmanager.co.kr";
 
     /* Aligo */
     public static $ALIGO_HOST   = "https://apis.aligo.in/send/";
@@ -170,4 +171,7 @@ class Configurations extends Model
     public static $BBS_LIMIT    = 20;
     public static $BBS_TYPE_ALL  = "ALL";
     public static $BBS_TYPE_NORMAL  = "NORMAL";
+
+    // Excel file class name seperated character
+    public static $EXCEL_CLASS_RIP_CODE = "(";
 }

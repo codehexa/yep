@@ -7,8 +7,10 @@ use App\Models\Academies;
 use App\Models\Classes;
 use App\Models\Configurations;
 use App\Models\LnClassTeacher;
+use App\Models\schoolGrades;
 use App\Models\Settings;
 use App\Models\Students;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -73,6 +75,19 @@ class StudentsController extends Controller
         $acId = $request->get("up_ac_id");
         $clId = $request->get("up_cl_id");
         $tmpName = "ST_".time().".".$excelFile->getClientOriginalExtension();
+        $classRoot = [];
+
+        $academies = new Academies();
+        $acHash = $academies->getHashTable();
+        $classes = new Classes();
+        $clHash = $classes->getHashTable();
+        $users = new User();
+        $teacherHash = $users->getTeacherHashTable();
+        $students = new Students();
+        $allAbsIds = $students->getAllAbsCodes();
+
+        $schoolGrades = new schoolGrades();
+        $not_set_grade = $schoolGrades->getNotSet();    // school_grades.scg_not_set = "Y"
 
         if (Storage::disk(Configurations::$EXCEL_FOLDER)->exists($acId."/".$tmpName)){
             return redirect()->back()->withErrors(["msg"=>"FAIL_ALREADY_HAS"]);
@@ -94,12 +109,12 @@ class StudentsController extends Controller
 
             $data = ExcelFacade::toArray(new ImportStudents(), $exFilePath);
 
-            $totalCountInClass = Students::where('class_id','=',$clId)->get();
+            //$totalCountInClass = Students::where('class_id','=',$clId)->get();
 
-            $forCheck = []; // 유저 클라스 이동 확인하기 위한 기존 반에 소속된 학생 인덱스 값.
+            /*$forCheck = []; // 유저 클라스 이동 확인하기 위한 기존 반에 소속된 학생 인덱스 값.
             foreach ($totalCountInClass as $inClass){
                 $forCheck[] = $inClass->id;
-            }
+            }*/
 
             for($i=4; $i < sizeof($data[0]); $i++){
                 $vals = $data[0][$i];
@@ -109,14 +124,47 @@ class StudentsController extends Controller
                 $parentHp = $vals[4];
                 $school = $vals[5];
                 $grade = $vals[6];
+                $clRoot = $vals[7];
                 $teacher = $vals[10];
                 $absCode = $vals[14];
 
-                //dd($absCode);
+                // class name
+                $clRoot1 = substr($clRoot,0,strpos($clRoot,Configurations::$EXCEL_CLASS_RIP_CODE)); // excel 반명 추출. 학원코드 + 반코드
+                $clAcCode = substr($clRoot1,0,1);
+                $clCode = substr($clRoot1,1,strlen($clRoot1));
 
-                $cnt = Students::where('abs_id','=',$absCode)->count();
+                $nowAcId = "";
 
-                if ($cnt <= 0 && $absCode != null){
+                if (isset($acHash[$clAcCode])){
+                    $nowAcId = $acHash[$clAcCode];  // academies.id
+                }
+
+                // 선생님 찾기
+                $teacherName = substr($teacher,0,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE));   // 선생님 이름만
+                $teacherAcCode = substr($teacher,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE) + 1,1); // 학원 코드
+                $teacherAcId = $acHash[$teacherAcCode]; // 선생님이 속한 학원 아이디
+
+                $tmpTeacherKey = $teacherName."_".$teacherAcId;
+                $nowTeacherId = "";    // 선생님 users.id
+                if (!isset($teacherHash[$tmpTeacherKey])){
+                    $nowTeacherId = $users->makeNewTeacher($teacherName,$teacherAcId);
+                    $teacherHash[$teacherName."_".$teacherAcId] = $nowTeacherId;
+                }else{
+                    $nowTeacherId = $teacherHash[$tmpTeacherKey];
+                }
+
+                if (isset($clHash[$clAcCode.$clCode])){
+                    $nowClId = $clHash[$clAcCode.$clCode];
+                }else{
+                    $nowClId = $classes->newClass($clRoot1,$nowAcId,$nowTeacherId,$not_set_grade);
+                    $clHash[$clRoot1] = $nowClId;
+                }
+
+                //$cnt = Students::where('abs_id','=',$absCode)->count();
+                //dd($allAbsIds);
+                $cnt = in_array($absCode,$allAbsIds);
+
+                if (!$cnt && $absCode != null){
                     // new
 
                     $newStudent = new Students();
@@ -127,9 +175,9 @@ class StudentsController extends Controller
                     $newStudent->school_name = $school;
                     $newStudent->school_grade = $grade;
                     $newStudent->abs_id = $absCode;
-                    $newStudent->class_id = $clId;
-                    $newStudent->teacher_name = $teacher;
-                    $newStudent->ac_id = $acId;
+                    $newStudent->class_id = $nowClId;
+                    $newStudent->teacher_name = $teacherName;
+                    $newStudent->ac_id = $nowAcId;
 
                     $newStudent->save();
 
@@ -142,13 +190,8 @@ class StudentsController extends Controller
                     $ctrl = new LogStudentsController();
                     $ctrl->addLog($mode,$target,$field,$old,$new);
 
-                }elseif ($cnt > 0 && $absCode != null){
+                }elseif ($cnt && $absCode != null){
                     $check = Students::where('abs_id','=',$absCode)->first();
-                    $checkStudentId = $check->id;
-
-                    if (($key = array_search($checkStudentId, $forCheck)) !== false){
-                        unset($forCheck[$key]);
-                    }
 
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
@@ -161,12 +204,12 @@ class StudentsController extends Controller
                     $hasTeacher = $check->teacher_name;
                     $hasAcId = $check->ac_id;
 
-                    if ($hasAcId != $acId){
-                        $check->ac_id = $acId;
+                    if ($hasAcId != $nowAcId){
+                        $check->ac_id = $nowAcId;
                         $mode = "modify";
                         $target = $check->id;
                         $old = $hasAcId;
-                        $new = $acId;
+                        $new = $nowAcId;
                         $field = "academy";
 
                         $ctrl = new LogStudentsController();
@@ -253,23 +296,23 @@ class StudentsController extends Controller
                         $ctrl = new LogStudentsController();
                         $ctrl->addLog($mode,$target,$field,$old,$new);
                     }
-                    if ($hasClassId != $clId){
-                        $check->class_id = $clId;
+                    if ($hasClassId != $nowClId){
+                        $check->class_id = $nowClId;
                         $mode = "modify";
                         $target = $check->id;
                         $old = $hasClassId;
-                        $new = $clId;
+                        $new = $nowClId;
                         $field = "Class ID";
 
                         $ctrl = new LogStudentsController();
                         $ctrl->addLog($mode,$target,$field,$old,$new);
                     }
-                    if ($hasTeacher != $teacher){
-                        $check->teacher_name = $teacher;
+                    if ($hasTeacher != $teacherName){
+                        $check->teacher_name = $teacherName;
                         $mode = "modify";
                         $target = $check->id;
                         $old = $hasTeacher;
-                        $new = $teacher;
+                        $new = $teacherName;
                         $field = "Teacher";
 
                         $ctrl = new LogStudentsController();
@@ -278,8 +321,7 @@ class StudentsController extends Controller
                     $check->save();
                 }
             } // end for
-            Students::whereIn('id',$forCheck)->update(['class_id'=>0]);
-            return redirect("/students/".$acId."/".$clId);
+            return redirect("/students");
         }
     }   // file upload done
 

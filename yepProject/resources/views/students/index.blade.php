@@ -65,7 +65,6 @@
         <table class="mt-3 table table-striped">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">#</th>
                     <th scope="col">{{ __('strings.lb_name') }}</th>
                     <th scope="col">{{ __('strings.lb_student_tel') }}</th>
                     <th scope="col">{{ __('strings.lb_student_hp') }}</th>
@@ -80,8 +79,7 @@
             <tbody>
             @foreach($data as $datum)
                 <tr class="text-center">
-                    <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ $datum->student_name }}</td>
+                    <th scope="row">{{ $datum->student_name }}</th>
                     <td>{{ $datum->student_tel }}</td>
                     <td>{{ $datum->student_hp }}</td>
                     <td>{{ $datum->parent_hp }}</td>
@@ -285,7 +283,7 @@
 
         $(document).on("click","#btn_add_excel",function (){
             event.preventDefault();
-            if ($("#section_academy").val() === ""){
+            /*if ($("#section_academy").val() === ""){
                 showAlert("{{ __('strings.str_select_academy') }}");
                 return;
             }
@@ -293,7 +291,7 @@
             if ($("#section_class").val() === ""){
                 showAlert("{{ __('strings.str_select_class') }}");
                 return;
-            }
+            }*/
             $("#uploadModalCenter").modal("show");
             $("#up_file_name").val("");
         });

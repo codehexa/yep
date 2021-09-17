@@ -13,4 +13,14 @@ class Academies extends Model
     protected $fillable = [
         "ac_name","ac_tel","ac_code"
     ];
+
+    public function getHashTable(){
+        $academies = Academies::get();
+        $data = [];
+        foreach($academies as $academy){
+            $data[$academy->ac_code]=$academy->id;
+        }
+
+        return $data;
+    }
 }

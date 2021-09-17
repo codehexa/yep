@@ -11,6 +11,11 @@ class schoolGrades extends Model
 
     protected $table = "school_grades";
     protected $fillable = [
-        "scg_name","scg_index"
+        "scg_name","scg_index","scg_not_set"
     ];
+
+    public function getNotSet(){
+        $sgrade = schoolGrades::where("scg_not_set",'=','Y')->first();
+        return $sgrade->id;
+    }
 }

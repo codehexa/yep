@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -45,5 +46,33 @@ class User extends Authenticatable
 
     public function academy(){
         return $this->belongsTo(Academies::class,'academy_id');
+    }
+
+    public function getTeacherHashTable(){
+        $users = User::where('power','!=','ADMIN')->where('live','=','Y')->get();
+        $data = [];
+        foreach($users as $user){
+            $data[$user->name."_".$user->academy_id] = $user->id;
+        }
+
+        return $data;
+    }
+
+    public function makeNewTeacher($name,$acid){
+        $add = new User();
+        $add->name = $name;
+        $add->academy_id = $acid;
+        $add->email = "tmp_".time()."@".Configurations::$EMAIL_URL;
+        $add->password = Hash::make(time());
+        $add->uid = $add->email;
+        $add->live = "Y";
+        $add->power = Configurations::$USER_POWER_TEACHER;
+
+        try {
+            $add->save();
+            return $add->id;
+        }catch (\Exception $exception){
+            return false;
+        }
     }
 }

@@ -15,7 +15,7 @@ class AcademiesSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('bms_days')->insert([
+        DB::table('academies')->insert([
             [
                 'ac_name' => "나루관",
                 'ac_tel'  => "031-8003-6911",

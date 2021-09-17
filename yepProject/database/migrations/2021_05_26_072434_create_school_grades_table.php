@@ -18,6 +18,7 @@ class CreateSchoolGradesTable extends Migration
             $table->timestamps();
             $table->string("scg_name")->comment("초/중/고/대/학교");
             $table->integer('scg_index')->unsigned()->default(0);
+            $table->enum("scg_not_set",["Y","N"])->default("N")->comment("미지정 일 경우, Y");
         });
     }
 

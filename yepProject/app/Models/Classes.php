@@ -26,4 +26,30 @@ class Classes extends Model
         return $this->belongsTo(User::class, "teacher_id");
     }
 
+    public function getHashTable(){
+        $cls = Classes::get();
+        $data = [];
+        foreach($cls as $cl){
+            $data[$cl->class_name] = $cl->id;
+        }
+
+        return $data;
+    }
+
+    public function newClass($name,$acid,$teacher_id,$not_set_id){
+        $add = new Classes();
+        $add->class_name = $name;
+        $add->ac_id = $acid;
+        $add->sg_id = $not_set_id;
+        $add->show = "Y";
+        $add->teacher_id = $teacher_id;
+
+        try {
+            $add->save();
+            return $add->id;
+        }catch (\Exception $exception){
+            return false;
+        }
+    }
+
 }
