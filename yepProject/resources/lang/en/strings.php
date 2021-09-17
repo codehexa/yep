@@ -74,6 +74,10 @@ return [
     "str_insert_new_password"   => "변경할 비밀번호를 입력하세요",
     "str_insert_re_password"    => "변경할 비밀번호를 다시 확인하세요",
     "str_do_u_stop_him" => "해당 사용자를 중지 하겠습니까?",
+    "lb_change_email"   => "E-mail 변경(최고관리자만가능)",
+    "str_change_email"  => "관리자 권한으로 이메일을 직권 변경합니다",
+    "str_admin_password"    => "관리자 비밀번호를 입력하세요",
+    "str_input_email_to_modify"   => "변경할 이메일을 입력하세요",
 
     /* 학원 관리 */
     "lb_academy_manage" => "학원 관리",
@@ -367,7 +371,7 @@ return [
     "err_select_now_week"   => "이번 주를 선택하세요",
     "err_save_sheet_id" => "기본 정보 셋팅을 우선 저장하세요.",
     "str_did_update"    => "업데이트 되었습니다",
-    "err_has_same_data" => "중복된 데이터가 있습니다. 불러오기 하세요.",
+    "err_has_same_data" => "중복된 데이터가 있습니다.",
     "lb_give_sdl_use"   => "SDL 제출 사항 운영 여부",
     "lb_give_sdl"   => "SDL 제출",
     "lb_study_book" => "익힘책",

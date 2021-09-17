@@ -10,6 +10,14 @@
                 @case ("FAIL_TO_UPDATE")
                 <h4 class="text-center text-danger"> {{ __('strings.err_fail_to_update') }}</h4>
                 @break
+
+                @case ("NOT_AUTH")
+                <h4 class="text-center text-danger"> {{ __('strings.err_need_admin_power') }}</h4>
+                @break
+
+                @case ("FAIL_CAUSE_DUP")
+                <h4 class="text-center text-danger"> {{ __('strings.err_has_same_data') }}</h4>
+                @break
             @endswitch
         @endforeach
     @endif
@@ -29,6 +37,9 @@
                     <div class="d-flex justify-content-between">
                         <label for="up_email" class="text-secondary">{{ __('strings.lb_email') }}</label>
                         <div class="ml-3" id="up_email">{{ $data->email }}</div>
+                        @if (\Illuminate\Support\Facades\Auth::user()->power == \App\Models\Configurations::$USER_POWER_ADMIN)
+                            <button id="btnChangeEmail" class="btn btn-primary btn-sm"><i class="fa fa-envelope-open-text"></i> {{ __('strings.lb_change_email') }}</button>
+                        @endif
                     </div>
                 </div>
                 <div class="list-group-item list-group-item-action form-inline">
@@ -171,6 +182,38 @@
 </div>
 
 
+<div class="modal fade" id="emailModalCenter" tabindex="-1" role="dialog" aria-labelledby="functionModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="emailModalLongTitle">{{ __('strings.str_change_email') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="emailFrm" id="emailFrm" method="post" action="/userEmailChange">
+                    @csrf
+                    <input type="hidden" name="up_now_id" id="up_now_id" value="{{ $data->id }}"/>
+                    <div class="form-group">
+                        <label for="up_now_password">{{ __('strings.str_admin_password') }}</label>
+                        <input type="password" name="up_now_password" id="up_now_password" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="up_now_email">{{ __('strings.str_input_email_to_modify') }}</label>
+                        <input type="text" name="up_now_email" id="up_now_email" class="form-control"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="ce_spin" class="d-none"><i class="fa fa-spin fa-spinner"></i> </span>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+                <button type="button" class="btn btn-primary" id="btn_change_email"><i class="fa fa-save"></i> {{ __('strings.fn_submit') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="alertModalCenter" tabindex="-1" role="dialog" aria-labelledby="alertModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
@@ -194,6 +237,29 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // email change
+        $(document).on("click","#btnChangeEmail",function (){
+            event.preventDefault();
+            $("#emailModalCenter").modal("show");
+        });
+
+        $(document).on("click","#btn_change_email",function (){
+            event.preventDefault();
+
+            if ($("#up_now_password").val() === ""){
+                showAlert("{{ __('strings.lb_current_password') }}");
+                return;
+            }
+
+            if ($("#up_now_email").val() === ""){
+                showAlert("{{ __('strings.str_insert_email') }}");
+                return;
+            }
+
+            $("#ce_spin").removeClass("d-none");
+            $("#emailFrm").submit();
+        })
+
         $(document).on("click","#btn_change_pw",function (){
             event.preventDefault();
             $("#functionModalCenter").modal("show");

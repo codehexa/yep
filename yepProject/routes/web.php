@@ -43,6 +43,7 @@ Route::group(['middleware' => ['adminPower']],function() {
     Route::post("/userPasswordChange",[\App\Http\Controllers\UsersController::class, 'changePw']);
     Route::post("/userAdd",[\App\Http\Controllers\UsersController::class, 'addUser']);
     Route::post("/userStopDo",[\App\Http\Controllers\UsersController::class, "stopUser"]);
+    Route::post("/userEmailChange",[\App\Http\Controllers\UsersController::class, "emailChange"]);
     /* academy */
     Route::get("/academyManage/{name?}",[\App\Http\Controllers\AcademyController::class, 'index'])->name('academyManage');
     Route::post("/addAcademy",[\App\Http\Controllers\AcademyController::class, 'add'])->name("addAcademy");

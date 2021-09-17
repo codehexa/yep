@@ -208,4 +208,38 @@ class UsersController extends Controller
             return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
         }
     }
+
+    public function emailChange(Request $request){
+        $user = Auth::user();
+
+        $nowId = $request->get("up_now_id");
+        $npw = $request->get("up_now_password");
+        $nemail = $request->get("up_now_email");
+
+        if (Hash::check($npw,$user->password)){
+            $cnt = User::where('email','=',$nemail)->count();
+            if ($cnt <= 0){
+                $target = User::find($nowId);
+                $old_value = $target->email;
+
+                $target->email = $nemail;
+
+                try {
+                    $target->save();
+
+                    $field_name = "email";
+
+                    $logUserCtrl = new LogUsersController();
+                    $logUserCtrl->addLog($user->id,$nowId,$field_name,$old_value,$nemail);
+
+                    return redirect("/userManage");
+                }catch (\Exception $exception){
+                    return redirect()->back()->withErrors(['msg'=>'FAIL_TO_UPDATE']);
+                }
+            }
+            return redirect()->back()->withErrors(['msg'=>'FAIL_CAUSE_DUP']);
+        }else{
+            return redirect()->back()->withErrors(['msg'=>'NOT_AUTH']);
+        }
+    }
 }
