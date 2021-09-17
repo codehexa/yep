@@ -70,6 +70,58 @@ class StudentsController extends Controller
         ]);
     }
 
+    public function studentsSearch($field='',$key=''){
+        $user = Auth::user();
+
+        $nowAcId = $user->academy_id;
+
+        $userPower = $user->power;
+
+        $isTeacher = "Y";
+
+        if ($userPower != Configurations::$USER_POWER_ADMIN){
+            $academies = Academies::where("id","=",$nowAcId)->orderBy('ac_name','asc')->get();
+            if ($userPower == Configurations::$USER_POWER_TEACHER){
+                $classes = Classes::where("ac_id","=",$nowAcId)
+                    ->where('teacher_id',$user->id)
+                    ->orderBy('class_name','asc')->get();
+            }else{
+                $classes = Classes::where("ac_id","=",$nowAcId)->orderBy('class_name','asc')->get();
+            }
+        }else{
+            $isTeacher = "N";
+            $academies = Academies::orderBy("ac_name","asc")->get();
+            $classes = Classes::orderBy("class_name","asc")->get();
+        }
+
+        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $pageLimit = $optObj->set_value;
+
+        if ($field != "" && $key != "") {
+            if ($isTeacher == "N") {
+                $data = Students::where($field, "like", "%{$key}%")->orderBy('student_name', 'asc')->paginate($pageLimit);
+            } else {
+                $inArray = [];
+                foreach ($classes as $cls) {
+                    $inArray . push($cls->id);
+                }
+                $data = Students::whereIn("class_id", $inArray)->where($field, "like", "%{$key}%")->orderBy('student_name', 'asc')->paginate($pageLimit);
+            }
+        }else{
+            $data = [];
+        }
+
+        return view("students.index",[
+            "data"  => $data,
+            "academies" => $academies,
+            "classes"   => $classes,
+            "rAcId" => "",
+            "rClsId" => "",
+            "field" => $field,
+            "key"   => $key
+        ]);
+    }
+
     public function fileUpload(Request $request){
         $excelFile = $request->file("up_file_name");
         $acId = $request->get("up_ac_id");

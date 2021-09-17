@@ -22,9 +22,11 @@ class schoolGradesController extends Controller
 
     public function add(Request $request){
         $gName = $request->get("up_new_name");
+        $gNotSet = $request->get("up_new_not_set");
 
         $schoolGrade = new schoolGrades();
         $schoolGrade->scg_name = $gName;
+        $schoolGrade->scg_not_set = $gNotSet;
 
         $preCount = schoolGrades::orderBy('scg_index','desc')->count();
 
@@ -88,9 +90,11 @@ class schoolGradesController extends Controller
     public function store(Request $request){
         $edId = $request->get("ed_id");
         $grade = $request->get("up_new_name");
+        $notSet = $request->get("up_new_not_set");
 
         $data = schoolGrades::find($edId);
         $data->scg_name = $grade;
+        $data->scg_not_set = $notSet;
 
         $data->save();
 

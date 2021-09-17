@@ -19,11 +19,13 @@
         @endforeach
     @endif
 
+    <h6 class="text-danger mt-3">{{ __('strings.lb_only_one_code') }}</h6>
     <div class="mt-3">
         <table class="mt-3 table table-striped">
             <thead>
                 <tr class="text-center">
                     <th scope="col">#</th>
+                    <th scope="col">{{ __('strings.lb_not_set') }}</th>
                     <th scope="col">{{ __('strings.lb_grade_name') }}</th>
                     <th scope="col">{{ __('strings.lb_index') }}</th>
                     <th scope="col">{{ __('strings.lb_function') }}</th>
@@ -33,6 +35,7 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
+                    <td>{{ $datum->scg_not_set }}</td>
                     <td>{{ $datum->scg_name }}</td>
                     <td>{{ $datum->scg_index }}</td>
                     <td>
@@ -72,6 +75,13 @@
                     <div class="form-group">
                         <label for="up_new_name">{{ __('strings.lb_grade_name') }}</label>
                         <input type="text" name="up_new_name" id="up_new_name" placeholder="{{ __('strings.lb_insert_grade') }}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="up_new_not_set">{{ __('strings.lb_not_set') }}</label>
+                        <select name="up_new_not_set" id="up_new_not_set" class="form-control">
+                            <option value="N">N</option>
+                            <option value="Y">Y</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -208,6 +218,7 @@
                     if (msg.result === "true"){
                         $("#ed_id").val(msg.data.id);
                         $("#up_new_name").val(msg.data.scg_name);
+                        $("#up_new_not_set").val(msg.data.scg_not_set);
                         $("#newFrm").attr({"action":"/schoolGradeStore"});
                     }else{
                         showAlert("{{ __('strings.err_get_info') }}");

@@ -58,6 +58,24 @@
             <button class="btn btn-primary btn-sm ml-2" id="btnLoad"><i class="fa fa-arrow-alt-circle-down"></i>
                 {{ __('strings.fn_load') }}
             </button>
+
+            <label class="ml-4">{{ __('strings.lb_search_condition') }}</label>
+            <select name="up_search_field" id="up_search_field" class="form-control form-control-sm ml-2">
+                <option value="student_name"
+                        @if (isset($field) && $field == "name")
+                            selected
+                        @endif
+                >{{ __('strings.lb_name') }}</option>
+                <option value="parent_hp"
+                        @if (isset($field) && $field == "parent_hp")
+                            selected
+                        @endif
+                >{{ __('strings.lb_parent_hp') }}</option>
+            </select>
+            <input type="text" name="up_search_key" id="up_search_key" class="form-control form-control-sm ml-2" value="{{ $key ?? '' }}"/>
+            <button class="btn btn-primary btn-sm ml-2" id="btnSearch"><i class="fa fa-search"></i>
+                {{ __('strings.fn_search') }}
+            </button>
         </div>
     </div>
 
@@ -280,6 +298,26 @@
                 })
             }
         });
+
+        // 검색
+        $(document).on("click","#btnSearch",function (){
+            searchData();
+        });
+
+        $(document).on("keypress","#up_search_key",function (){
+            if (event.keyCode === 13){
+                searchData();
+            }
+        });
+
+        function searchData(){
+            if ($("#up_search_key").val() === ""){
+                showAlert("{{ __('strings.str_insert_key_value') }}");
+                return;
+            }
+
+            location.href = "/studentsSearch/" + $("#up_search_field").val() + "/" + $("#up_search_key").val();
+        }
 
         $(document).on("click","#btn_add_excel",function (){
             event.preventDefault();

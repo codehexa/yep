@@ -81,6 +81,8 @@ return [
 
     /* 학년 관리 */
     "lb_grade_manage"   => "학년 관리",
+    "lb_not_set"    => "미지정",
+    "lb_only_one_code"  => "미지정 코드는 반드시 1개 존재하여야 합니다",
     "lb_grade_title"    => "구분",
     "lb_grade_name" => "학년",
     "lb_index"  => "순서",
@@ -219,6 +221,7 @@ return [
     "str_insert_abs_id" => "학번을 입력하세요 ",
     "str_insert_teacher_name"   => "담임명을 입력하세요",
     "str_insert_school_grade"   => "학년을 입력하세요",
+    "str_insert_key_value"  => "검색 대상을 입력하세요",
 
     /* 시험 입력 폼 관리 */
     "lb_test_form_manage"   => "시험 관리",
