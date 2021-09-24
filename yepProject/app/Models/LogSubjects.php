@@ -11,7 +11,7 @@ class LogSubjects extends Model
 
     protected $table = "log_subjects";
     protected $fillable = [
-        "sj_mode","target_id","sj_old","sj_new","writer_id","sj_field"
+        "sj_mode","target_id","sj_old","sj_new","writer_id","log_field"
     ];
 
     public function Writer(){

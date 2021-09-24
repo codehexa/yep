@@ -121,7 +121,7 @@
                             @if ($item->sj_has_child == "N")
                                 @php ($field_name = "score_".$num)
                                 <td class="form-group">
-                                        <input type="number"
+                                        <input type="text"
                                                name="score_{{ $num }}[]" id="f_{{ $num }}_{{ $i }}_{{ $data[$i]["id"] }}" value="{{ $data[$i][$field_name] }}"
                                                max="{{ $item->sj_max_score }}" min="0"
                                                data-sjid="{{ $item->sj_id }}"
@@ -139,8 +139,8 @@
                                 @php ($num++)
                             @endif
                         @endforeach
-                        <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion"/> </td>
-                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" value="{{ isset($data[$i]["wordian"]) ? $data[$i]["wordian"]:"" }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian"/> </td>
+                        <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion fn_input "/> </td>
+                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ isset($data[$i]["wordian"]) ? $data[$i]["wordian"]:"" }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian fn_input "/> </td>
                         <td>
                             @if ($data[$i]["sent"] == "N")
                                 <div class="btn-group-sm btn-group">
@@ -267,6 +267,42 @@
 
         let hakgiData = [];
         let selInput;
+
+        $(document).on("keydown",".fn_input",function(){
+            let nowRow = $(this).attr("fn_row");
+            let nowHorizontalCols = $(".fn_tbody_tr").eq(nowRow);   // 현재 포커스된 인풋이 포함된 로우 tr
+            let nowFnItemIndex = $(nowHorizontalCols).find(".fn_input").index($(this));
+
+            if (event.keyCode === {{ \App\Models\Configurations::$KEY_CODE_UP }} ){
+                if (nowRow <= 0) return;
+                $(".fn_tbody_tr").eq(nowRow -1).find(".fn_input").eq(nowFnItemIndex).focus();
+                $(".fn_tbody_tr").eq(nowRow -1).find(".fn_input").eq(nowFnItemIndex).select();
+                return;
+            }
+
+            if (event.keyCode === {{ \App\Models\Configurations::$KEY_CODE_DOWN }}){
+                if (parseInt(nowRow) >= $(".fn_tbody_tr").length -1) return;
+                $(".fn_tbody_tr").eq(parseInt(nowRow) +1).find(".fn_input").eq(nowFnItemIndex).focus();
+                $(".fn_tbody_tr").eq(parseInt(nowRow) +1).find(".fn_input").eq(nowFnItemIndex).select();
+            }
+
+            if (event.keyCode === {{ \App\Models\Configurations::$KEY_CODE_LEFT }}){
+                if ($(nowHorizontalCols).find(".fn_input").index($(this)) <= 0) return;
+                if ($(this).prop("selectionStart") <= 0){
+                    $(nowHorizontalCols).find(".fn_input").eq($(nowHorizontalCols).find(".fn_input").index($(this)) -1).focus();
+                    $(nowHorizontalCols).find(".fn_input").eq($(nowHorizontalCols).find(".fn_input").index($(this)) -1).select();
+                }
+            }
+
+            if (event.keyCode === {{ \App\Models\Configurations::$KEY_CODE_RIGHT }}){
+                if ($(nowHorizontalCols).find(".fn_input").index($(this)) >= $(nowHorizontalCols).find(".fn_input").length -1) return;
+                if ($(this).prop("selectionEnd") === $(this).val().length){
+                    $(nowHorizontalCols).find(".fn_input").eq($(nowHorizontalCols).find(".fn_input").index($(this)) +1).focus();
+                    $(nowHorizontalCols).find(".fn_input").eq($(nowHorizontalCols).find(".fn_input").index($(this)) +1).select();
+                }
+            }
+        });
+
         $(document).on("keyup",".fn_input",function () {
             //console.log("row Total (Y or N) : " + $(this).attr("fn_total") + " / group : " + $(this).attr("fn_group"));
             let isTotal = $(this).attr("fn_total");
@@ -277,14 +313,13 @@
             let nowSubjectId = $(this).data("sjid");
             let nowItem = $(this);
 
-            console.log('now val : ' + nowVal);
 
             // 100 점제 환산 처리
             if (!chkMax) {
                 if (parseInt(nowVal) > parseInt(maxScore)) {
                     showAlert("{{__('strings.lb_you_input_over_point')}}");
                     $(this).val(maxScore);
-                    console.log("max score : " + chkMax);
+                    //console.log("max score : " + chkMax);
                     return;
                 }
 
@@ -302,7 +337,7 @@
                 let _depth = $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).data("depth");
                 let _total = $(".fn_tbody_tr").eq(nowRow).find(".fn_input").eq(i).attr("fn_total");
 
-                console.log("_total : " + _total + ", _depth : " + _depth);
+                //console.log("_total : " + _total + ", _depth : " + _depth);
 
                 if (_total === "N" && _depth === 0){
                     _total = "Y";
@@ -354,6 +389,7 @@
                 }
             }
         });
+
 
         $(document).on("focus",".fn_input",function (){
             $(this).select();

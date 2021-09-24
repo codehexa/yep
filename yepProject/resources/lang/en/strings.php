@@ -189,7 +189,7 @@ return [
     "str_insert_subject_group"  => "과목 영역을 입력하세요",
     "lb_loading_update"    => "업데이트 중입니다",
     "str_waiting_to_update" => "업데이트 중입니다. 잠시만 기다려 주세요",
-    "str_must_make_total"   => "하위 과목을 만들 경우, 반듯이 맨 마지막 항목은 Total 이 되게 해주세요.",
+    "str_must_make_total"   => "하위 과목을 만들 경우, 반드시 맨 마지막 항목은 Total 이 되게 해주세요.",
     "lb_total_type" => "Total 여부",
     "lb_normal_subject" => "일반",
     "lb_total_subject"  => "Total",

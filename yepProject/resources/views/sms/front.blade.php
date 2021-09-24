@@ -210,7 +210,6 @@
         @endif
         <div class="mt-3">{{ $data->links('pagination::bootstrap-4') }}</div>
     </div>
-
 </div>
 
 <div class="modal fade" id="infoModalCenter" tabindex="-1" role="dialog" aria-labelledby="infoModalCenterTitle" aria-hidden="true">

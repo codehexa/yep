@@ -174,4 +174,10 @@ class Configurations extends Model
 
     // Excel file class name seperated character
     public static $EXCEL_CLASS_RIP_CODE = "(";
+
+    // key Event Keycode
+    public static $KEY_CODE_LEFT    = 37;
+    public static $KEY_CODE_UP  = 38;
+    public static $KEY_CODE_RIGHT   = 39;
+    public static $KEY_CODE_DOWN    = 40;
 }

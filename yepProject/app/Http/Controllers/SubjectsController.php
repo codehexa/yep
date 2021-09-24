@@ -97,6 +97,7 @@ class SubjectsController extends Controller
 
                 return redirect("/subjects/{$sgrade}");
             }catch (\Exception $e){
+                //dd($e);
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_SAVE']);
             }
         }
