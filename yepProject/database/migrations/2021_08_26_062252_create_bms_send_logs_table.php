@@ -26,6 +26,9 @@ class CreateBmsSendLogsTable extends Migration
             $table->string('bsl_usage_point')->nullable()->comment('aligo 차감 포인트 ');
             $table->string('bsl_aligo_result_code')->nullable()->comment('aligo result code');
             $table->mediumText('bsl_send_text')->nullable()->comment("보내는 내용");
+            $table->enum('bsl_reservation_code',['Y','N'])->default('N')->comment('예약여부');
+            $table->date('bsl_reservation_date')->nullable()->comment('예약일자');
+            $table->string('bsl_reservation_time')->nullable()->comment('AMHHMM');
         });
     }
 

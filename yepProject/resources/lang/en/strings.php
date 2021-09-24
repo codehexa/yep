@@ -409,6 +409,9 @@ return [
     "err_first_set_hwork"   => "현재 과제 관리 데이터가 없습니다. 프로그램 실행이 중지되었습니다.",
     "err_cant_set_function" => "과제관리에서 데이터 셋팅이 필요합니다",
     "err_set_to_load"   => "데이터를 불러오기 위해 기본 정보를 셋팅하세요",
+    "lb_check_send_reservation" => "예약 전송 적용",
+    "err_check_days"    => "수업 시간을 선택하세요",
+    "err_not_proper_date"   => "현재 시간보다 10분 이후로 설정하세요",
 
     /* BMS 과목 관리 */
     "lb_subject_manage" => "과목관리",

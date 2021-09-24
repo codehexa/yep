@@ -7,6 +7,7 @@ use App\Models\Configurations;
 use App\Models\SmsPageSettings;
 use App\Models\SmsSendResults;
 use App\Models\TestAreas;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -92,6 +93,14 @@ class AligoController extends Controller
             $sms['key'] = $key;
             $sms['msg_type']    = Configurations::$ALIGO_MSG_TYPE;
 
+            if ($lmsDatum->bsl_reservation_code == Configurations::$BSL_RESERVATION_CODE_YES){
+                $sms['rdate']   = Carbon::parse($lmsDatum->bsl_reservatio_date)->format('YYYYMMDD');
+                $timeVal = $lmsDatum->bsl_reservation_time;
+                $timeVal_re    = preg_replace('/:/','',$timeVal);
+
+                $sms['rtime']   = $timeVal_re;
+            }
+
             $msgRoot = $lmsDatum->bsl_send_text;
 
             $tels = $lmsDatum->tels;
@@ -118,7 +127,11 @@ class AligoController extends Controller
             $jsonDecode = json_decode($res);
 
             if ($jsonDecode->result_code == "1"){
-                $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_SENT;
+                if ($lmsDatum->bsl_reservation_code == Configurations::$BSL_RESERVATION_CODE_YES){
+                    $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_RESERVATION;
+                }else{
+                    $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_SENT;
+                }
                 $lmsDatum->bsl_sent_date = now();
             }else{
                 $lmsDatum->bsl_result_msg = Configurations::$BMS_SENT_MESSAGE_FALSE;

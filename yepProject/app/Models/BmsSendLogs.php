@@ -12,7 +12,8 @@ class BmsSendLogs extends Model
     protected $fillable = [
         "tels","bsl_title","bsl_sent_date",
         "bsl_us_id","bsl_us_name",
-        "bsl_fault_msg","bsl_result_msg","bsl_usage_point","bsl_aligo_result_code"
+        "bsl_fault_msg","bsl_result_msg","bsl_usage_point","bsl_aligo_result_code",
+        "bsl_reservation_code","bsl_reservation_date","bsl_reservation_time"
     ];
 
     public function sentUser(){

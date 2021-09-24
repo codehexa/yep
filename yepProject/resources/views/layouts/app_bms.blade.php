@@ -25,6 +25,7 @@
 
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/jquery-ui-1.12.1/jquery-ui.js') }}" defer></script>
+    <link href="{{ asset('js/jquery-ui-1.12.1/jquery-ui.css') }}" rel="stylesheet">
 
     <script src="{{ asset('js/jquery.tmpl.js') }}" defer></script>
 

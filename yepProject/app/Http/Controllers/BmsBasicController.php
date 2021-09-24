@@ -251,6 +251,11 @@ class BmsBasicController extends Controller
         $tels = $request->get("up_us_id");
         $title = $request->get("up_info_title");
         $txt = $request->get("infoTextVal");
+        $res_code   = $request->get("res_check");
+        $res_date   = $request->get("res_date");
+        $res_time   = $request->get("res_time");
+
+        if ($res_code == "") $res_code = "N";
 
         $targetTels = [];
         $loopCount = number_format(ceil(sizeof($tels)/Configurations::$BMS_MAX_MASS_SIZE));
@@ -283,6 +288,9 @@ class BmsBasicController extends Controller
             $newData->bsl_usage_point = null;
             $newData->bsl_aligo_result_code = null;
             $newData->bsl_send_text = $txt;
+            $newData->bsl_reservation_code = $res_code;
+            $newData->bsl_reservation_date  = $res_date;
+            $newData->bsl_reservation_time  = $res_time;
 
             $newData->save();
         }

@@ -131,8 +131,16 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div id="infoText" class="h6"></div>
+                            <div class="form-inline bg-info p-1 rounded">
+                                <input type="checkbox" class="form-check-input" name="res_check" id="res_check" value="Y"/>
+                                <label for="res_check" class="form-check-label ml-1">{{ __('strings.lb_check_send_reservation') }}</label>
+                                <input type="text" name="res_date" id="res_date" class="date form-control form-control-sm ml-1" style="width:8rem;"/>
+                                <input type="time" name="res_time" id="res_time" class="form-control form-control-sm ml-1"/>
+                            </div>
+
+                            <div id="infoText" class="h6 mt-1"></div>
                             <input type="hidden" name="infoTextVal" id="infoTextVal"/>
+
                         </div>
                     </div>
                 </form>
@@ -256,6 +264,7 @@
                                     <option value="{{ $stdDay->id }}" data-len="{{ $stdDay->days_count }}" @{{if studyDays == {!! $stdDay->id !!}}}  selected @{{/if}}>{{ $stdDay->days_title }}</option>
                                 @endforeach
                                 </select>
+                                <button class="btn btn-outline-primary btn-sm fn_make_class ml-2"><i class="fa fa-bread-slice"></i> {{ __('strings.lb_make_class') }}</button>
                             </div>
 
                             <div class="form-group form-inline">
@@ -338,7 +347,6 @@
 
                     <div class="list-group-item">
                         <div class="mt-1 btn-group btn-group-sm">
-                            <button class="btn btn-outline-primary fn_make_class"><i class="fa fa-bread-slice"></i> {{ __('strings.lb_make_class') }}</button>
                             <button class="btn btn-outline-primary fn_save"><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
                             <button class="btn btn-outline-primary fn_preview"><i class="fa fa-binoculars"></i> {{ __('strings.fn_preview') }}</button>
                             <i class="fa fa-spin fa-spinner d-none excute_loader mt-2 ml-2"></i>
@@ -672,6 +680,11 @@
                 showAlert("{{ __('strings.str_must_has_classes') }}");
             }
 
+            if ($(".fn_forms_list").eq(nowPanelIndex).find(".fn_up_study_times").val() === ""){
+                showAlert("{{ __('strings.err_check_days') }}");
+                return;
+            }
+
             let innerCls = [];
 
             for(let innerI = 0; innerI < $(".fn_classes").eq(nowPanelIndex).children(".fn_forms_list_inner_child").length; innerI++){
@@ -687,12 +700,14 @@
                     showAlert("{{ __('strings.err_second_subject') }}");
                     return;
                 }
-                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(innerI).val() === ""){
-                    showAlert("{{ __('strings.err_second_teacher') }}");
-                    return;
-                }
+
                 if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_dt").eq(innerI).val() === ""){
                     showAlert("{{ __('strings.err_dt') }}");
+                    return;
+                }
+
+                if ($(".fn_classes").eq(nowPanelIndex).find(".fn_up_class_second_teacher").eq(innerI).val() === ""){
+                    showAlert("{{ __('strings.err_second_teacher') }}");
                     return;
                 }
 
@@ -946,6 +961,7 @@
                 $("#yoilForm").tmpl(nTmplData).appendTo(targetInnerList);
             }
 
+            //console.log("day len : " + daysLen);
             if (dataArray[nowPanelIndex].subItems.length <= 0){
                 for (let i=0; i < daysLen; i++){
                     dataArray[nowPanelIndex].subItems.push({});
@@ -1449,7 +1465,13 @@
             nowPanelIndex = $(".fn_sms_send").index($(this));
             let nowText = $(".fn_draw_panel_ta").eq(nowPanelIndex).val();
 
-            $("#infoModalCenter").modal("show");
+            $("#infoModalCenter").on('shown.bs.modal',function(){
+                $("#res_date").datepicker({
+                    dateFormat:'yy-mm-dd',
+                });
+                $('.ui-datepicker').css('z-index', 99999);
+                //console.log('load');
+            }).modal("show");
 
             $("#infoText").html(nowText.replace(/(?:\r\n|\r|\n)/g,'<br/>'));
             $("#infoTextVal").val(nowText);
@@ -1475,7 +1497,6 @@
                 }
             });
         });
-
 
         // replace context
         function replaceContext(flag,srcText){
@@ -1577,6 +1598,20 @@
                 return;
             }
 
+            if ($("#res_check").is(":checked")){
+                let nowDate = new Date();
+                let selTime = new Date($("#res_date").val().replaceAll("-",","));
+                selTime.setHours($("#res_time").val().substr(0,2));
+                selTime.setMinutes($("#res_time").val().substr(3,2));
+
+                let diffTime = selTime.getTime() - nowDate.getTime();
+                if (diffTime < {{ \App\Models\Configurations::$BMS_SEND_RESERVATION_TIME }}){
+                    showAlert("{{ __('strings.err_not_proper_date') }}");
+                }
+                return;
+
+            }
+
             let _title = $(".fn_class_name").eq(nowPanelIndex).text();
 
             $("#up_info_title").val(_title);
@@ -1600,7 +1635,9 @@
                     }
                 }
             })
-        })
+        });
+
+
 
         function showAlert(str){
             $("#alertModalCenter").modal("show");

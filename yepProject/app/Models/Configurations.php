@@ -93,6 +93,9 @@ class Configurations extends Model
     public static $BMS_SENT_MESSAGE_READY   = "READY";
     public static $BMS_SENT_MESSAGE_SENT   = "SENT";
     public static $BMS_SENT_MESSAGE_FALSE   = "FALSE";
+    public static $BMS_SENT_MESSAGE_RESERVATION = "RESERVATION";
+
+    public static $BMS_SEND_RESERVATION_TIME    = 10 * 60 *1000;    // 10min
 
     public static $BMS_SHEET_INFO_SENT_DATE_READY = "READY";
     public static $BMS_SHEET_INFO_SENT_DATE_FALSE = "FALSE";
@@ -149,11 +152,15 @@ class Configurations extends Model
         ["tag"=>"BOOK","title"=>"익힘책"],
         ["tag"=>"DIRECT","title"=>"직접 입력"],
     ];
-    // SDL CODES.. DB related. caution.
+    // SDL CODES. DB related. caution.
     public static $BMS_BS_CODE_NEXT = "NEXT";
     public static $BMS_BS_CODE_SAME = "SAMEDAY";
     public static $BMS_BS_CODE_BOOK = "BOOK";
     public static $BMS_BS_CODE_DIRECT = "DIRECT";
+
+    // Aligo Reservation code
+    public static $BSL_RESERVATION_CODE_YES = "Y";
+    public static $BSL_RESERVATION_CODE_NO  = "N";
 
     // Script TAG
     public static $JS_ENTER = ":ENTER:";
