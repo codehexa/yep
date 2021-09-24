@@ -1607,9 +1607,8 @@
                 let diffTime = selTime.getTime() - nowDate.getTime();
                 if (diffTime < {{ \App\Models\Configurations::$BMS_SEND_RESERVATION_TIME }}){
                     showAlert("{{ __('strings.err_not_proper_date') }}");
+                    return;
                 }
-                return;
-
             }
 
             let _title = $(".fn_class_name").eq(nowPanelIndex).text();
