@@ -83,15 +83,37 @@ class AcademyController extends Controller
 
         $academy->ac_name = $name;
         $academy->ac_tel    = $tel;
+        $academy->ac_code   = $code;
 
         try {
             $academy->save();
-            $this->logMode = "modify";
-            $this->logTarget = $id;
-            $this->logDesc = trans("logstrings.academy_modify_done",["OLD_VALUE"=>$old_name,"NEW_VALUE"=>$name]);
+            if ($old_name != $name){
+                $this->logMode = "modify";
+                $this->logTarget = $id;
+                $this->logDesc = trans("logstrings.academy_modify_done",["OLD_VALUE"=>$old_name,"NEW_VALUE"=>$name]);
 
-            $logCtrl = new LogAcademiesController();
-            $logCtrl->store($this->logCategory, $this->logMode,$this->logTarget,$this->logDesc);
+                $logCtrl = new LogAcademiesController();
+                $logCtrl->store($this->logCategory, $this->logMode,$this->logTarget,$this->logDesc);
+            }
+
+            if ($old_tel != $tel){
+                $this->logMode = "modify";
+                $this->logTarget = $id;
+                $this->logDesc = trans("logstrings.academy_modify_done",["OLD_VALUE"=>$old_tel,"NEW_VALUE"=>$tel]);
+
+                $logCtrl = new LogAcademiesController();
+                $logCtrl->store($this->logCategory, $this->logMode,$this->logTarget,$this->logDesc);
+            }
+
+            if ($old_code != $code){
+                $this->logMode = "modify";
+                $this->logTarget = $id;
+                $this->logDesc = trans("logstrings.academy_modify_done",["OLD_VALUE"=>$old_code,"NEW_VALUE"=>$code]);
+
+                $logCtrl = new LogAcademiesController();
+                $logCtrl->store($this->logCategory, $this->logMode,$this->logTarget,$this->logDesc);
+            }
+
 
             return redirect()->route("academyManage");
 
