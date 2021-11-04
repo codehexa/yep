@@ -25,6 +25,9 @@
                 @case ("CALL_TO_DEV")
                 <h4 class="text-center text-danger"> {{ __('strings.err_call_to_dev',["CODE"=>"FILE_EXCEL_FAIL"]) }}</h4>
                 @break
+                @case ("NO_TEACHER_DATA")
+                <h4 class="text-center text-danger"> {{ __('strings.no_teacher_data') }}</h4>
+                @break
             @endswitch
         @endforeach
     @endif

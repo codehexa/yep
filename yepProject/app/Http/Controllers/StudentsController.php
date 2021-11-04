@@ -178,6 +178,9 @@ class StudentsController extends Controller
                 $grade = $vals[6];
                 $clRoot = $vals[7];
                 $teacher = $vals[10];
+                if ($teacher == ""){
+                    return redirect()->back()->withErrors(['msg'=>'NO_TEACHER_DATA']);
+                }
                 $absCode = $vals[14];
 
                 // class name

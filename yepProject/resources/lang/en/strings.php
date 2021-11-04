@@ -313,6 +313,8 @@ return [
     "lb_input_sms_bottom"   => "SMS 결과 페이지 하단 내용을 입력하세요",
     "err_delete_class"  => "삭제된 클래스",
 
+    "no_teacher_data"   => "선생님 지정이 되지 않았습니다",
+
     /* BMS */
     "lb_bms_program_title"  => "수업공지 프로그램",
     "lb_bms_bbs"    => "게시글 관리",
