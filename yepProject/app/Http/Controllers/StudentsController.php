@@ -242,6 +242,15 @@ class StudentsController extends Controller
                     $clHash[$clRoot] = $nowClId;
                 }
 
+                // 반과 담임 매칭하기
+                $nowClass = Classes::find($nowClId);
+                $nowClass->teacher_id = $nowTeacherId;
+                try {
+                    $nowClass->save();
+                }catch (\Exception $exception){
+
+                }
+
                 //$cnt = Students::where('abs_id','=',$absCode)->count();
                 //dd($allAbsIds);
                 $cnt = in_array($absCode,$allAbsIds);
