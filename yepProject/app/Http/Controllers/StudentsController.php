@@ -138,6 +138,8 @@ class StudentsController extends Controller
         $students = new Students();
         $allAbsIds = $students->getAllAbsCodes();
 
+        dd($acHash);
+
         $schoolGrades = new schoolGrades();
         $not_set_grade = $schoolGrades->getNotSet();    // school_grades.scg_not_set = "Y"
 
