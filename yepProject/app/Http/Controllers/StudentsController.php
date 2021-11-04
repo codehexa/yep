@@ -141,6 +141,8 @@ class StudentsController extends Controller
         $schoolGrades = new schoolGrades();
         $not_set_grade = $schoolGrades->getNotSet();    // school_grades.scg_not_set = "Y"
 
+        dd($clHash);
+
         if (Storage::disk(Configurations::$EXCEL_FOLDER)->exists($acId."/".$tmpName)){
             return redirect()->back()->withErrors(["msg"=>"FAIL_ALREADY_HAS"]);
         }else{
