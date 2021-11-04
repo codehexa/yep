@@ -181,9 +181,13 @@ class StudentsController extends Controller
                 $absCode = $vals[14];
 
                 // class name
-                dd($clRoot);
-                $clRoot1 = substr($clRoot,0,strpos($clRoot,Configurations::$EXCEL_CLASS_RIP_CODE)); // excel 반명 추출. 학원코드 + 반코드
-                $clAcCode = substr($clRoot1,0,1);
+                if (strpos($clRoot,Configurations::$EXCEL_CLASS_RIP_CODE) > 0){
+                    $clRoot1 = substr($clRoot,0,strpos($clRoot,Configurations::$EXCEL_CLASS_RIP_CODE)); // excel 반명 추출. 학원코드 + 반코드
+                }else{
+                    $clRoot1 = $clRoot;
+                }
+
+                $clAcCode = substr($clRoot,0,1);
                 $clCode = substr($clRoot1,1,strlen($clRoot1));
 
                 $nowAcId = "";
