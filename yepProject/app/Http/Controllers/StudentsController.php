@@ -206,6 +206,9 @@ class StudentsController extends Controller
 
                 $tmpTeacherKey = $teacherName."_".$teacherAcId;
                 $nowTeacherId = "";    // 선생님 users.id
+
+                dd($teacherHash);
+
                 if (!isset($teacherHash[$tmpTeacherKey])){
                     $nowTeacherId = $users->makeNewTeacher($teacherName,$teacherAcId);
                     $teacherHash[$teacherName."_".$teacherAcId] = $nowTeacherId;

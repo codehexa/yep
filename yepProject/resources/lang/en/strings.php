@@ -29,6 +29,7 @@ return [
     "lb_target" => "대상",
     "lb_show"   => "보이기",
     "lb_loading"    => "Loading...",
+    "lb_okay"   => "확인",
 
     /* 홈 화면 */
     "lb_edit_private"   => "개인정보변경",
