@@ -194,6 +194,8 @@ class StudentsController extends Controller
                     }
                 }
 
+                dd ($nowAcId);
+
 
                 // 선생님 찾기
                 $teacherName = substr($teacher,0,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE));   // 선생님 이름만
