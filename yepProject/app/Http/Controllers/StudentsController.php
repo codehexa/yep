@@ -194,7 +194,7 @@ class StudentsController extends Controller
                     }
                 }
 
-                dd ($acHash);
+                dd ($clAcCode);
 
 
                 // 선생님 찾기
