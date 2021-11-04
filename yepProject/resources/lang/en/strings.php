@@ -310,6 +310,7 @@ return [
     "lb_authorization_to_page"  => "성적표 확인을 위한 보호자 인증",
     "lb_sms_page_bottom"    => "SMS 결과 페이지 하단 내용",
     "lb_input_sms_bottom"   => "SMS 결과 페이지 하단 내용을 입력하세요",
+    "err_delete_class"  => "삭제된 클래스",
 
     /* BMS */
     "lb_bms_program_title"  => "수업공지 프로그램",

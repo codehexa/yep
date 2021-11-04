@@ -174,7 +174,7 @@
                         <th scope="col" class="text-center">{{ $datum->id }}</th>
                         <td class="text-center">{{ $datum->Academy->ac_name }}</td>
                         <td class="text-center">{{ $datum->Grade->scg_name }}</td>
-                        <td class="text-center">{{ is_null($datum->ClassObj)? "삭제된 클래스":  $datum->ClassObj->class_name }}</td>
+                        <td class="text-center">{{ is_null($datum->ClassObj)? __('strings.err_delete_class'):  $datum->ClassObj->class_name }}</td>
                         <td class="text-center">{{ $datum->year }}</td>
                         <td class="text-center">{{ $datum->week }} {{ __('strings.lb_weeks') }}</td>
                         <td >{{ $datum->TestForm->form_title }}</td>
