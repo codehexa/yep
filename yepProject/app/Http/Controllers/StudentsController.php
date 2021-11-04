@@ -207,13 +207,17 @@ class StudentsController extends Controller
                 $tmpTeacherKey = $teacherName."_".$teacherAcId;
                 $nowTeacherId = "";    // 선생님 users.id
 
-                dd($teacherHash);
+                foreach ($teacherHash as $kt=>$vt){
+                    if ($kt == $tmpTeacherKey){
+                        $nowTeacherId = $vt;
+                        break;
+                    }
+                }
 
-                if (!isset($teacherHash[$tmpTeacherKey])){
+
+                if ($nowTeacherId == ""){
                     $nowTeacherId = $users->makeNewTeacher($teacherName,$teacherAcId);
                     $teacherHash[$teacherName."_".$teacherAcId] = $nowTeacherId;
-                }else{
-                    $nowTeacherId = $teacherHash[$tmpTeacherKey];
                 }
 
                 $nowClId = "";
