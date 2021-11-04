@@ -205,7 +205,13 @@ class StudentsController extends Controller
                 // 선생님 찾기
                 $teacherName = substr($teacher,0,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE));   // 선생님 이름만
                 $teacherAcCode = substr($teacher,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE) + 1,1); // 학원 코드
-                $teacherAcId = $acHash[$teacherAcCode]; // 선생님이 속한 학원 아이디
+                $teacherAcId = "";  // 선생님이 속한 학원 아이디
+                foreach ($acHash as $k=>$v){
+                    if ($k == $teacherAcCode){
+                        $teacherAcId = $v;
+                        break;
+                    }
+                }
 
                 $tmpTeacherKey = $teacherName."_".$teacherAcId;
                 $nowTeacherId = "";    // 선생님 users.id
