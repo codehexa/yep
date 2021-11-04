@@ -124,7 +124,7 @@ class StudentsController extends Controller
 
     public function fileUpload(Request $request){
         $excelFile = $request->file("up_file_name");
-        $acId = $request->get("up_ac_id");
+        $acId = $request->get("up_ac_id");  // ""값일 수 있음.
         $clId = $request->get("up_cl_id");
         $tmpName = "ST_".time().".".$excelFile->getClientOriginalExtension();
         $classRoot = [];
@@ -140,8 +140,6 @@ class StudentsController extends Controller
 
         $schoolGrades = new schoolGrades();
         $not_set_grade = $schoolGrades->getNotSet();    // school_grades.scg_not_set = "Y"
-
-        dd($clHash);
 
         if (Storage::disk(Configurations::$EXCEL_FOLDER)->exists($acId."/".$tmpName)){
             return redirect()->back()->withErrors(["msg"=>"FAIL_ALREADY_HAS"]);
@@ -189,11 +187,13 @@ class StudentsController extends Controller
 
                 $nowAcId = "";
 
-                if (isset($acHash[$clAcCode])){
-                    $nowAcId = $acHash[$clAcCode];  // academies.id
+                foreach($acHash as $k=>$v){
+                    if ($k == $clAcCode){
+                        $nowAcId = $v;
+                        break;
+                    }
                 }
 
-                if ($nowAcId == "") $nowAcId = $acId;
 
                 // 선생님 찾기
                 $teacherName = substr($teacher,0,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE));   // 선생님 이름만
@@ -209,11 +209,17 @@ class StudentsController extends Controller
                     $nowTeacherId = $teacherHash[$tmpTeacherKey];
                 }
 
-                if (isset($clHash[$clAcCode.$clCode])){
-                    $nowClId = $clHash[$clAcCode.$clCode];
-                }else{
-                    $nowClId = $classes->newClass($clRoot1,$nowAcId,$nowTeacherId,$not_set_grade);
-                    $clHash[$clRoot1] = $nowClId;
+                $nowClId = "";
+                foreach ($clHash as $k2=>$v2){
+                    if ($k2 == $clRoot){
+                        $nowClId = $v2;
+                        break;
+                    }
+                }
+
+                if ($nowClId == ""){
+                    $nowClId = $classes->newClass($clRoot,$nowAcId,$nowTeacherId,$not_set_grade);  // $name,$acid,$teacher_id,$not_set_id
+                    $clHash[$clRoot] = $nowClId;
                 }
 
                 //$cnt = Students::where('abs_id','=',$absCode)->count();
