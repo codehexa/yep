@@ -87,7 +87,7 @@
             <div class="text-secondary">{{ __('strings.str_there_is_no_data')}}</div>
         @endif
         <div class="mt-3">
-            {{ $data->links() }}
+            {{ $data->links("pagination::bootstrap-4") }}
         </div>
     </div>
 </div>
