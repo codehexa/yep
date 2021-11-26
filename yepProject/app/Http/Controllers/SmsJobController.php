@@ -579,7 +579,7 @@ class SmsJobController extends Controller
             }
 
             $nowSmsScore->opinion = $opinionVals[$i];
-            $nowSmsScore->woridan = $opinionVals[$i];
+            $nowSmsScore->wordian = $opinionVals[$i];
             $nowSmsScore->save();
         }
         if ($autoSave == "Y"){
