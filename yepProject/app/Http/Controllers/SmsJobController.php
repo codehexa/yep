@@ -96,7 +96,8 @@ class SmsJobController extends Controller
             }
 
             if (!in_array($clId,$myClassesIds)){
-                return redirect()->back()->withErrors(['msg'=>'ONLY_MY_CLASS']);
+
+                //return redirect()->back()->withErrors(['msg'=>'ONLY_MY_CLASS']);
             }
         }
 
