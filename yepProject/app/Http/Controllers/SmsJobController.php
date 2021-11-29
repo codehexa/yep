@@ -264,13 +264,20 @@ class SmsJobController extends Controller
         $gradeId = $request->get("section_grade");
         $year = $request->get("section_year");
 
-        if ($gradeId != ""){
-            $data = Classes::where('ac_id','=',$acId)
-                ->where('sg_id','=',$gradeId)
-                ->orderBy('class_name','asc')->get();
-        }else{
-            $data = Classes::where('ac_id','=',$acId)->orderBy('class_name','asc')->get();
+        $user = Auth::user();
+
+        if ($user->power == Configurations::$USER_POWER_TEACHER){
+            $data = Classes::where('teacher_id','=',$user->id)->orderBy('class_name','asc')->get();
+        } else {
+            if ($gradeId != ""){
+                $data = Classes::where('ac_id','=',$acId)
+                    ->where('sg_id','=',$gradeId)
+                    ->orderBy('class_name','asc')->get();
+            }else{
+                $data = Classes::where('ac_id','=',$acId)->orderBy('class_name','asc')->get();
+            }
         }
+
 
         $hakgi = new \stdClass();
 
