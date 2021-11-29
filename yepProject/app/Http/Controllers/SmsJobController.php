@@ -31,6 +31,8 @@ class SmsJobController extends Controller
     public function front($acId='',$gradeId='',$clId='',$year='',$hakgi='',$week=''){
         $user = Auth::user();
         $nowPower = $user->power;
+        $myClassesIds = [];
+        $data = [];
 
         if ($nowPower === Configurations::$USER_POWER_TEACHER){
             $acId = $user->academy_id;
@@ -47,6 +49,11 @@ class SmsJobController extends Controller
         $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
         if ($nowPower == Configurations::$USER_POWER_TEACHER){
+            $myClasses = Classes::where('teacher_id','=',$user->id)->get();
+
+            foreach ($myClasses as $myClass){
+                $myClassesIds[] = $myClass->id;
+            }
             $classes = Classes::where('teacher_id','=',$user->id)->get();
         }else{
             if ($acId != "" && $gradeId != ""){
@@ -89,19 +96,15 @@ class SmsJobController extends Controller
         $limit = $settings->set_value;
 
         if ($nowPower == Configurations::$USER_POWER_TEACHER){
-            $myClasses = Classes::where('teacher_id','=',$user->id)->get();
-            $myClassesIds = [];
-            foreach ($myClasses as $myClass){
-                $myClassesIds[] = $myClass->id;
+            if ($acId != "" && $clId != ""){
+                $data = SmsPapers::where($dataWhere)->paginate($limit);
             }
-
-            if (!in_array($clId,$myClassesIds)){
-
-                //return redirect()->back()->withErrors(['msg'=>'ONLY_MY_CLASS']);
-            }
+        }else{
+            $data = SmsPapers::where($dataWhere)->paginate($limit);
         }
 
-        $data = SmsPapers::where($dataWhere)->paginate($limit);
+
+
 
 
         $RHakgis = [];
