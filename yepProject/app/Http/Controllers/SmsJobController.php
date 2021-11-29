@@ -104,8 +104,8 @@ class SmsJobController extends Controller
             if ($clId != "") {
                 $dataWhere[] = ["cl_id",'=',$clId];
             }
-            $data = SmsPapers::where($dataWhere)->paginate($limit);
         }
+        $data = SmsPapers::where($dataWhere)->paginate($limit);
 
 
         $RHakgis = [];
