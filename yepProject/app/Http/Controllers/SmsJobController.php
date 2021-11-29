@@ -92,19 +92,14 @@ class SmsJobController extends Controller
             $myClasses = Classes::where('teacher_id','=',$user->id)->get();
             $myClassesIds = [];
             foreach ($myClasses as $myClass){
-                $myClassesIds = $myClass->id;
+                $myClassesIds[] = $myClass->id;
             }
-            $dataWhere['ac_id'] = $acId;
-            if ($clId == "") {
-                $dataWhere['cl_id'] = $myClassesIds;
-            } else {
-                $dataWhere[] = ["cl_id",'=',$clId];
-            }
-        }else{
-            if ($clId != "") {
-                $dataWhere[] = ["cl_id",'=',$clId];
+
+            if (!in_array($clId,$myClassesIds)){
+                return redirect()->back()->withErrors(['msg'=>'ONLY_MY_CLASS']);
             }
         }
+
         $data = SmsPapers::where($dataWhere)->paginate($limit);
 
 

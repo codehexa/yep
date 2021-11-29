@@ -314,6 +314,7 @@ return [
     "err_delete_class"  => "삭제된 클래스",
 
     "no_teacher_data"   => "선생님 지정이 되지 않았습니다",
+    "err_show_only_my_class"    => "오직 선생님의 반 정보만 리스트 됩니다.",
 
     /* BMS */
     "lb_bms_program_title"  => "수업공지 프로그램",

@@ -31,6 +31,9 @@
                 @case ("FAIL_TO_ADD")
                 <h4 class="text-center text-danger"> {{ __('strings.err_add_test_in_sms_paper') }}</h4>
                 @break
+                @case ("ONLY_MY_CLASS")
+                <h4 class="text-center text-danger"> {{ __('strings.err_show_only_my_class') }}</h4>
+                @break
             @endswitch
         @endforeach
     @endif
