@@ -32,7 +32,6 @@ class SmsJobController extends Controller
         $user = Auth::user();
         $nowPower = $user->power;
         $myClassesIds = [];
-        $data = [];
 
         if ($nowPower === Configurations::$USER_POWER_TEACHER){
             $acId = $user->academy_id;
@@ -102,9 +101,6 @@ class SmsJobController extends Controller
         }else{
             $data = SmsPapers::where($dataWhere)->paginate($limit);
         }
-
-
-
 
 
         $RHakgis = [];
