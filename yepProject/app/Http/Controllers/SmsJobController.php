@@ -33,6 +33,8 @@ class SmsJobController extends Controller
         $nowPower = $user->power;
         $myClassesIds = [];
 
+        $data = [];
+
         if ($nowPower === Configurations::$USER_POWER_TEACHER){
             $acId = $user->academy_id;
         }

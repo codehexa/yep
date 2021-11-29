@@ -211,7 +211,9 @@
         @if (sizeof($data) <= 0)
             <h5 class="text-dark mt-3">{{ __('strings.str_there_is_no_data') }}</h5>
         @endif
+        @if ($data->hasPages())
         <div class="mt-3">{{ $data->links('pagination::bootstrap-4') }}</div>
+        @endif
     </div>
 </div>
 
