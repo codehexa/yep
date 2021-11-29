@@ -32,6 +32,10 @@ class SmsJobController extends Controller
         $user = Auth::user();
         $nowPower = $user->power;
 
+        if ($nowPower === Configurations::$USER_POWER_TEACHER){
+            $acId = $user->academy_id;
+        }
+
         //dd("acid :".$acId." / grade : {$gradeId} / clID : {$clId} / year: {$year} / hakgi : {$hakgi} / week : {$week}");
 
         if ($nowPower != Configurations::$USER_POWER_ADMIN){
@@ -42,19 +46,24 @@ class SmsJobController extends Controller
 
         $schoolGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
-        if ($acId != "" && $gradeId != ""){
-            $classes = Classes::where('ac_id','=',$acId)
-                ->where('sg_id','=',$gradeId)
-                ->where('show','=','Y')
-                ->orderBy('class_name','asc')->get();
-        }elseif ($acId != "" && $gradeId == "") {
-            $classes = Classes::where('ac_id','=',$acId)
-                ->where('sg_id','=',$gradeId)
-                ->where('show','=','Y')
-                ->orderBy('class_name','asc')->get();
+        if ($nowPower == Configurations::$USER_POWER_TEACHER){
+            $classes = Classes::where('teacher_id','=',$user->id)->get();
         }else{
-            $classes = Classes::where('show','=','Y')->orderBy('class_name','asc')->get();
+            if ($acId != "" && $gradeId != ""){
+                $classes = Classes::where('ac_id','=',$acId)
+                    ->where('sg_id','=',$gradeId)
+                    ->where('show','=','Y')
+                    ->orderBy('class_name','asc')->get();
+            }elseif ($acId != "" && $gradeId == "") {
+                $classes = Classes::where('ac_id','=',$acId)
+                    ->where('sg_id','=',$gradeId)
+                    ->where('show','=','Y')
+                    ->orderBy('class_name','asc')->get();
+            }else{
+                $classes = Classes::where('show','=','Y')->orderBy('class_name','asc')->get();
+            }
         }
+
 
         $dataWhere = [];
         if ($acId != "") {
@@ -79,7 +88,25 @@ class SmsJobController extends Controller
         $settings = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
         $limit = $settings->set_value;
 
-        $data = SmsPapers::where($dataWhere)->paginate($limit);
+        if ($nowPower == Configurations::$USER_POWER_TEACHER){
+            $myClasses = Classes::where('teacher_id','=',$user->id)->get();
+            $myClassesIds = [];
+            foreach ($myClasses as $myClass){
+                $myClassesIds = $myClass->id;
+            }
+            $dataWhere['ac_id'] = $acId;
+            if ($clId == "") {
+                $dataWhere['cl_id'] = $myClassesIds;
+            } else {
+                $dataWhere[] = ["cl_id",'=',$clId];
+            }
+        }else{
+            if ($clId != "") {
+                $dataWhere[] = ["cl_id",'=',$clId];
+            }
+            $data = SmsPapers::where($dataWhere)->paginate($limit);
+        }
+
 
         $RHakgis = [];
 
