@@ -33,8 +33,6 @@ class SmsJobController extends Controller
         $nowPower = $user->power;
         $myClassesIds = [];
 
-        $data = [];
-
         if ($nowPower === Configurations::$USER_POWER_TEACHER){
             $acId = $user->academy_id;
         }
@@ -99,6 +97,10 @@ class SmsJobController extends Controller
         if ($nowPower == Configurations::$USER_POWER_TEACHER){
             if ($acId != "" && $clId != ""){
                 $data = SmsPapers::where($dataWhere)->paginate($limit);
+            }else{
+                $data = SmsPapers::where('ac_id','=',$acId)
+                    ->whereIn('cl_id',$myClassesIds)
+                    ->paginate($limit);
             }
         }else{
             $data = SmsPapers::where($dataWhere)->paginate($limit);
