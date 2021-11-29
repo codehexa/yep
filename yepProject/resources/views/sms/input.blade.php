@@ -134,7 +134,7 @@
                                                @else
                                                    fn_total="N"
                                                @endif
-                                               class="form-control form-control-sm text-center fn_input "/>
+                                               class="form-control form-control-sm text-center fn_input fn_scores"/>
                                 </td>
                                 @php ($num++)
                             @endif
@@ -619,7 +619,7 @@
 
             let curId = $(this).attr("fn_id");
             let scoresArray = [];
-            $.each($("input[type='number']"),function (i,obj){
+            $.each($(".fn_scores"),function (i,obj){
                 if ($(obj).attr("fn_row") === curRow){
                     scoresArray.push($(obj).val());
                 }
