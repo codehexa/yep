@@ -21,9 +21,11 @@ class CommentsController extends Controller
 
     public function index($grade='',$sjId=''){
         $sGrades = schoolGrades::orderBy('scg_index','asc')->get();
+        //dd($sGrades);
+
         $data = [];
 
-        $config = Settings::where("set_code","=",Configurations::$SETTINGS_TEST_MAX_SCORE)->first();
+        $config = Settings::where("set_code","=",Configurations::$SETTINGS_TEST_MAX_SCORE)->latest()->first();
         $maxScore = $config->set_value;
 
         $subjectArray = [];

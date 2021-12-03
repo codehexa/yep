@@ -45,7 +45,7 @@ class StudentsController extends Controller
             $classes = Classes::orderBy("class_name","asc")->get();
         }
 
-        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->latest()->first();
         $pageLimit = $optObj->set_value;
 
         if ($acid != "" && $clsId != ""){
@@ -94,7 +94,7 @@ class StudentsController extends Controller
             $classes = Classes::orderBy("class_name","asc")->get();
         }
 
-        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->latest()->first();
         $pageLimit = $optObj->set_value;
 
         if ($field != "" && $key != "") {
