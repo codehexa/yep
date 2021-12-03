@@ -57,7 +57,7 @@
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
                     <td>{{ $datum->academy->ac_name }}</td>
-                    <td>{{ $datum->school_grade->scg_name }}</td>
+                    <td>{{ isset($datum->school_grade) ? $datum->school_grade->scg_name :'none' }}</td>
                     <td>{{ $datum->class_name }}</td>
                     <td>
                         {{ is_null($datum->teacher) ? '':$datum->teacher->name }}

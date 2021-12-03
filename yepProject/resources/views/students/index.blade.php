@@ -6,6 +6,7 @@
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
         <button id="btn_add_excel" name="btn_add_excel" class="btn btn-sm btn-primary"><i class="fa fa-file-excel"></i> {{ __('strings.lb_upload_excel') }}</button>
+        <a href="#" class="btn btn-secondary btn-sm"><i class="fa fa-user-slash"></i> {{ __('strings.lb_except_class') }}</a>
     </div>
     @if ($errors->any())
         @foreach ($errors->all() as $error)

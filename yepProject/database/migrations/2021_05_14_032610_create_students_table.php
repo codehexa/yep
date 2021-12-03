@@ -27,6 +27,7 @@ class CreateStudentsTable extends Migration
             $table->string("abs_id")->unique()->comment("학원사랑에서 제공하는 고유 아이디");
             $table->string("teacher_name")->nullable();
             $table->bigInteger("ac_id")->unsigned()->default(0)->comment('academies.id');
+            $table->enum("is_live",["Y","N"])->default("Y")->nullable()->comment("퇴원학생일 경우, N");
         });
     }
 

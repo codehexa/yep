@@ -213,6 +213,7 @@ return [
     "lb_academy_label"  => "관",
     "lb_upload_excel"   => "Excel 업로드",
     "lb_excel_file" => "Excel 파일",
+    "lb_except_class"   => "퇴원학생관리",
     "lb_abs_id" => "학번",
     "lb_student_tel"    => "원생 전화번호",
     "str_select_class"  => "반을 선택하세요",
