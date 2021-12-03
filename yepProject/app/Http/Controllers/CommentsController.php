@@ -37,6 +37,8 @@ class CommentsController extends Controller
                 ->orderBy('sj_order','asc')
                 ->get();
 
+            dd($subjectRoot);
+
             foreach ($subjectRoot as $subjectR){
                 $curParent = $subjectR->id;
                 $curhas = $subjectR->has_child;
