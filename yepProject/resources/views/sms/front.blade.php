@@ -176,11 +176,11 @@
                     <tr>
                         <th scope="col" class="text-center">{{ $datum->id }}</th>
                         <td class="text-center">{{ $datum->Academy->ac_name }}</td>
-                        <td class="text-center">{{ $datum->Grade->scg_name }}</td>
+                        <td class="text-center">{{ isset($datum->Grade) ? $datum->Grade->scg_name :"<span class='text-danger'>Deleted</span>" }}</td>
                         <td class="text-center">{{ is_null($datum->ClassObj)? __('strings.err_delete_class'):  $datum->ClassObj->class_name }}</td>
                         <td class="text-center">{{ $datum->year }}</td>
                         <td class="text-center">{{ $datum->week }} {{ __('strings.lb_weeks') }}</td>
-                        <td >{{ isset($datum->TestForm) ? $datum->TestForm->form_title : "<span class='text-danger'>NONE</span>"}}</td>
+                        <td >{{ isset($datum->TestForm) ? $datum->TestForm->form_title : "<span class='text-danger'>Deleted</span>"}}</td>
                         <td class="text-center btn-group">
                             @switch($datum->sp_status)
                                 @case(\App\Models\Configurations::$SMS_STATUS_READY)
