@@ -180,7 +180,7 @@
                         <td class="text-center">{{ is_null($datum->ClassObj)? __('strings.err_delete_class'):  $datum->ClassObj->class_name }}</td>
                         <td class="text-center">{{ $datum->year }}</td>
                         <td class="text-center">{{ $datum->week }} {{ __('strings.lb_weeks') }}</td>
-                        <td >{{ $datum->TestForm->form_title }}</td>
+                        <td >{{ isset($datum->TestForm) ? $datum->TestForm->form_title : "<span class='text-danger'>NONE</span>"}}</td>
                         <td class="text-center btn-group">
                             @switch($datum->sp_status)
                                 @case(\App\Models\Configurations::$SMS_STATUS_READY)
