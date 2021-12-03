@@ -52,7 +52,7 @@
         <ul id="subjects" class="nav flex-column">
             @foreach ($data as $datum)
                 <li class="nav nav-pills flex-column mb-2 my-1" id="{{ $datum->id }}">
-                    <div class="d-flex justify-content-between border p-2">
+                    <div class="d-flex justify-content-between border p-2 list-group-item-action">
                         <h5>
                             @if ($datum->sj_type == "N")
                                 <i class="fa fa-cube"></i>
@@ -76,7 +76,7 @@
                     @if ($datum->has_child == "Y")
                         <ul class="nav flex-column fn_sortable">
                             @foreach($datum->children as $child)
-                                <li class="nav-link ml-3 my-1 border" id="{{ $child->id }}">
+                                <li class="nav-link ml-3 my-1 border list-group-item-action" id="{{ $child->id }}">
                                     <div class="d-flex justify-content-between">
                                         <h6>
                                             @if ($child->sj_type == "N")
