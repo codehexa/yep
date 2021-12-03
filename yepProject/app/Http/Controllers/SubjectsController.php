@@ -239,6 +239,17 @@ class SubjectsController extends Controller
             if ($old_has_child == "Y"){
                 Subjects::where('parent_id','=',$delid)->delete();
             }
+            if ($old_depth == 1){
+                $countChild = Subjects::where('parent_id','=',$old_parent)
+                    ->where('depth','=','1')->count();
+                $upSubject = Subjects::find($old_parent);
+                if ($countChild <= 0){
+                    $upSubject->has_child = 'N';
+                }else{
+                    $upSubject->has_child = 'Y';
+                }
+                $upSubject->save();
+            }
             Subjects::where('parent_id','=',$old_parent)->where('sj_order','>',$old_order)->where('sg_id','=',$old_gradeId)
                 ->decrement('sj_order',1);
 
