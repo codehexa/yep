@@ -25,7 +25,7 @@ class CommentsController extends Controller
 
         $data = [];
 
-        $config = Settings::where("set_code","=",Configurations::$SETTINGS_TEST_MAX_SCORE)->latest()->first();
+        $config = Settings::where("set_code","=",Configurations::$SETTINGS_TEST_MAX_SCORE)->latest();
         $maxScore = $config->set_value;
 
         $subjectArray = [];
