@@ -46,7 +46,7 @@ class StudentsController extends Controller
         }
 
         $optObjRoot = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->get();
-        $optObj = $optObjRoot->first();
+        $optObj = $optObjRoot[0];
         $pageLimit = $optObj->set_value;
 
         if ($acid != "" && $clsId != ""){
@@ -128,7 +128,7 @@ class StudentsController extends Controller
         }
 
         $optObjRoot = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->get();
-        $optObj = $optObjRoot->first();
+        $optObj = $optObjRoot[0];
         $pageLimit = $optObj->set_value;
 
         if ($field != "" && $key != "") {
@@ -340,7 +340,7 @@ class StudentsController extends Controller
 
                 }elseif ($cnt && $absCode != null){
                     $checkObj = Students::where('abs_id','=',$absCode)->get();
-                    $check = $checkObj->first();
+                    $check = $checkObj[0];
 
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
