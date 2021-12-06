@@ -404,6 +404,17 @@ class SmsJobController extends Controller
                 $newSmsSend->ssr_view = Configurations::$SMS_SEND_VIEW_N;
                 $newSmsSend->save();
                 $send_N++;
+                if ($student->student_hp != ""){
+                    $newSmsSend = new SmsSendResults();
+                    $newSmsSend->student_id = $student->id;
+                    $newSmsSend->class_id = $classId;
+                    $newSmsSend->sms_paper_code = $spCode;
+                    $newSmsSend->sms_msg = $smsReMsg;
+                    $newSmsSend->ssr_status = Configurations::$SMS_SEND_RESULTS_READY;
+                    $newSmsSend->sms_tel_no = $student->student_hp;
+                    $newSmsSend->ssr_view = Configurations::$SMS_SEND_VIEW_N;
+                    $newSmsSend->save();
+                }
             }
             $spPaper->sp_status = Configurations::$SMS_STATUS_SENT;
             $spPaper->sent_date = now();
