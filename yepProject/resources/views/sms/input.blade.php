@@ -38,7 +38,7 @@
         {{ $paperInfo->Hakgi->hakgi_name }}
         {{ __('strings.lb_week_string',["WEEK"=>$paperInfo->week]) }}
         <i class="fa fa-chevron-right"></i>
-        {{ $paperInfo->TestForm->form_title }}
+        {{ isset($paperInfo->TestForm) ? $paperInfo->TestForm->form_title : "Deleted"}}
     </h6>
 
     <div class="mt-3 btn-group">
