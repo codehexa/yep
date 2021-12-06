@@ -390,7 +390,7 @@ class SmsJobController extends Controller
         foreach($spPapers as $spPaper){
             $classId = $spPaper->cl_id;
 
-            $students = Students::where('class_id','=',$classId)->get();
+            $students = Students::where('class_id','=',$classId)->where('is_live','=','Y')->get();
             foreach ($students as $student){
                 $smsReMsg = str_replace(Configurations::$SMS_REPLACE_NAME,$student->student_name,$smsMsg);
                 $smsReMsg .= $smsURL;
@@ -551,7 +551,8 @@ class SmsJobController extends Controller
             }
         }
 
-        $students = Students::where("class_id","=",$clId)->orderBy('student_name','asc')->get();
+        $students = Students::where("class_id","=",$clId)
+            ->where('is_live','=','Y')->orderBy('student_name','asc')->get();
 
         foreach ($students as $student){
             $stId = $student->id;
