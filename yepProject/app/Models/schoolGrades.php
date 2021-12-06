@@ -15,7 +15,37 @@ class schoolGrades extends Model
     ];
 
     public function getNotSet(){
-        $sgrade = schoolGrades::where("scg_not_set",'=','Y')->first();
+        $sgradeObj = schoolGrades::where("scg_not_set",'=','Y')->get();
+        $sgrade = $sgradeObj->first();
+
         return $sgrade->id;
+    }
+
+    public function getHashTable(){
+        $data = schoolGrades::get();
+        $hTable = [];
+        foreach ($data as $datum){
+            $hTable[$datum->scg_name] = $datum->id;
+        }
+
+        return $hTable;
+    }
+
+    public function addGrade($name){
+        $sg = new schoolGrades();
+        $maxIndex = schoolGrades::max('scg_index');
+        $sg->scg_name = $name;
+        $sg_id = -1;
+        $sg->scg_index = $maxIndex;
+
+        try {
+            $sg->save();
+            $sg_id = $sg->id;
+
+        }catch (\Exception $exception){
+
+        }
+
+        return $sg_id;
     }
 }

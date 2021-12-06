@@ -128,13 +128,14 @@ Route::group(['middleware' => ['managerPower']],function() {
 
 
     /* 학생 관리 */
-    Route::get("/students/{acId?}/{clId?}",[\App\Http\Controllers\StudentsController::class,"index"])->name("students");
+    Route::get("/students/{live?}/{acId?}/{clId?}",[\App\Http\Controllers\StudentsController::class,"index"])->name("students");
     Route::get("/studentsSearch/{field}/{key}",[\App\Http\Controllers\StudentsController::class,"studentsSearch"]);
     Route::post("/excelFileUpload",[\App\Http\Controllers\StudentsController::class, "fileUpload"]);
     Route::get("/testExcel",[\App\Http\Controllers\StudentsController::class, "testExcel"]);
     Route::post("/getStudentInfoJson",[\App\Http\Controllers\StudentsController::class, "getStudentJson"]);
     Route::post("/storeStudent",[\App\Http\Controllers\StudentsController::class, "store"]);
     Route::post("/getClassesJsonInStudent",[\App\Http\Controllers\StudentsController::class, "getClasses"]);
+    Route::post("/studentReset",[\App\Http\Controllers\StudentsController::class,"studentReset"]);
 
     /* 시험 폼 관리 */
     Route::get("/testForm/{grade?}/{acId?}",[\App\Http\Controllers\TestFormsController::class, "index"]);

@@ -122,11 +122,13 @@
                         <label for="info_desc">{{ __('strings.lb_test_desc') }}</label>
                         <input type="text" name="info_desc" id="info_desc" placeholder="{{ __('strings.str_insert_form_desc') }}" class="form-control"/>
                     </div>
-                    <div class="mt-3 d-flex justify-content-center">
+                    <div class="mt-3 d-flex justify-content-between">
+                        <input type="checkbox" id="leftCheckAll" class="btn btn-sm btn-outline-primary"/>
                         <div class="btn-group">
                             <button class="btn btn-sm btn-primary" id="btnToLeft"><i class="fa fa-arrow-circle-left"></i> </button>
                             <button class="btn btn-sm btn-danger" id="btnToRight"><i class="fa fa-arrow-circle-right"></i> </button>
                         </div>
+                        <input type="checkbox" id="rightCheckAll" class="btn btn-sm btn-outline-primary"/>
                     </div>
                     <div class="d-flex justify-content-between mt-2">
                         <div class="form-group border rounded w-100 p-1 mr-1">
@@ -220,6 +222,20 @@
     </script>
 
     <script type="text/javascript">
+        // check all
+        $(document).on("click","#rightCheckAll",function (){
+            let tf = $(this).prop("checked");
+            $(".fn_subjects").each(function (i,obj){
+                $(obj).prop("checked",tf);
+            });
+        });
+
+        $(document).on("click","#leftCheckAll",function (){
+            let tf = $(this).prop("checked");
+            $(".fn_saved").each(function (i,obj){
+                $(obj).prop("checked",tf);
+            });
+        });
         // load
         $(document).on("click","#btnLoad",function (){
             event.preventDefault();

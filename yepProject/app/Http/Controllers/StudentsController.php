@@ -24,7 +24,7 @@ class StudentsController extends Controller
     public function __construct(){
         $this->middleware("auth");
     }
-    public function index($acid='',$clsId=''){
+    public function index($live='Y',$acid='',$clsId=''){
         $user = Auth::user();
 
         $nowAcId = $user->academy_id;
@@ -45,20 +45,37 @@ class StudentsController extends Controller
             $classes = Classes::orderBy("class_name","asc")->get();
         }
 
-        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $optObjRoot = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->get();
+        $optObj = $optObjRoot->first();
         $pageLimit = $optObj->set_value;
 
         if ($acid != "" && $clsId != ""){
-            $data = Students::where("class_id","=",$clsId)->orderBy('student_name','asc')->paginate($pageLimit);
+            if ($live == "A"){
+                $data = Students::where("class_id","=",$clsId)
+                    ->orderBy('student_name','asc')->paginate($pageLimit);
+            } else {
+                $data = Students::where("class_id","=",$clsId)
+                    ->where('is_live','=',$live)
+                    ->orderBy('student_name','asc')->paginate($pageLimit);
+            }
         }elseif ($acid != "" && $clsId == ""){
             $clsArray = Classes::where("ac_id","=",$acid)->get();
             $clsArrayVal = [];
             foreach($clsArray as $cls){
                 $clsArrayVal[] = $cls->id;
             }
-            $data = Students::whereIn("class_id",$clsArrayVal)->orderBy('student_name','asc')->paginate($pageLimit);
+            if ($live == "A"){
+                $data = Students::whereIn("class_id",$clsArrayVal)->orderBy('student_name','asc')->paginate($pageLimit);
+            }else{
+                $data = Students::whereIn("class_id",$clsArrayVal)->where("is_live","=",$live)->orderBy('student_name','asc')->paginate($pageLimit);
+            }
         }else {
-            $data = Students::orderBy('student_name','asc')->paginate($pageLimit);
+            if ($live == "A"){
+                $data = Students::orderBy('student_name','asc')->paginate($pageLimit);
+            }else{
+                $data = Students::where("is_live","=",$live)->orderBy('student_name','asc')->paginate($pageLimit);
+            }
+
         }
 
         return view("students.index",[
@@ -66,8 +83,24 @@ class StudentsController extends Controller
             "academies" => $academies,
             "classes"   => $classes,
             "rAcId" => $acid,
-            "rClsId" => $clsId
+            "rClsId" => $clsId,
+            "rLive" => $live
         ]);
+    }
+
+    public function studentReset(){
+        $user = Auth::user();
+
+        if ($user->power != Configurations::$USER_POWER_ADMIN){
+            $upd = DB::table('students')
+                ->where('ac_id','=',$user->academy_id)
+                ->update(['is_live'=>'N']);
+        } else {
+            $upd = DB::table('students')
+                ->update(['is_live'=>'N']);
+        }
+
+        return redirect('/students');
     }
 
     public function studentsSearch($field='',$key=''){
@@ -94,7 +127,8 @@ class StudentsController extends Controller
             $classes = Classes::orderBy("class_name","asc")->get();
         }
 
-        $optObj = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $optObjRoot = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->get();
+        $optObj = $optObjRoot->first();
         $pageLimit = $optObj->set_value;
 
         if ($field != "" && $key != "") {
@@ -123,6 +157,17 @@ class StudentsController extends Controller
     }
 
     public function fileUpload(Request $request){
+        $auth = Auth::user();
+        if ($auth->power == Configurations::$USER_POWER_ADMIN){
+            // all set student N
+            $studentsUpdate = DB::table('students')->update(['is_live'=>'N']);
+        }else{
+            //
+            $auth_academy_id = $auth->academy_id;
+            $studentsUpdate = DB::table('students')
+                ->where('ac_id','=',$auth_academy_id)
+                ->update(['is_live'=>'N']);
+        }
         $excelFile = $request->file("up_file_name");
         $acId = $request->get("up_ac_id");  // ""값일 수 있음.
         $clId = $request->get("up_cl_id");
@@ -139,6 +184,7 @@ class StudentsController extends Controller
         $allAbsIds = $students->getAllAbsCodes();
 
         $schoolGrades = new schoolGrades();
+        $gradeHashes = $schoolGrades->getHashTable();   // 해시 테이블.
         $not_set_grade = $schoolGrades->getNotSet();    // school_grades.scg_not_set = "Y"
 
         if (Storage::disk(Configurations::$EXCEL_FOLDER)->exists($acId."/".$tmpName)){
@@ -170,18 +216,28 @@ class StudentsController extends Controller
 
             for($i=4; $i < sizeof($data[0]); $i++){
                 $vals = $data[0][$i];
-                $name = $vals[1];
-                $tel = $vals[2];
-                $hp = $vals[3];
-                $parentHp = $vals[4];
-                $school = $vals[5];
-                $grade = $vals[6];
-                $clRoot = $vals[7];
-                $teacher = $vals[10];
+                $name = $vals[1];   // 이름
+                $tel = $vals[2];    // 전화번호
+                $hp = $vals[3];     // 원생HP
+                $parentHp = $vals[4];   // 부모휴대전화번호
+                $school = $vals[5]; // 학교
+                $grade = $vals[6];  // 학년
+                $excelSchoolGrade = $vals[7];   // 학년 상세
+                $clRoot = $vals[8]; // 반명
+                $teacher = $vals[11];   // 담임 선생님
                 if ($teacher == ""){
                     return redirect()->back()->withErrors(['msg'=>'NO_TEACHER_DATA']);
                 }
-                $absCode = $vals[14];
+                $absCode = $vals[15];   // 학번
+
+                //dd($gradeHashes);
+                // school grade 찾기
+                if (empty($gradeHashes[$excelSchoolGrade])){
+                    $sgGradeId = $schoolGrades->addGrade($excelSchoolGrade);
+                    $gradeHashes[$excelSchoolGrade] = $sgGradeId;
+                }else{
+                    $sgGradeId = $gradeHashes[$excelSchoolGrade];
+                }
 
                 // class name
                 if (strpos($clRoot,Configurations::$EXCEL_CLASS_RIP_CODE) > 0){
@@ -238,7 +294,7 @@ class StudentsController extends Controller
                 }
 
                 if ($nowClId == ""){
-                    $nowClId = $classes->newClass($clRoot,$nowAcId,$nowTeacherId,$not_set_grade);  // $name,$acid,$teacher_id,$not_set_id
+                    $nowClId = $classes->newClass($clRoot,$nowAcId,$nowTeacherId,$sgGradeId);  // $name,$acid,$teacher_id,$not_set_id
                     $clHash[$clRoot] = $nowClId;
                 }
 
@@ -269,6 +325,7 @@ class StudentsController extends Controller
                     $newStudent->class_id = $nowClId;
                     $newStudent->teacher_name = $teacherName;
                     $newStudent->ac_id = $nowAcId;
+                    $newStudent->is_live = 'Y';
 
                     $newStudent->save();
 
@@ -282,7 +339,8 @@ class StudentsController extends Controller
                     $ctrl->addLog($mode,$target,$field,$old,$new);
 
                 }elseif ($cnt && $absCode != null){
-                    $check = Students::where('abs_id','=',$absCode)->first();
+                    $checkObj = Students::where('abs_id','=',$absCode)->get();
+                    $check = $checkObj->first();
 
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
@@ -294,6 +352,7 @@ class StudentsController extends Controller
                     $hasClassId = $check->class_id;
                     $hasTeacher = $check->teacher_name;
                     $hasAcId = $check->ac_id;
+                    $hasLive = $check->is_live;
 
                     if ($hasAcId != $nowAcId){
                         $check->ac_id = $nowAcId;
@@ -409,6 +468,17 @@ class StudentsController extends Controller
                         $ctrl = new LogStudentsController();
                         $ctrl->addLog($mode,$target,$field,$old,$new);
                     }
+                    if ($hasLive != 'Y'){
+                        $check->is_live = 'Y';
+                        $mode = "modify";
+                        $target = $check->id;
+                        $old = $hasLive;
+                        $new = 'Y';
+                        $field = "IsLive";
+
+                        $ctrl = new LogStudentsController();
+                        $ctrl->addLog($mode,$target,$field,$old,$new);
+                    }
                     $check->save();
                 }
             } // end for
@@ -437,6 +507,7 @@ class StudentsController extends Controller
         $abs = $request->get("info_abs_id");
         $classId = $request->get("info_class_id");
         $teacherName = $request->get("info_teacher_name");
+        $isLive = $request->get("info_is_live");
 
         $oldInfo = Students::find($infoId);
 
@@ -555,6 +626,19 @@ class StudentsController extends Controller
             $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
 
             $oldInfo->teacher_name = $teacherName;
+        }
+
+        if ($isLive != $oldInfo->is_live) {
+            $lsMode = "modify";
+            $lsTarget = $infoId;
+            $oldVal = $oldInfo->is_live;
+            $newVal = $isLive;
+            $lsField = "Is Live";
+
+            $logCtrl = new LogStudentsController();
+            $logCtrl->addLog($lsMode,$lsTarget,$lsField,$oldVal,$newVal);
+
+            $oldInfo->is_live = $isLive;
         }
 
         try {

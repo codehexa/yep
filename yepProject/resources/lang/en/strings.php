@@ -30,6 +30,12 @@ return [
     "lb_show"   => "보이기",
     "lb_loading"    => "Loading...",
     "lb_okay"   => "확인",
+    "lb_all"  => "전체에서",
+    "lb_live_y"  => "등원학생",
+    "lb_live_n" => "휴원학생",
+    "lb_live_type"  => "휴원확인",
+    "lb_live_set_n" => "전체 휴원처리",
+    "lb_live_title" => "등원 상태",
 
     /* 홈 화면 */
     "lb_edit_private"   => "개인정보변경",
@@ -228,6 +234,7 @@ return [
     "str_insert_teacher_name"   => "담임명을 입력하세요",
     "str_insert_school_grade"   => "학년을 입력하세요",
     "str_insert_key_value"  => "검색 대상을 입력하세요",
+    "str_confirm_reset" => "휴원 처리하겠습니까?",
 
     /* 시험 입력 폼 관리 */
     "lb_test_form_manage"   => "시험 관리",
@@ -523,6 +530,7 @@ return [
     "fn_toggle" => "반전",
     "fn_inputs" => "입력 항목",
     "fn_go_first"   => "맨 처음으로",
+    "fn_restore"    => "복귀",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",

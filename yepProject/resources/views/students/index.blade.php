@@ -6,8 +6,9 @@
     <div class="mt-3 btn-group">
         <a href="/home" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> {{ __("strings.fn_home") }}</a>
         <button id="btn_add_excel" name="btn_add_excel" class="btn btn-sm btn-primary"><i class="fa fa-file-excel"></i> {{ __('strings.lb_upload_excel') }}</button>
-        <a href="#" class="btn btn-secondary btn-sm"><i class="fa fa-user-slash"></i> {{ __('strings.lb_except_class') }}</a>
+        <a href="#" id="btnResetDo" class="btn btn-sm btn-outline-danger"><i class="fa fa-user-slash"></i> {{ __('strings.lb_live_set_n') }}</a>
     </div>
+
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             @switch($error)
@@ -57,6 +58,13 @@
                         @endif
                     >{{ $class->class_name }}</option>
                 @endforeach
+            </select>
+
+            <label for="is_live" class="form-label ml-3">{{ __('strings.lb_live_type') }}</label>
+            <select name="is_live" id="is_live" class="form-select ml-1 form-control form-control-sm">
+                <option value="A" {{ !isset($rLive) || $rLive == "A" ? "selected":"" }}>{{ __('strings.lb_all') }}</option>
+                <option value="Y" {{ isset($rLive) && $rLive == "Y" ? "selected":"" }}>{{ __('strings.lb_live_y') }}</option>
+                <option value="N" {{ isset($rLive) && $rLive == "N" ? "selected":"" }}>{{ __('strings.lb_live_n') }}</option>
             </select>
 
             <button class="btn btn-primary btn-sm ml-2" id="btnLoad"><i class="fa fa-arrow-alt-circle-down"></i>
@@ -188,13 +196,21 @@
                         <input type="text" name="info_teacher_name" id="info_teacher_name" placeholder="{{ __('strings.str_insert_teacher_name') }}" class="form-control"/>
                     </div>
 
+                    <div class="form-group">
+                        <label for="info_is_live">{{ __('strings.lb_live_title') }}</label>
+                        <select name="info_is_live" id="info_is_live" class="form-control">
+                            <option value="Y" > {{ __('strings.lb_live_y') }}</option>
+                            <option value="N" > {{ __('strings.lb_live_n') }}</option>
+                        </select>
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
                 <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
                 <button type="button" class="btn btn-primary" id="btnStSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_okay') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
-                <button type="button" class="btn btn-danger d-none" id="btnTaDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+                <button type="button" class="btn btn-danger d-none" id="btnRestore"><i class="fa fa-trash-restore-alt"></i> {{ __('strings.fn_restore') }}</button>
             </div>
         </div>
     </div>
@@ -277,6 +293,14 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // 전체 휴원처리 액션
+        $(document).on("click","#btnResetDo",function (){
+            $("#confirmModalCenter").modal("show");
+            $("#fn_confirm_body").html(" {{ __('strings.str_confirm_reset') }}");
+
+            $("#delFrm").prop({"action":"studentReset"}).submit();
+        });
+
         // 관 선택을 변경했을 때 이벤트
         $(document).on("change","#section_academy",function (){
             //
@@ -357,13 +381,16 @@
             event.preventDefault();
             let acId = $("#section_academy").val();
             let clId = $("#section_class").val();
+            let liveId = $("#is_live").val();
+
+            if (liveId == "") liveId = "A";
 
             if (acId !== "" && clId !== ""){
-                location.href = "/students/" + acId + "/" + clId;
+                location.href = "/students/" + liveId + "/" + acId + "/" + clId;
             }else if (acId !== "" && clId === ""){
-                location.href = "/students/" + acId;
+                location.href = "/students/" + liveId + "/" + acId;
             }else {
-                location.href = "/students";
+                location.href = "/students/" + liveId;
             }
         });
 
@@ -400,6 +427,7 @@
                         $("#info_abs_id").val(msg.data.abs_id);
                         $("#info_class_id").val(msg.data.class_id);
                         $("#info_teacher_name").val(msg.data.teacher_name);
+                        $("#info_is_live").val(msg.data.is_live);
 
                         $("#fn_loading").addClass("d-none");
                     }else{
