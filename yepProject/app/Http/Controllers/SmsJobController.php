@@ -298,7 +298,7 @@ class SmsJobController extends Controller
 
     public function getTestFormsJson(Request $request){
         $acId = $request->get("section_academy");
-        $gradeId = $request->get("section_grade");
+        $gradeId = $request->get("up_grade_id");
 
         if (is_null($acId)) $acId = 0;
 
