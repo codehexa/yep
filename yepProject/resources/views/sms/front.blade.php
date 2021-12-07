@@ -189,7 +189,7 @@
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SENT)
                                 <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
-                                @if isset($datum->TestForm)
+                                @if (isset($datum->TestForm))
                                 <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
                                 @endif
                                 @break
