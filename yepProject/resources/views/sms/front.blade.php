@@ -239,7 +239,7 @@
                     <div class="row pl-1 pr-1">
                         <div class="col border mr-1" style="height: 300px;">
                             <h6>{{ __('strings.lb_test_title') }}</h6>
-                            <div class="list-group overflow-auto list-group-flush" id="ls_forms" style="height:250px;"></div>
+                            <div class="list-group overflow-auto list-group-flush overflow-scroll" id="ls_forms" style="height:250px;"></div>
                         </div>
                         <div class="col border ml-1" style="height: 300px;">
                             <h6>{{ __('strings.lb_subjects') }}</h6>
