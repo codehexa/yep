@@ -32,7 +32,7 @@
     <div class="mt-3 form-group">
         <div class="form-inline">
 
-            <label for="section_grade" class="form-label ml-3">{{ __('strings.lb_section_grades') }}</label>
+            <label for="section_grade" class="form-label">{{ __('strings.lb_section_grades') }}</label>
             <select name="section_grade" id="section_grade" class="form-select ml-1 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
                 @foreach ($schoolGrades as $schoolGrade)
@@ -248,7 +248,7 @@
         $(document).on("click","#btn_add",function (){
             event.preventDefault();
             if ($("#section_grade").val() === ""){
-                showAlert("{{ __('strings.str_select_grade') }}");
+                showAlert("{{ __('strings.str_select_grades') }}");
                 return;
             }
 
