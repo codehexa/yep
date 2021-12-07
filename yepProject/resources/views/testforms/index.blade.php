@@ -31,17 +31,7 @@
 
     <div class="mt-3 form-group">
         <div class="form-inline">
-            <label for="section_academy" class="form-label">{{ __('strings.lb_academy_label') }}</label>
-            <select name="section_academy" id="section_academy" class="form-select ml-1 form-control form-control-sm">
-                <option value="">{{ __('strings.fn_all') }}</option>
-                @foreach ($academies as $academy)
-                    <option value="{{ $academy->id }}"
-                    @if ($rAcId != '' && $rAcId == $academy->id)
-                        selected
-                    @endif
-                    >{{ $academy->ac_name }}</option>
-                @endforeach
-            </select>
+
             <label for="section_grade" class="form-label ml-3">{{ __('strings.lb_section_grades') }}</label>
             <select name="section_grade" id="section_grade" class="form-select ml-1 form-control form-control-sm">
                 <option value="">{{ __('strings.fn_all') }}</option>
@@ -240,10 +230,8 @@
         $(document).on("click","#btnLoad",function (){
             event.preventDefault();
 
-            if ($("#section_grade").val() !== "" && $("#section_academy").val() === "") {
+            if ($("#section_grade").val() !== "") {
                 location.href = "/testForm/" + $("#section_grade").val();
-            }else if ($("#section_grade").val() !== "" && $("#section_academy").val() !== "") {
-                location.href = "/testForm/" + $("#section_grade").val() + "/" + $("#section_academy").val();
             }else{
                 location.href = "/testForm";
             }
@@ -379,7 +367,6 @@
 
             $("#fn_loading").removeClass("d-none");
 
-            $("#up_ac_id").val($("#section_academy").val());
             $("#up_grade_id").val($("#section_grade").val());
 
             $("#tfFrm").submit();
@@ -423,11 +410,6 @@
                         subjectDataSet = [];    // initial
                         savedDataSet = [];  // initail
 
-                        if (msg.tfData.ac_id === 0){
-                            $("#section_academy")[0].selectedIndex = 0;
-                        }else{
-                            $("#section_academy").val(msg.tfData.ac_id);
-                        }
 
                         if (msg.tfData.grade_id === 0){
                             $("#section_grade")[0].selectedIndex = 0;

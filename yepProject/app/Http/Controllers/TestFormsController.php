@@ -24,7 +24,7 @@ class TestFormsController extends Controller
         $this->middleware("auth");
     }
 
-    public function index($gradeId ='',$acId=''){
+    public function index($gradeId =''){
         $academies = Academies::orderBy('ac_name','asc')->get();
         $scGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
@@ -32,7 +32,6 @@ class TestFormsController extends Controller
         $limit = $config->set_value;
 
         $wheres = [];
-        if ($acId != "") $wheres[] = ["ac_id",'=',$acId];
         if ($gradeId != "") $wheres[] = ["grade_id","=",$gradeId];
 
         if (sizeof($wheres) > 0){
@@ -45,7 +44,7 @@ class TestFormsController extends Controller
             [
                 'data'=>$data,'academies'=>$academies,
                 'schoolGrades'=>$scGrades,
-                'rAcId'=>$acId,'rGradeId'=>$gradeId
+                'rGradeId'=>$gradeId
             ]
         );
     }

@@ -138,7 +138,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/studentReset",[\App\Http\Controllers\StudentsController::class,"studentReset"]);
 
     /* 시험 폼 관리 */
-    Route::get("/testForm/{grade?}/{acId?}",[\App\Http\Controllers\TestFormsController::class, "index"]);
+    Route::get("/testForm/{grade?}",[\App\Http\Controllers\TestFormsController::class, "index"]);
     Route::post("/testFormSubjectsJson",[\App\Http\Controllers\TestFormsController::class, "getSubjects"]);
     Route::post("/storeTestForm",[\App\Http\Controllers\TestFormsController::class, "store"]);
     Route::post("/getTestFormJson",[\App\Http\Controllers\TestFormsController::class, "getTestFormData"]);
