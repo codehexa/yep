@@ -666,11 +666,12 @@
         // 불러오기 버튼 클릭 시
         $(document).on("click","#btnLoad",function (){
             event.preventDefault();
+            /*
             if ($("#section_academy").val() === ""){
                 showAlert("{{ __('strings.str_select_academy') }}");
                 return;
             }
-/*
+
 
             if ($("#section_grade").val() === ""){
                 showAlert("{{ __('strings.str_select_grades') }}");
