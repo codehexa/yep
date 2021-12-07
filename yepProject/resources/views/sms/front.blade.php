@@ -670,6 +670,7 @@
                 showAlert("{{ __('strings.str_select_academy') }}");
                 return;
             }
+/*
 
             if ($("#section_grade").val() === ""){
                 showAlert("{{ __('strings.str_select_grades') }}");
@@ -690,6 +691,7 @@
                 showAlert("{{ __('strings.str_select_hakgi') }}");
                 return;
             }
+*/
 
             location.href = "/SmsFront/" + $("#section_academy").val() + "/" + $("#section_grade").val() + "/" + $("#section_class").val() +
                 "/" + $("#section_year").val() + "/" + $("#section_hakgi").val() + "/" + $("#section_weeks").val();
