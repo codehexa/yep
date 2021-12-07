@@ -323,6 +323,7 @@ return [
 
     "no_teacher_data"   => "선생님 지정이 되지 않았습니다",
     "err_show_only_my_class"    => "오직 선생님의 반 정보만 리스트 됩니다.",
+    "sms_excel_download"    => "Download",
 
     /* BMS */
     "lb_bms_program_title"  => "수업공지 프로그램",
@@ -556,5 +557,15 @@ return [
     "err_no_student"    => "매칭되는 자료가 없습니다",
     "err_fail_to_new_add_dup"   => "기존 등록된 E-Mail 이 있습니다",
     "err_input_title"   => "제목을 입력하세요",
+
+    /* Excel Strings */
+    "exc_student_info"   => "원생 자료",
+    "exc_week_pre"   => "WEEK :NO",
+    "exc_student_name"  => "원생명",
+    "exc_school"    => "학교",
+    "exc_grade" => "학년",
+    "exc_class" => "반",
+    "exc_teacher"   => "담임",
+    "wait_to_download_and_get_bottom"   => "파일이 다운로드 될 때 까지 잠시만 기다려 주세요. 브라우저 하단에 다운로드 파일 링크가 생깁니다.",
 
 ];

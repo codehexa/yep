@@ -164,6 +164,7 @@ Route::post("/saveMatching",[\App\Http\Controllers\SmsJobController::class, "sav
 Route::post("/delSmsFront",[\App\Http\Controllers\SmsPapersController::class, "delSmsFront"]);
 Route::post("/getTestPapersJson",[\App\Http\Controllers\SmsPapersController::class,"getTestPapers"]);
 Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "addSmsPapers"]);
+Route::get("/SmsExcelDownload/{ppId}",[\App\Http\Controllers\SmsJobController::class, "SmsExcelDownload"]);
 
 
 Route::prefix('bms')->group(function(){

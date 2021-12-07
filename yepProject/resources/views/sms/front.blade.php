@@ -189,6 +189,7 @@
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SENT)
                                 <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
+                                <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SAVING)
                                 <span class="text-primary"> {{ __('strings.lb_sms_paper_saving') }} </span>
@@ -367,12 +368,40 @@
     </div>
 </div>
 
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="true" >
+        <div class="toast-header">
+            <strong class="mr-auto">Excel Download</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            {{ __('strings.wait_to_download_and_get_bottom') }}
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
 
     <script type="text/javascript">
         //
+        // excel download
+        $(document).on("click",".fn_excel",function(){
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            let linkUrl = $(this).attr("href");
+
+            location.href = linkUrl;
+
+            $('.toast').toast({
+                delay: 4000
+            }).toast("show");
+        });
+
         let hakgiData = [];
         let selInput;
         // 년도 변경 시

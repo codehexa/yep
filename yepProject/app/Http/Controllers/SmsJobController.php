@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TestExcelExport;
 use App\Models\Academies;
 use App\Models\Classes;
 use App\Models\Configurations;
@@ -20,6 +21,7 @@ use App\Models\TestFormsItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SmsJobController extends Controller
 {
@@ -187,7 +189,7 @@ class SmsJobController extends Controller
             $hakgiDatum = Hakgi::find($hakgi);
             $hakgiMax = $hakgiDatum->weeks;
 
-            $students = Students::where("class_id","=",$classId)->get();
+            $students = Students::where("class_id","=",$classId)->where('is_live','=','Y')->get();
 
             foreach ($students as $student){
                 $stId = $student->id;
@@ -641,5 +643,18 @@ class SmsJobController extends Controller
         }catch (\Exception $exception){
             return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
         }
+    }
+
+    // excel download
+    public function SmsExcelDownload($ppId){
+        // 프린트용 템플릿은 views/exports/papers.blade.php 사용
+        // 데이터 클래스는 app/Exports/TestExcelExport.php 사용
+        $paper = SmsPapers::find($ppId);
+        $testform = TestForms::find($paper->tf_id);
+        $classInfo = Classes::find($paper->cl_id);
+        $academyInfo = Academies::find($paper->ac_id);
+
+        $excelFilename = date("Ymd").$academyInfo->ac_name."_".$classInfo->class_name."_".$paper->year."_".$paper->week."_".$testform->form_title.".xlsx";
+        return Excel::download(new TestExcelExport($ppId),$excelFilename);
     }
 }
