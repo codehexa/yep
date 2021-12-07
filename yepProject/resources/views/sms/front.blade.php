@@ -237,13 +237,13 @@
                     <input type="hidden" name="up_hakgi" id="up_hakgi"/>
                     <input type="hidden" name="up_week" id="up_week"/>
                     <div class="row pl-1 pr-1">
-                        <div class="col border mr-1" style="height: 250px;">
+                        <div class="col border mr-1" style="height: 300px;">
                             <h6>{{ __('strings.lb_test_title') }}</h6>
                             <div class="list-group overflow-auto list-group-flush" id="ls_forms" style="height:250px;"></div>
                         </div>
-                        <div class="col border ml-1" style="height: 250px;">
+                        <div class="col border ml-1" style="height: 300px;">
                             <h6>{{ __('strings.lb_subjects') }}</h6>
-                            <div class="list-group overflow-auto list-group-flush" id="ls_subjects"></div>
+                            <div class="list-group overflow-auto list-group-flush" id="ls_subjects" style="height:250px;"></div>
                         </div>
                     </div>
                 </form>
