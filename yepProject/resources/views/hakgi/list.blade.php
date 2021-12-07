@@ -52,7 +52,7 @@
             @foreach($data as $datum)
                 <tr class="text-center">
                     <th scope="row">{{ $datum->id }}</th>
-                    <td>{{ $datum->SchoolGrades->scg_name }}</td>
+                    <td>{{ isset($datum->SchoolGrades)? $datum->SchoolGrades->scg_name :"Deleted"}}</td>
                     <td>{{ $datum->hakgi_name }}</td>
                     <td>{{ $datum->weeks }}</td>
                     <td>{{ $datum->show }}</td>
