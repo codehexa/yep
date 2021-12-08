@@ -535,6 +535,7 @@ return [
     "fn_go_first"   => "맨 처음으로",
     "fn_restore"    => "복귀",
 
+
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",
     "err_fail_to_save"  => "저장하는데 실패했습니다",
