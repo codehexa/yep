@@ -146,7 +146,7 @@
                             @if ($data[$i]["sent"] == "N")
                                 <div class="btn-group-sm btn-group">
                                     <a href="#" class="btn btn-primary btn-sm fn_item text-nowrap" fn_id="{{ $data[$i]["id"] }}" fn_item_row="{{ $i }}">
-                                        <span class="fa fa-spin fa-spinner fn_fa_{{ $i }} d-none"></span> {{ __('strings.fn_save') }}</a>
+                                        <span class="fa fa-spin fa-spinner fn_fa_{{ $i }} d-none"></span> <span class="text-nowrap"{{ __('strings.fn_save') }}</a>
                                 </div>
                             @else
                                 <span class="btn btn-secondary btn-sm">{{ __('strings.lb_sent') }}</span>
