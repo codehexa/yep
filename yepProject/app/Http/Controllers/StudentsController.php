@@ -263,7 +263,7 @@ class StudentsController extends Controller
                 }
 
                 // 선생님 찾기
-                $teacherName = substr($teacher,0,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE));   // 선생님 이름만
+                $teacherName = $teacher;   // 선생님 이름만. 2021.12.8. 이준영과장 요청으로 선생님 이름 그대로 저장.
                 $teacherAcCode = substr($teacher,strpos($teacher,Configurations::$EXCEL_CLASS_RIP_CODE) + 1,1); // 학원 코드
                 $teacherAcId = "";  // 선생님이 속한 학원 아이디
                 foreach ($acHash as $k=>$v){
