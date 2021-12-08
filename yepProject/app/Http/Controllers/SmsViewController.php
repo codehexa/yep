@@ -215,21 +215,16 @@ class SmsViewController extends Controller
     }
 
     // preview
-    public function viewDetailPreview(Request $request){
-        $upCode = $request->get("up_code");
-        $upTel = $request->get("up_parent_tel");
+    public function viewDetailPreview($pid){
+        $upCode = $pid;
 
-        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
+        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->first();
 
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
-        foreach($smsPapers as $smsPaper){
-            $clId = $smsPaper->cl_id;
-        }
-
-        $student = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->first();
+        $student = Students::where('class_id','=',$smsPapers->cl_id)->get()->random();
 
         $opinionsAll = [];
         $opinionN = 0;

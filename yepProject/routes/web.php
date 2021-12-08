@@ -254,7 +254,7 @@ Route::prefix('bms')->group(function(){
 /* SMS 외부에서 확인하는 라우트 */
 Route::get("/sms/viewpage/{code?}",[\App\Http\Controllers\SmsViewController::class, "smsView"]);
 Route::post("/sms/views",[\App\Http\Controllers\SmsViewController::class, "viewDetail"]);
-Route::get("/sms/preview/{pid}/{tel}",[\App\Http\Controllers\SmsViewController::class, "viewDetailPreview"]);
+Route::get("/sms/preview/{pid}",[\App\Http\Controllers\SmsViewController::class, "viewDetailPreview"]);
 
 
 /* Manuals */
