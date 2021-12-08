@@ -226,7 +226,7 @@ class StudentsController extends Controller
                 if ($teacher == ""){
                     return redirect()->back()->withErrors(['msg'=>'NO_TEACHER_DATA']);
                 }
-                $absCode = (int)$vals[15];   // 학번
+                $absCode = number_format($vals[15],"","");   // 학번
 
                 //dd($gradeHashes);
                 // school grade 찾기
