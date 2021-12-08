@@ -112,10 +112,10 @@
                             </div>
                         </th>-->
                         <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]['id'] }}" value="{{ $data[$i]['id'] }}"/>
-                        <td class="text-center">{{ $data[$i]["studentItem"]->student_name }}</td>
-                        <td class="text-center">{{ $data[$i]["studentItem"]->school_name }}</td>
-                        <td class="text-center">{{ $data[$i]["studentItem"]->school_grade }}</td>
-                        <td class="text-center">{{ $data[$i]["studentItem"]->teacher_name }}</td>
+                        <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->student_name }}</td>
+                        <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->school_name }}</td>
+                        <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->school_grade }}</td>
+                        <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->teacher_name }}</td>
 
                         @php ($num = 0)
                         @foreach ($tItems as $item)
