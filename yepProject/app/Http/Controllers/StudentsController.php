@@ -309,7 +309,7 @@ class StudentsController extends Controller
                 //dd($allAbsIds);
                 $cnt = in_array($absCode,$allAbsIds);
 
-                if ($cnt && $absCode != null){
+                if (!$cnt && $absCode != null){
                     dd($absCode);
                 }
                 if (!$cnt && $absCode != null){
