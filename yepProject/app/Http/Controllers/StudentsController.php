@@ -337,7 +337,8 @@ class StudentsController extends Controller
                     $ctrl->addLog($mode,$target,$field,$old,$new);
 
                 }elseif ($cnt && $absCode != null){
-                    $check = Students::where('abs_id','=',$absCode)->first();
+                    $checkRoot = Students::where('abs_id','=',$absCode)->get();
+                    $check = $checkRoot->first();
 
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
