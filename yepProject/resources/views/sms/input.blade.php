@@ -85,17 +85,17 @@
                                         @else
                                             rowspan="2"
                                         @endif
-                                        class="text-center">{{ $tItem->sj_title }}</th>
+                                        class="text-center text-nowrap">{{ $tItem->sj_title }}</th>
                                 @endif
                             @endforeach
-                            <th scope="col" rowspan="2"  class="text-center">{{ __('strings.lb_comment') }}</th>
-                            <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_wordian') }}</th>
-                            <th scope="col" rowspan="2"  class="text-center">{{ __('strings.lb_btn_manage') }}</th>
+                            <th scope="col" rowspan="2"  class="text-center text-nowrap">{{ __('strings.lb_comment') }}</th>
+                            <th scope="col" rowspan="2" class="text-center text-nowrap">{{ __('strings.lb_wordian') }}</th>
+                            <th scope="col" rowspan="2"  class="text-center text-nowrap">{{ __('strings.lb_btn_manage') }}</th>
                         </tr>
                         @if ($hasDouble == "Y")
                             @foreach($tItems as $tItem)
                                 @if ($tItem->sj_depth == "1")
-                                    <th scope="col" class="text-center">{{ $tItem->sj_title }}</th>
+                                    <th scope="col" class="text-center text-nowrap">{{ $tItem->sj_title }}</th>
                                 @endif
                             @endforeach
                         @endif
