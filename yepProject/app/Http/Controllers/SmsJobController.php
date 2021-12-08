@@ -441,7 +441,7 @@ class SmsJobController extends Controller
     public function saveMatch(Request $request){
         //dd($request);
         $acId = $request->get("up_academy");
-        $clId = $request->get("up_class");
+        $clIdRoot = $request->get("up_class");  // 배열. , 로 구분 가능.
         $sgId = $request->get("up_grade");
         $hgId = $request->get("up_hakgi");
         $year = $request->get("up_year");
@@ -449,72 +449,76 @@ class SmsJobController extends Controller
         $tfIds = $request->get("tf_ids");   // array
         $tfIdsString = implode(",",$tfIds);
 
-        // check
-        $wheres = [
-            ["ac_id",'=',$acId],
-            ["cl_id",'=',$clId],
-            ["sg_id",'=',$sgId],
-            ["hg_id",'=',$hgId],
-            ["year",'=',$year],
-            ["week",'=',$week]
-        ];
-        $oldValues = SmsPapers::where($wheres)->whereIn('tf_id',[$tfIdsString])->get();
-        if (sizeof($oldValues) > 0){
-            $saved_tf_ids = [];
-            $savedSpCode = "";
-            $sentValue = "";
-            foreach($oldValues as $preDatum){
-                $saved_tf_ids[] = $preDatum->tf_id;
-                $savedSpCode = $preDatum->sp_code;
-                $sentValue = $preDatum->sp_status;
-            }
+        $clIds = explode(",",$clIdRoot);
+        for ($i=0; $i < sizeof($clIds); $i++){
+            // check
+            $clId = $clIds[$i];
+            $wheres = [
+                ["ac_id",'=',$acId],
+                ["cl_id",'=',$clId],
+                ["sg_id",'=',$sgId],
+                ["hg_id",'=',$hgId],
+                ["year",'=',$year],
+                ["week",'=',$week]
+            ];
+            $oldValues = SmsPapers::where($wheres)->whereIn('tf_id',[$tfIdsString])->get();
+            if (sizeof($oldValues) > 0){
+                $saved_tf_ids = [];
+                $savedSpCode = "";
+                $sentValue = "";
+                foreach($oldValues as $preDatum){
+                    $saved_tf_ids[] = $preDatum->tf_id;
+                    $savedSpCode = $preDatum->sp_code;
+                    $sentValue = $preDatum->sp_status;
+                }
 
-            if ($sentValue != Configurations::$SMS_STATUS_READY){
-                if ($sentValue == Configurations::$SMS_STATUS_SAVING){
-                    return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SAVING"]);
+                if ($sentValue != Configurations::$SMS_STATUS_READY){
+                    if ($sentValue == Configurations::$SMS_STATUS_SAVING){
+                        return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SAVING"]);
+                    }
+                    if ($sentValue == Configurations::$SMS_STATUS_SENT){
+                        return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SENT"]);
+                    }
                 }
-                if ($sentValue == Configurations::$SMS_STATUS_SENT){
-                    return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SENT"]);
+                $compares = array_diff($tfIds,$saved_tf_ids);   // $tfIds 에 있는 요소만 남는다. 삭제할 요소
+                $add_compares = array_diff($saved_tf_ids,$tfIds);   // 입력해야할 요소.
+                // 삭제할 것.
+                for($i=0; $i < sizeof($compares); $i++){
+                    SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
                 }
-            }
-            $compares = array_diff($tfIds,$saved_tf_ids);   // $tfIds 에 있는 요소만 남는다. 삭제할 요소
-            $add_compares = array_diff($saved_tf_ids,$tfIds);   // 입력해야할 요소.
-            // 삭제할 것.
-            for($i=0; $i < sizeof($compares); $i++){
-                SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
-            }
-            for ($i=0; $i < sizeof($add_compares); $i++){
-                $newItem = new SmsPapers();
-                $newItem->writer_id = Auth::user()->id;
-                $newItem->ac_id = $acId;
-                $newItem->cl_id = $clId;
-                $newItem->sg_id = $sgId;
-                $newItem->hg_id = $hgId;
-                $newItem->year = $year;
-                $newItem->week = $week;
-                $newItem->tf_id = $add_compares[$i];
-                $newItem->sp_code = $savedSpCode;
-                $newItem->sp_status = Configurations::$SMS_STATUS_READY;
-            }
-        }else{
-            // new insert
-            $spCode = $this->getSmsPaperCode();
-            for ($i=0; $i < sizeof($tfIds); $i++){
-                $newAdd = new SmsPapers();
-                $newAdd->writer_id = Auth::user()->id;
-                $newAdd->ac_id = $acId;
-                $newAdd->cl_id = $clId;
-                $newAdd->sg_id = $sgId;
-                $newAdd->hg_id = $hgId;
-                $newAdd->year = $year;
-                $newAdd->week = $week;
-                $newAdd->tf_id = $tfIds[$i];
-                $newAdd->sp_code = $spCode;
-                $newAdd->sp_status = Configurations::$SMS_STATUS_READY;
-                $newAdd->save();
+                for ($i=0; $i < sizeof($add_compares); $i++){
+                    $newItem = new SmsPapers();
+                    $newItem->writer_id = Auth::user()->id;
+                    $newItem->ac_id = $acId;
+                    $newItem->cl_id = $clId;
+                    $newItem->sg_id = $sgId;
+                    $newItem->hg_id = $hgId;
+                    $newItem->year = $year;
+                    $newItem->week = $week;
+                    $newItem->tf_id = $add_compares[$i];
+                    $newItem->sp_code = $savedSpCode;
+                    $newItem->sp_status = Configurations::$SMS_STATUS_READY;
+                }
+            }else{
+                // new insert
+                $spCode = $this->getSmsPaperCode();
+                for ($i=0; $i < sizeof($tfIds); $i++){
+                    $newAdd = new SmsPapers();
+                    $newAdd->writer_id = Auth::user()->id;
+                    $newAdd->ac_id = $acId;
+                    $newAdd->cl_id = $clId;
+                    $newAdd->sg_id = $sgId;
+                    $newAdd->hg_id = $hgId;
+                    $newAdd->year = $year;
+                    $newAdd->week = $week;
+                    $newAdd->tf_id = $tfIds[$i];
+                    $newAdd->sp_code = $spCode;
+                    $newAdd->sp_status = Configurations::$SMS_STATUS_READY;
+                    $newAdd->save();
+                }
             }
         }
-        return redirect("/SmsFront/{$acId}/{$sgId}/{$clId}/{$year}/{$hgId}/{$week}");
+        return redirect("/SmsFront/{$acId}/{$sgId}/{$clIds[0]}/{$year}/{$hgId}/{$week}");
     }
 
     public function getSmsPaperCode(){

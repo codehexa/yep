@@ -252,6 +252,7 @@ return [
 
 
     /* SMS 업무 */
+    "lb_select_classes" => "반 선택",
     "lb_sms_page_use_check"   => "사용 체크",
     "lb_blog_guide" => "블로그 가이드 코멘트",
     "lb_input_blog_guide"   => "블로그 가이드 코멘트를 입력하세요",

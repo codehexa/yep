@@ -237,6 +237,10 @@
                     <input type="hidden" name="up_hakgi" id="up_hakgi"/>
                     <input type="hidden" name="up_week" id="up_week"/>
                     <div class="row pl-1 pr-1">
+                        <div class="col border mr-1" style="height: 300px">
+                            <h6>{{ __('strings.lb_select_classes') }}</h6>
+                            <div class="list-group overflow-auto list-group-flush overflow-scroll" id="ls_classes" style="height:250px;"></div>
+                        </div>
                         <div class="col border mr-1" style="height: 300px;">
                             <h6>{{ __('strings.lb_test_title') }}</h6>
                             <div class="list-group overflow-auto list-group-flush overflow-scroll" id="ls_forms" style="height:250px;"></div>
@@ -745,6 +749,14 @@
 
         function loadCurrentForms(){
             $("#fn_loading").removeClass("d-none");
+            $("#ls_classes").empty();
+
+            $.each($("#section_class").find("option"),function (i,obj){
+                if ($(obj).val() != ""){
+                    $("<div class='list-group-item'><input type='checkbox' name='up_classes[]' id='up_classes_id_" + i + "' value='" + $(obj).val() + "' class='form-check-input'/><label for='up_classes_id_" + i + "'>" + $(obj).text() + "</label></div>").appendTo($("#ls_classes"));
+                }
+            });
+
             $.ajax({
                 type:"POST",
                 url:"/getTestFormsInSmsJson",
@@ -852,7 +864,16 @@
         $(document).on("click","#btnSubmit",function (){
             //
             event.preventDefault();
-            if ($("#section_class").val() === ""){
+            /*if ($("#section_class").val() === ""){
+                showAlert("{{ __('strings.str_select_class') }}");
+                return;
+            }*/
+            var classesIds = [];
+            $.each($("input[name='up_classes[]']:checked"),function (i,obj){
+                classesIds.push($(obj).val());
+            });
+
+            if (classesIds.length <= 0){
                 showAlert("{{ __('strings.str_select_class') }}");
                 return;
             }
@@ -875,7 +896,7 @@
             $("#fn_loading").removeClass("d-none");
             $("#up_academy").val($("#section_academy").val());
             $("#up_grade").val($("#section_grade").val());
-            $("#up_class").val($("#section_class").val());
+            $("#up_class").val(classesIds.toString());
             $("#up_year").val($("#section_year").val());
             $("#up_hakgi").val($("#section_hakgi").val());
             $("#up_week").val($("#section_weeks").val());
