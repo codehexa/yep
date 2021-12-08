@@ -341,7 +341,7 @@ class StudentsController extends Controller
                     $check = $checkRoot->first();
 
                     if (!isset($check->student_name)){
-                        dd($check);
+                        dd($check."_".$absCode);
                     }
 
                     $hasName = $check->student_name;
