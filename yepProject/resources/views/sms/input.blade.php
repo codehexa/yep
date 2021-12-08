@@ -51,7 +51,7 @@
         </div>
         <span class="d-none text-danger mt-2 ml-2" id="guide_100">{{ __('strings.lb_if_you_use_100') }}</span>
     </div>
-    <div class="mt-3 overflow-visible">
+    <div class="mt-3 overflow-auto">
         <form name="smsFrm" id="smsFrm" method="post" action="/SmsJobSave">
             @csrf
             <input type="hidden" name="saved_sp_id" id="saved_sp_id" value="{{ $spId }}"/>
