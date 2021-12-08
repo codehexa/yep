@@ -670,35 +670,31 @@
         // 불러오기 버튼 클릭 시
         $(document).on("click","#btnLoad",function (){
             event.preventDefault();
-            /*
-            if ($("#section_academy").val() === ""){
-                showAlert("{{ __('strings.str_select_academy') }}");
-                return;
+            let loadURL = "/SmsFront";
+
+            if ($("#section_academy").val() !== ""){
+                loadURL = loadURL + "/" + $("#section_academy").val();
             }
 
 
-            if ($("#section_grade").val() === ""){
-                showAlert("{{ __('strings.str_select_grades') }}");
-                return;
+            if ($("#section_grade").val() !== ""){
+                loadURL = loadURL + "/" + $("#section_grade").val();
             }
 
             if ($("#section_class").val() === ""){
-                showAlert("{{ __('strings.str_select_class') }}");
-                return;
+                loadURL = loadURL + "/" + $("#section_grade").val();
             }
 
             if ($("#section_year").val() === ""){
-                showAlert("{{ __('strings.str_select_year') }}");
-                return;
+                loadURL = loadURL + "/" + $("#section_grade").val();
             }
 
             if ($("#section_hakgi").val() === ""){
-                showAlert("{{ __('strings.str_select_hakgi') }}");
-                return;
+                loadURL = loadURL + "/" + $("#section_grade").val();
             }
-*/
 
-            location.href = "/SmsFront/" + $("#section_academy").val() + "/" + $("#section_grade").val() + "/" + $("#section_class").val() +
+            location.href = loadURL;
+            //location.href = "/SmsFront/" + $("#section_academy").val() + "/" + $("#section_grade").val() + "/" + $("#section_class").val() +
                 "/" + $("#section_year").val() + "/" + $("#section_hakgi").val() + "/" + $("#section_weeks").val();
         });
 
