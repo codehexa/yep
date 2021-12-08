@@ -681,23 +681,33 @@
 
             if ($("#section_academy").val() !== ""){
                 loadURL = loadURL + "/" + $("#section_academy").val();
+            }else{
+                loadURL = loadURL + "/ALL";
             }
 
 
             if ($("#section_grade").val() !== ""){
                 loadURL = loadURL + "/" + $("#section_grade").val();
+            }else{
+                loadURL = loadURL + "/ALL";
             }
 
             if ($("#section_class").val() !== ""){
                 loadURL = loadURL + "/" + $("#section_class").val();
+            }else{
+                loadURL = loadURL + "/ALL";
             }
 
             if ($("#section_year").val() !== ""){
                 loadURL = loadURL + "/" + $("#section_year").val();
+            }else{
+                loadURL = loadURL + "/ALL";
             }
 
             if ($("#section_hakgi").val() !== ""){
                 loadURL = loadURL + "/" + $("#section_hakgi").val();
+            }else{
+                loadURL = loadURL + "/ALL";
             }
 
             location.href = loadURL;
