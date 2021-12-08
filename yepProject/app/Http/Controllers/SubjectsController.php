@@ -236,10 +236,9 @@ class SubjectsController extends Controller
         try {
             $subject->delete();
 
-            if ($old_has_child == "Y"){
+            if ($old_depth == "0"){
                 Subjects::where('parent_id','=',$delid)->delete();
-            }
-            if ($old_depth == 1){
+            }elseif ($old_depth == 1){
                 $countChild = Subjects::where('parent_id','=',$old_parent)
                     ->where('depth','=','1')->count();
                 $upSubject = Subjects::find($old_parent);
