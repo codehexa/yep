@@ -424,7 +424,7 @@
             $.ajax({
                 url:"/getTempPage",
                 data:{
-                    "_token":$("input[name='_token']").val(),
+                    _token:'{!! csrf_token() !!}',
                     "pId":pId,
                 },
                 type:"POST",
@@ -432,7 +432,7 @@
                 success:function(msg){
                     $("#preview_panel").load("/sms/views",
                         {
-                            _token:$("#input[name='_token']").val(),
+                            _token:'{!! csrf_token() !!}',
                             up_code:msg.spcode,
                             up_parent_tel:msg.data.parent_hp
                         }
