@@ -218,7 +218,7 @@ class SmsViewController extends Controller
     public function viewDetailPreview($pid){
         $upCode = $pid;
 
-        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->first();
+        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
 
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
