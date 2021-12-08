@@ -309,6 +309,9 @@ class StudentsController extends Controller
                 //dd($allAbsIds);
                 $cnt = in_array($absCode,$allAbsIds);
 
+                if ($cnt && $absCode != null){
+                    dd($absCode);
+                }
                 if (!$cnt && $absCode != null){
                     // new
 
@@ -341,8 +344,7 @@ class StudentsController extends Controller
                     $check = $checkRoot->first();
 
                     if (!isset($check->student_name)){
-                        print_r($allAbsIds);
-                        dd($check."_".$absCode);
+                        dd("_check:".$check."_".$absCode);
                     }
 
                     $hasName = $check->student_name;
