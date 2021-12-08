@@ -155,7 +155,7 @@ class StudentsController extends Controller
     }
 
     public function addZero($v){
-        return $this->sprintf('%07d', $v);
+        return sprintf('%07d', $v);
     }
 
     public function fileUpload(Request $request){
