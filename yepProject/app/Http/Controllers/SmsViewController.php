@@ -224,7 +224,9 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
-        $student = Students::where('class_id','=',$smsPapers->cl_id)->get()->random();
+        $clId= $smsPapers->first()->cl_id;
+
+        $student = Students::where('class_id','=',$clId)->get()->random();
 
         $opinionsAll = [];
         $opinionN = 0;
