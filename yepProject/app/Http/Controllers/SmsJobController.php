@@ -699,7 +699,7 @@ class SmsJobController extends Controller
         $paper = SmsPapers::find($pId);
         $tempStudent = Students::where('class_id','=',$paper->cl_id)->get()->random();
 
-        return redirect()->json(['data'=>$tempStudent]);
+        return response()->json(['data'=>$tempStudent]);
 
     }
 }
