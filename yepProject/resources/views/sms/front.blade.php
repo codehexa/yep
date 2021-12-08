@@ -681,16 +681,16 @@
                 loadURL = loadURL + "/" + $("#section_grade").val();
             }
 
-            if ($("#section_class").val() === ""){
-                loadURL = loadURL + "/" + $("#section_grade").val();
+            if ($("#section_class").val() !== ""){
+                loadURL = loadURL + "/" + $("#section_class").val();
             }
 
-            if ($("#section_year").val() === ""){
-                loadURL = loadURL + "/" + $("#section_grade").val();
+            if ($("#section_year").val() !== ""){
+                loadURL = loadURL + "/" + $("#section_year").val();
             }
 
-            if ($("#section_hakgi").val() === ""){
-                loadURL = loadURL + "/" + $("#section_grade").val();
+            if ($("#section_hakgi").val() !== ""){
+                loadURL = loadURL + "/" + $("#section_hakgi").val();
             }
 
             location.href = loadURL;
