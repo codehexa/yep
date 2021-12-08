@@ -188,7 +188,7 @@
                                 <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SENT)
-                                <a href="#" class="btn btn-sm btn-success fn_detail_view" data-code="{{ $datum-sp_code }}"><i class="fa fa-tv"></i> {{ __('strings.fn_preview') }}</a>
+                                <a href="#" class="btn btn-sm btn-success fn_detail_view" data-code="{{ $datum->sp_code }}"><i class="fa fa-tv"></i> {{ __('strings.fn_preview') }}</a>
                                 <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                 @if (isset($datum->TestForm))
                                 <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
