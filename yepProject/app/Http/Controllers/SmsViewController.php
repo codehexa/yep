@@ -264,6 +264,10 @@ class SmsViewController extends Controller
                     ->where('week','=',$week)
                     ->first();
 
+                if (!isset($studentNowScore)){
+                    return view('sms/preview_msg',['msg'=>'NO Score']);
+                }
+
                 $teacherSays[] = $studentNowScore->opinion;
                 if (!is_null($studentNowScore->wordian)){
                     $wordians[] = $studentNowScore->wordian;
