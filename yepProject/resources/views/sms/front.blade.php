@@ -181,30 +181,33 @@
                         <td class="text-center">{{ $datum->year }}</td>
                         <td class="text-center">{{ $datum->week }} {{ __('strings.lb_weeks') }}</td>
                         <td >{!!  isset($datum->TestForm) ? $datum->TestForm->form_title : "<span class='text-danger'>Deleted</span>" !!}</td>
-                        <td class="text-center btn-group">
-                            @switch($datum->sp_status)
-                                @case(\App\Models\Configurations::$SMS_STATUS_READY)
-                                {{ __('strings.lb_sms_paper_ready') }}
-                                <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
-                                @break
-                                @case(\App\Models\Configurations::$SMS_STATUS_SENT)
-                                <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
-                                @if (isset($datum->TestForm))
-                                <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
-                                @endif
-                                @break
-                                @case(\App\Models\Configurations::$SMS_STATUS_SAVING)
-                                <span class="text-primary"> {{ __('strings.lb_sms_paper_saving') }} </span>
-                                <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
-                                @break
-                                @case(\App\Models\Configurations::$SMS_STATUS_ABLE)
-                                <button class="btn btn-primary btn-sm fn_item" fn_code="{{ $datum->sp_code }}"><i class="fa fa-paper-plane"></i> {{ __('strings.lb_sms_paper_able') }} </button>
-                                <a href="#" class="btn btn-sm btn-success fn_detail_view" data-code="{{ $datum->id }}" ><i class="fa fa-tv"></i> {{ __('strings.fn_preview') }}</a>
-                                <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-outline-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
-                                @break
-                            @endswitch
-                            <button class="btn btn-info btn-sm fn_add_item" fn_code="{{ $datum->id }}"><i class="fa fa-plus-circle"></i> {{ __('strings.lb_add_paper') }}</button>
-                            <button class="btn btn-danger btn-sm fn_del_item" fn_code="{{ $datum->id }}"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+                        <td class="d-flex justify-content-end">
+                            <div class="btn-group">
+                                @switch($datum->sp_status)
+                                    @case(\App\Models\Configurations::$SMS_STATUS_READY)
+                                    {{ __('strings.lb_sms_paper_ready') }}
+                                    <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
+                                    @break
+                                    @case(\App\Models\Configurations::$SMS_STATUS_SENT)
+                                    <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
+                                    @if (isset($datum->TestForm))
+                                        <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
+                                    @endif
+                                    @break
+                                    @case(\App\Models\Configurations::$SMS_STATUS_SAVING)
+                                    <span class="text-primary"> {{ __('strings.lb_sms_paper_saving') }} </span>
+                                    <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
+                                    @break
+                                    @case(\App\Models\Configurations::$SMS_STATUS_ABLE)
+                                    <button class="btn btn-primary btn-sm fn_item" fn_code="{{ $datum->sp_code }}"><i class="fa fa-paper-plane"></i> {{ __('strings.lb_sms_paper_able') }} </button>
+                                    <a href="#" class="btn btn-sm btn-success fn_detail_view" data-code="{{ $datum->id }}" ><i class="fa fa-tv"></i> {{ __('strings.fn_preview') }}</a>
+                                    <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-outline-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
+                                    @break
+                                @endswitch
+                                <button class="btn btn-info btn-sm fn_add_item" fn_code="{{ $datum->id }}"><i class="fa fa-plus-circle"></i> {{ __('strings.lb_add_paper') }}</button>
+                                <button class="btn btn-danger btn-sm fn_del_item" fn_code="{{ $datum->id }}"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+                            </div>
+
                         </td>
                     </tr>
                     @endforeach
