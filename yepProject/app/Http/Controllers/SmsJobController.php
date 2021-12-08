@@ -463,9 +463,7 @@ class SmsJobController extends Controller
                 ["week",'=',$week]
             ];
             $oldValues = SmsPapers::where($wheres)->whereIn('tf_id',[$tfIdsString])->get();
-            if ($i == 3){
-                dd($oldValues);
-            }
+
             if (sizeof($oldValues) > 0){
                 $saved_tf_ids = [];
                 $savedSpCode = "";
@@ -502,6 +500,7 @@ class SmsJobController extends Controller
                     $newItem->tf_id = $add_compares[$i];
                     $newItem->sp_code = $savedSpCode;
                     $newItem->sp_status = Configurations::$SMS_STATUS_READY;
+                    $newItem->save();
                 }
             }else{
                 // new insert
