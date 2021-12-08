@@ -431,9 +431,8 @@
                 dataType:"json",
                 success:function(msg){
                     $.post("/sms/preview/",{
-                        _token:'{!! csrf_token() !!}',
-                        up_code:msg.spcode,
-                        up_parent_tel:msg.tel
+                        pid:msg.spcode,
+                        tel:msg.tel
                     },function(data){
                         var w = window.open('about:blank');
                         w.document.open();
