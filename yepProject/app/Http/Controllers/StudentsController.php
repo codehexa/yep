@@ -154,6 +154,17 @@ class StudentsController extends Controller
         ]);
     }
 
+    public function eraseZero($v){
+        for ($i = 0; $i < strlen($v); $i++){
+            $res = substr($v,$i,1);
+            if ($res != '0'){
+                $endZero = $i;
+                $endPosition = strlen($v) - $endZero;
+                return substr($v,$endZero,$endPosition);
+            }
+        }
+    }
+
     public function fileUpload(Request $request){
         $auth = Auth::user();
         if ($auth->power == Configurations::$USER_POWER_ADMIN){
@@ -226,7 +237,7 @@ class StudentsController extends Controller
                 if ($teacher == ""){
                     return redirect()->back()->withErrors(['msg'=>'NO_TEACHER_DATA']);
                 }
-                $absCode = preg_replace('/(0)(\d)/','$2', $vals[15]);
+                $absCode = eraseZero($vals[15]);
 
                 //$absCode = number_format($vals[15],"","");   // 학번
 
