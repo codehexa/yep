@@ -522,7 +522,7 @@ class SmsJobController extends Controller
                 }
             }
         }
-        //return redirect("/SmsFront/{$acId}/{$sgId}/{$clIds[0]}/{$year}/{$hgId}/{$week}");
+        return redirect("/SmsFront/{$acId}/{$sgId}/{$clIds[0]}/{$year}/{$hgId}/{$week}");
     }
 
     public function getSmsPaperCode(){
