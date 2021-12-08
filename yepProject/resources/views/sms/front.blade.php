@@ -430,7 +430,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    var pop = window.open('/sms/preview/' + msg.spcode,'Preview','width=500');
+                    var pop = window.open('/sms/preview/' + msg.spcode,'Preview','width=650px');
                 }
             });
         });
