@@ -238,7 +238,7 @@
                     <input type="hidden" name="up_week" id="up_week"/>
                     <div class="row pl-1 pr-1">
                         <div class="col border mr-1" style="height: 300px">
-                            <h6><input type="checkbox" id="class_cbox" class="form-check-input mr-1"/> {{ __('strings.lb_select_classes') }}</h6>
+                            <h6><input type="checkbox" id="class_cbox" class="form-check-input ml-3"/> {{ __('strings.lb_select_classes') }}</h6>
                             <div class="list-group overflow-auto list-group-flush overflow-scroll" id="ls_classes" style="height:250px;"></div>
                         </div>
                         <div class="col border mr-1" style="height: 300px;">
