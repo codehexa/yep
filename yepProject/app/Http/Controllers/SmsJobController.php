@@ -691,4 +691,15 @@ class SmsJobController extends Controller
         $excelFilename = date("Ymd").$academyInfo->ac_name."_".$classInfo->class_name."_".$paper->year."_".$paper->week."_".$testform->form_title.".xlsx";
         return Excel::download(new TestExcelExport($ppId),$excelFilename);
     }
+
+    // temp for preview
+    public function tempGet(Request $request){
+        $pId = $request->get("pId");
+
+        $paper = SmsPapers::find($pId);
+        $tempStudent = Students::where('class_id','=',$paper->cl_id)->get()->random();
+
+        return redirect()->json(['data'=>$tempStudent]);
+
+    }
 }

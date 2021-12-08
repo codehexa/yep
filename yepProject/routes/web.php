@@ -166,6 +166,7 @@ Route::post("/delSmsFront",[\App\Http\Controllers\SmsPapersController::class, "d
 Route::post("/getTestPapersJson",[\App\Http\Controllers\SmsPapersController::class,"getTestPapers"]);
 Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "addSmsPapers"]);
 Route::get("/SmsExcelDownload/{ppId}",[\App\Http\Controllers\SmsJobController::class, "SmsExcelDownload"]);
+Route::post("/getTempPage",[\App\Http\Controllers\SmsJobController::class,"tempGet"]);
 
 
 Route::prefix('bms')->group(function(){

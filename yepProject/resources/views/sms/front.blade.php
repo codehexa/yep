@@ -188,7 +188,7 @@
                                 <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.lb_input') }}</a>
                                 @break
                                 @case(\App\Models\Configurations::$SMS_STATUS_SENT)
-                                <a href="#" class="btn btn-sm btn-success fn_detail_view" data-code="{{ $datum->sp_code }}"><i class="fa fa-tv"></i> {{ __('strings.fn_preview') }}</a>
+                                <a href="#" class="btn btn-sm btn-success fn_detail_view" data-code="{{ $datum->id }}" data-spcode="{{ $datum->sp_code }}"><i class="fa fa-tv"></i> {{ __('strings.fn_preview') }}</a>
                                 <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                 @if (isset($datum->TestForm))
                                 <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
@@ -389,11 +389,55 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="previewModalCenter" tabindex="-1" role="dialog" aria-labelledby="previewModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLongTitle">{{ __('strings.fn_preview') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="preview_panel"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
 
     <script type="text/javascript">
+        // preview
+        $(document).on("click",".fn_detail_view",function (){
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            let spCode = $(this).data("spcode");
+            let pId = $(this).data("id");
+
+            $("#previewModalCenter").modal("show");
+
+            $.ajax({
+                url:"/getTempPage",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "pId":pId,
+                },
+                type:"POST",
+                dataType:"json",
+                success:function(msg){
+                    $("#preview_panel").load("/sms/views",[
+                        {"_token":$("#input[name='_token']").val()},
+                        {"up_code":spCode},
+                        {"up_parent_tel":msg.data.tel}
+                    ]);
+                }
+            });
+        });
         // 폼 매칭 반선택 전체 선택, 해제
         $(document).on("click","#class_cbox",function (){
             let box = $(this);
