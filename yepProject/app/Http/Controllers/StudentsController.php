@@ -154,15 +154,8 @@ class StudentsController extends Controller
         ]);
     }
 
-    public function eraseZero($v){
-        for ($i = 0; $i < strlen($v); $i++){
-            $res = substr($v,$i,1);
-            if ($res != '0'){
-                $endZero = $i;
-                $endPosition = strlen($v) - $endZero;
-                return substr($v,$endZero,$endPosition);
-            }
-        }
+    public function addZero($v){
+        return sprint('%07d',$v);
     }
 
     public function fileUpload(Request $request){
@@ -237,7 +230,8 @@ class StudentsController extends Controller
                 if ($teacher == ""){
                     return redirect()->back()->withErrors(['msg'=>'NO_TEACHER_DATA']);
                 }
-                $absCode = $this->eraseZero($vals[15]);
+                $absCode = $this->addZero($vals[15]);
+                dd($absCode);
 
                 //$absCode = number_format($vals[15],"","");   // 학번
 
@@ -355,11 +349,6 @@ class StudentsController extends Controller
                 }elseif ($cnt && $absCode != null){
                     $checkRoot = Students::where('abs_id','=',$absCode)->get();
                     $check = $checkRoot->first();
-
-                    if (!isset($check->student_name)){
-                        print_r($allAbsIds);
-                        dd("_check:".$check."_".$absCode);
-                    }
 
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
