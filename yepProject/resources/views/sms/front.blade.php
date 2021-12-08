@@ -430,7 +430,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    $.post("/sms/preview/" + msg.spcode  + "/" + msg.tel,function(data){
+                    $.post("/sms/preview/" + msg.spcode,function(data){
                         var w = window.open('about:blank');
                         w.document.open();
                         w.document.write(data);
