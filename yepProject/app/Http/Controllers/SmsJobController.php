@@ -465,7 +465,6 @@ class SmsJobController extends Controller
             $oldValues = SmsPapers::where($wheres)->whereIn('tf_id',[$tfIdsString])->get();
 
             if (sizeof($oldValues) > 0){
-                dd($oldValues);
                 $saved_tf_ids = [];
                 $savedSpCode = "";
                 $sentValue = "";
@@ -484,6 +483,7 @@ class SmsJobController extends Controller
                     }
                 }
                 $compares = array_diff($tfIds,$saved_tf_ids);   // $tfIds 에 있는 요소만 남는다. 삭제할 요소
+                dd($compares);
                 $add_compares = array_diff($saved_tf_ids,$tfIds);   // 입력해야할 요소.
                 // 삭제할 것.
                 for($i=0; $i < sizeof($compares); $i++){
