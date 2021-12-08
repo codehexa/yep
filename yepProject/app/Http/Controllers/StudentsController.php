@@ -308,10 +308,10 @@ class StudentsController extends Controller
                 //$cnt = Students::where('abs_id','=',$absCode)->count();
                 //dd($allAbsIds);
                 $cnt = in_array($absCode,$allAbsIds);
-
-                if (!$cnt && $absCode != null){
-                    dd($absCode);
-                }
+//
+//                if ($cnt && $absCode != null){
+//                    dd($absCode);
+//                }
                 if (!$cnt && $absCode != null){
                     // new
 
@@ -344,6 +344,7 @@ class StudentsController extends Controller
                     $check = $checkRoot->first();
 
                     if (!isset($check->student_name)){
+                        print_r($allAbsIds);
                         dd("_check:".$check."_".$absCode);
                     }
 
