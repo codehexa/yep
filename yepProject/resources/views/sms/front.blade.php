@@ -434,7 +434,7 @@
                         {
                             _token:'{!! csrf_token() !!}',
                             up_code:msg.spcode,
-                            up_parent_tel:msg.data.parent_hp
+                            up_parent_tel:msg.tel
                         }
                     );
                 }
