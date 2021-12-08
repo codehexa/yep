@@ -159,6 +159,7 @@ Route::post("/getClassesJson",[\App\Http\Controllers\SmsJobController::class, "g
 Route::post("/getTestFormsInSmsJson",[\App\Http\Controllers\SmsJobController::class, "getTestFormsJson"]);
 Route::post("/sendSms",[\App\Http\Controllers\SmsJobController::class, "sendSms"]);
 Route::post("/saveOpinion",[\App\Http\Controllers\SmsJobController::class, "saveOpinion"]);
+Route::post("/saveWordian",[\App\Http\Controllers\SmsJobController::class, "saveWordian"]);
 Route::post("/saveSmsEach",[\App\Http\Controllers\SmsJobController::class, "saveSmsEach"]);
 Route::post("/saveMatching",[\App\Http\Controllers\SmsJobController::class, "saveMatch"]);
 Route::post("/delSmsFront",[\App\Http\Controllers\SmsPapersController::class, "delSmsFront"]);

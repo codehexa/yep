@@ -141,7 +141,7 @@
                             @endif
                         @endforeach
                         <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion fn_input "/> </td>
-                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ isset($data[$i]["wordian"]) ? $data[$i]["wordian"]:"" }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian fn_input "/> </td>
+                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ isset($data[$i]["wordian"]) ? $data[$i]["wordian"]:"" }}" fn_wd_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian fn_input "/> </td>
                         <td>
                             @if ($data[$i]["sent"] == "N")
                                 <div class="btn-group-sm btn-group">
@@ -185,6 +185,36 @@
                 <button type="button" class="btn btn-primary" id="btnOpSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
                 <button type="button" class="btn btn-danger d-none" id="btnOpDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="wordianModalCenter" tabindex="-1" role="dialog" aria-labelledby="wordianModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wordianModalLongTitle">{{ __('strings.lb_insert_wordian') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="wordianFrm" id="wordianFrm" method="post" action="">
+                    @csrf
+                    <input type="hidden" name="wordian_info_id" id="wordian_info_id"/>
+                    <div class="form-group">
+                        <label for="info_wordian">{{ __('strings.lb_wordian') }}</label>
+                        <textarea type="text" name="info_wordian" id="info_wordian" placeholder="{{ __('strings.lb_insert_wordian') }}" class="form-control">
+                        </textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <i id="fn_loading" class="fa fa-spin fa-spinner mr-3 d-none"></i>
+                <button type="button" class="btn btn-primary" id="btnWordianSubmit" ><i class="fa fa-save"></i> {{ __('strings.fn_save') }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_cancel') }}</button>
+                <button type="button" class="btn btn-danger d-none" id="btnWordianDelete"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
             </div>
         </div>
     </div>
@@ -407,6 +437,16 @@
             $("#info_name").val(curOpinion).focus();
         });
 
+        // wordian click
+        $(document).on("click",".fn_wordian",function(){
+           let curWordian = $(this).val();
+           let curId = $(this).attr("fn_wd_id");
+            opinionRowId = $(this).attr("id");
+            $("#wordianModalCenter").modal("show");
+            $("#wordian_info_id").val(curId);
+            $("#info_wordian").val(curWordian).focus();
+        });
+
         // 모달에서 저장하기를 클릭할 때 이벤트
         $(document).on("click","#btnOpSubmit",function (){
             $.ajax({
@@ -426,6 +466,26 @@
                 }
             })
 
+        });
+
+        // wordian 모달에서 저장하기를 클릭할 때 이벤트
+        $(document).on("click","#btnWordianSubmit",function (){
+            $.ajax({
+                type:"POST",
+                url:"/saveWordian",
+                dataType:"json",
+                data:$("#wordianFrm").serialize(),
+                success:function (msg){
+                    if (msg.result === "true"){
+                        $("#" + opinionRowId).val($("#info_wordian").val());
+                        $("#wordianModalCenter").modal("hide");
+                        $("#info_wordian").val("");
+                    }else{
+                        showAlert("{{ __('strings.err_fail_to_save') }}");
+                        return;
+                    }
+                }
+            });
         });
 
         $(document).on("click","#btnTest",function (){

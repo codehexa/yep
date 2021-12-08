@@ -310,6 +310,7 @@ return [
     "lb_test_analysis"  => "성적 분석 의견",
     "lb_wordian"    => "Wordian",
     "lb_wordian_title"  => "Wordian",
+    "lb_insert_wordian" => "Wordian 입력하세요.",
     "lb_max_100points"  => "100점 환산 점수 제 적용",
     "lb_you_input_over_point"   => "입력 최고 점수를 초과하여 최고 점수로 자동 입력되었습니다.",
     "lb_you_input_under_point"   => "입력 최저 점수를 미달하여 최저 점수로 자동 입력되었습니다.",

@@ -354,6 +354,25 @@ class SmsJobController extends Controller
         }
     }
 
+    public function saveWordian(Request $request){
+        $nowId = $request->get("wordian_info_id");
+        $wordian = $request->get("info_wordian");
+
+        $result = "false";
+
+        $Score = SmsScores::find($nowId);
+
+        $Score->wordian = $wordian;
+
+        try {
+            $Score->save();
+            $result = "true";
+            return response()->json(["result"=>$result]);
+        }catch (\Exception $exception){
+            return response()->json(["result"=>$result]);
+        }
+    }
+
     public function saveSmsEach(Request $request){
         $scId = $request->get("scId");
         $scores = $request->get("scores");
