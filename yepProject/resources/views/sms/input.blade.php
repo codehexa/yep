@@ -121,7 +121,7 @@
                         @foreach ($tItems as $item)
                             @if ($item->sj_has_child == "N")
                                 @php ($field_name = "score_".$num)
-                                <td class="form-group text-center">
+                                <td class="form-group align-self-center">
                                         <input type="text"
                                                name="score_{{ $num }}[]" id="f_{{ $num }}_{{ $i }}_{{ $data[$i]["id"] }}" value="{{ $data[$i][$field_name] }}"
                                                max="{{ $item->sj_max_score }}" min="0"
