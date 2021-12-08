@@ -60,7 +60,7 @@
                 <thead>
                     @if (is_null($testForm))
                         <tr class="text-center">
-                            <th scope="col">#</th>
+<!--                            <th scope="col">#</th>-->
                             <th scope="col">{{ __('strings.lb_student_name') }}</th>
                             <th scope="col">{{ __('strings.lb_school_name') }}</th>
                             <th scope="col">{{ __('strings.lb_grade_name') }}</th>
@@ -72,7 +72,7 @@
                         </tr>
                     @else
                         <tr class="text-center">
-                            <th scope="col" rowspan="2" class="text-center">#</th>
+<!--                            <th scope="col" rowspan="2" class="text-center">#</th>-->
                             <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_student_name') }}</th>
                             <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_school_name') }}</th>
                             <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_grade_name') }}</th>
@@ -104,13 +104,14 @@
                 <tbody>
                 @for($i=0; $i < sizeof($data); $i++)
                     <tr class="text-center fn_tbody_tr">
-                        <th scope="row">
+<!--                        <th scope="row">
                             <div class="form-check align-self-center">
-<!--                                <input type="checkbox" name="ss_id[]" id="ss_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["id"] }}" class="form-check-input" checked/>-->
+&lt;!&ndash;                                <input type="checkbox" name="ss_id[]" id="ss_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["id"] }}" class="form-check-input" checked/>&ndash;&gt;
                                 {{ $i + 1 }}
-                                <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]['id'] }}" value="{{ $data[$i]['id'] }}"/>
+
                             </div>
-                        </th>
+                        </th>-->
+                        <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]['id'] }}" value="{{ $data[$i]['id'] }}"/>
                         <td class="text-center">{{ $data[$i]["studentItem"]->student_name }}</td>
                         <td class="text-center">{{ $data[$i]["studentItem"]->school_name }}</td>
                         <td class="text-center">{{ $data[$i]["studentItem"]->school_grade }}</td>
