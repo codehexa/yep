@@ -61,8 +61,6 @@ class SmsViewController extends Controller
             $smsSettings = SmsPageSettings::first();
             $smsPaperFirst = $smsPapers->first();
 
-            dd($smsPaperFirst);
-
             $smsSendResult = SmsSendResults::where('sms_paper_code','=',$upCode)
                 ->where('student_id','=',$student_id)->first();
             $smsSendResult->ssr_view = Configurations::$SMS_SEND_VIEW_Y;
@@ -214,6 +212,159 @@ class SmsViewController extends Controller
     // test form get
     public function getTestForm($tfId){
 
+    }
+
+    // preview
+    public function viewDetailPreview(Request $request){
+        $upCode = $request->get("up_code");
+        $upTel = $request->get("up_parent_tel");
+
+        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
+
+        if (is_null($smsPapers)){
+            return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
+        }
+
+        foreach($smsPapers as $smsPaper){
+            $clId = $smsPaper->cl_id;
+        }
+
+        $student = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->first();
+
+        $opinionsAll = [];
+        $opinionN = 0;
+
+        if (is_null($student)){
+            return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
+        }else{
+            $student_id = $student->id;
+            $smsSettings = SmsPageSettings::first();
+            $smsPaperFirst = $smsPapers->first();
+
+            $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
+
+            $teacherSays = [];
+            $wordians = [];
+
+            $jsData = [];
+
+            foreach ($smsPapers as $sPaper){
+                $sgId = $sPaper->sg_id;
+                $tfId = $sPaper->tf_id;
+                $year = $sPaper->year;
+                $week = $sPaper->week;
+
+                $nowJsData = [];
+
+                $testFormData = TestForms::find($tfId);
+                $testFormChildData = TestFormsItems::where('tf_id','=',$tfId)->orderBy('sj_index','asc')->get();
+                $studentNowScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
+                    ->where('sg_id','=',$sgId)
+                    ->where('year','=',$year)
+                    ->where('week','=',$week)
+                    ->first();
+
+                $teacherSays[] = $studentNowScore->opinion;
+                if (!is_null($studentNowScore->wordian)){
+                    $wordians[] = $studentNowScore->wordian;
+                }
+
+                $studentPreScore = null;
+                if ($week > 1){
+                    $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
+                        ->where('sg_id','=',$sgId)
+                        ->where('year','=',$year)->where('week','=',$week -1)
+                        ->first();
+                }
+                $subjectN = 0;
+                $hasPreScore = "N";
+                if (!is_null($studentPreScore)) $hasPreScore = "Y";
+
+                $parent_subject_title = "";
+                $saved_parent_id = -1;
+                $stack = 1;
+                $score_N = 0;
+
+                for ($i=0; $i < sizeof($testFormChildData); $i++){
+                    $cItem = $testFormChildData[$i];
+                    $scoreFieldName = "score_".$score_N;
+                    if (is_null($studentPreScore)) {
+                        $preScore = "0";
+                    }else{
+                        $preScore = $studentPreScore->$scoreFieldName;
+                    }
+                    if (is_null($studentNowScore)){
+                        $nowScore = "0";
+                    }else{
+                        $nowScore = $studentNowScore->$scoreFieldName;
+                    }
+
+                    $parent_title = "";
+                    if ($cItem->sj_depth == "1"){
+                        $parent_title = "";
+                    }
+
+
+                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T") {   // 대표 및 셀프
+                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
+                        $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
+                        $nowJsData[$score_N]["id"] = $cItem->id;
+                        $nowJsData[$score_N]["stack"] = $stack;
+                        $stack++;
+                        $score_N++;
+                        if ($cItem->testFormParent->exam == "N"){
+                            $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
+                            $opinionsAll[] = ["title" => $cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
+                        }
+                    }else if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "Y" && $cItem->sj_type != "T"){    // 과목 그룹 대표
+//                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
+//                        $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
+//                        $nowJsData[$score_N]["id"] = $cItem->id;
+//                        $nowJsData[$score_N]["stack"] = $stack;
+                        //$stack++;
+                        //$score_N++;
+                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){    // inner
+                        for ($k = 0; $k < sizeof($testFormChildData); $k++){
+                            if ($testFormChildData[$k]["id"] == $cItem->sj_parent_id){
+                                $parent_title = $testFormChildData[$k]->sj_title;
+                                break;
+                            }
+                        }
+                        $nowJsData[$score_N]["labels"]   = $parent_title." / ".$cItem->sj_title;
+                        $nowJsData[$score_N]["scores"]   = "{$preScore},{$nowScore}";
+                        $nowJsData[$score_N]["id"]   = $cItem->id;
+                        $nowJsData[$score_N]["stack"]    = $stack;
+                        $score_N++;
+                        if ($cItem->testFormParent->exam == "N"){
+                            $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
+                            $opinionsAll[] = ["title" => $parent_title." / ".$cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
+                        }
+                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type == "T"){
+                        $stack++;
+                    }
+                }
+
+
+                $jsData[] = $nowJsData;
+
+                $opinionN++;
+                $formSet = [];
+                $formSet['exam']    = $testFormData->exam;
+                $formSet['testTitle'] = $testFormData->form_title;
+
+                $dataSet[] = $formSet;
+            }
+
+            return view('parents.detail',[
+                'papers'=>$smsPapers,'student'=>$student,
+                'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
+                'jsData'=>$jsData,
+                'dataSet'=>$dataSet,
+                'scoreAnalysis' => $opinionsAll,
+                'teacherSays'=>$teacherSays,
+                "wordians"=>$wordians
+            ]);
+        }
     }
 
 

@@ -430,7 +430,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    $("#preview_panel").load("/sms/views",
+                    $("#preview_panel").load("/sms/preview",
                         {
                             _token:'{!! csrf_token() !!}',
                             up_code:msg.spcode,
