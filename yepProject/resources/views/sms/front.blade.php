@@ -430,20 +430,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    $.post("/sms/preview/" + msg.spcode,function(data){
-                        var w = window.open('about:blank');
-                        w.document.open();
-                        w.document.write(data);
-                        w.document.close();
-                    });
-                    /*open("/sms/preview/","_blank","width=500");
-                    $("#preview_panel").load("/sms/preview",
-                        {
-                            _token:'{!! csrf_token() !!}',
-                            up_code:msg.spcode,
-                            up_parent_tel:msg.tel
-                        }
-                    );*/
+                    var pop = window.open('/sms/preview/' + msg.spcode,'Preview','width=500');
                 }
             });
         });
