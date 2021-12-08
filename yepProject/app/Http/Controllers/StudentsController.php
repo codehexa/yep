@@ -339,7 +339,7 @@ class StudentsController extends Controller
                 }elseif ($cnt && $absCode != null){
                     $checkRoot = Students::where('abs_id','=',$absCode)->get();
                     $check = $checkRoot->first();
-                    dd($check);
+                    dd($check->student_name);
 
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
