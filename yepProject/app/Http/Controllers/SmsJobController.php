@@ -474,7 +474,6 @@ class SmsJobController extends Controller
                     $sentValue = $preDatum->sp_status;
                 }
 
-                dd($saved_tf_ids);
                 if ($sentValue != Configurations::$SMS_STATUS_READY){
                     if ($sentValue == Configurations::$SMS_STATUS_SAVING){
                         return redirect()->back()->withErrors(["msg"=>"FAIL_CAUSE_SAVING"]);
@@ -489,6 +488,8 @@ class SmsJobController extends Controller
                 for($i=0; $i < sizeof($compares); $i++){
                     SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
                 }
+
+                dd($add_compares);
 
                 for ($i=0; $i < sizeof($add_compares); $i++){
                     $newItem = new SmsPapers();
