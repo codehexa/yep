@@ -340,6 +340,10 @@ class StudentsController extends Controller
                     $checkRoot = Students::where('abs_id','=',$absCode)->get();
                     $check = $checkRoot->first();
 
+                    if (!isset($check->student_name)){
+                        dd($check);
+                    }
+
                     $hasName = $check->student_name;
                     $hasTel = $check->student_tel;
                     $hasHp = $check->student_hp;
