@@ -73,7 +73,7 @@
                     @else
                         <tr class="text-center">
 <!--                            <th scope="col" rowspan="2" class="text-center">#</th>-->
-                            <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_student_name') }}</th>
+                            <th scope="col" rowspan="2" class="text-center text-nowrap">{{ __('strings.lb_student_name') }}</th>
                             <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_school_name') }}</th>
                             <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_grade_name') }}</th>
                             <th scope="col" rowspan="2" class="text-center">{{ __('strings.lb_teacher_name') }}</th>
