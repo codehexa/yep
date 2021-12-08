@@ -432,8 +432,8 @@
                 success:function(msg){
                     $("#preview_panel").load("/sms/views",[
                         {"_token":$("#input[name='_token']").val()},
-                        {"up_code":spCode},
-                        {"up_parent_tel":msg.data.tel}
+                        {"up_code":msg.spcode},
+                        {"up_parent_tel":msg.data.parent_hp}
                     ]);
                 }
             });
