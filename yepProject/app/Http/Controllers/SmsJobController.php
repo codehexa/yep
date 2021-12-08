@@ -488,7 +488,6 @@ class SmsJobController extends Controller
                 for($i=0; $i < sizeof($compares); $i++){
                     SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
                 }
-                dd($add_compares);
 
                 for ($i=0; $i < sizeof($add_compares); $i++){
                     $newItem = new SmsPapers();
@@ -509,22 +508,22 @@ class SmsJobController extends Controller
                 // new insert
                 $spCode = $this->getSmsPaperCode();
                 for ($i=0; $i < sizeof($tfIds); $i++){
-                    $newAdd = new SmsPapers();
-                    $newAdd->writer_id = Auth::user()->id;
-                    $newAdd->ac_id = $acId;
-                    $newAdd->cl_id = $clId;
-                    $newAdd->sg_id = $sgId;
-                    $newAdd->hg_id = $hgId;
-                    $newAdd->year = $year;
-                    $newAdd->week = $week;
-                    $newAdd->tf_id = $tfIds[$i];
-                    $newAdd->sp_code = $spCode;
-                    $newAdd->sp_status = Configurations::$SMS_STATUS_READY;
-                    $newAdd->save();
+                    $nPaper = new SmsPapers();
+                    $nPaper->writer_id = Auth::user()->id;
+                    $nPaper->ac_id = $acId;
+                    $nPaper->cl_id = $clId;
+                    $nPaper->sg_id = $sgId;
+                    $nPaper->hg_id = $hgId;
+                    $nPaper->year = $year;
+                    $nPaper->week = $week;
+                    $nPaper->tf_id = $tfIds[$i];
+                    $nPaper->sp_code = $spCode;
+                    $nPaper->sp_status = Configurations::$SMS_STATUS_READY;
+                    $nPaper->save();
                 }
             }
         }
-        return redirect("/SmsFront/{$acId}/{$sgId}/{$clIds[0]}/{$year}/{$hgId}/{$week}");
+        //return redirect("/SmsFront/{$acId}/{$sgId}/{$clIds[0]}/{$year}/{$hgId}/{$week}");
     }
 
     public function getSmsPaperCode(){
