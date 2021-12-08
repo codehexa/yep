@@ -451,9 +451,9 @@ class SmsJobController extends Controller
 
         $clIds = explode(",",$clIdRoot);
 
-        for ($i=0; $i < sizeof($clIds); $i++){
+        for ($j=0; $j < sizeof($clIds); $j++){
             // check
-            $clId = $clIds[$i];
+            $clId = $clIds[$j];
             $wheres = [
                 ["ac_id",'=',$acId],
                 ["cl_id",'=',$clId],
@@ -487,10 +487,7 @@ class SmsJobController extends Controller
                 // 삭제할 것.
                 for($i=0; $i < sizeof($compares); $i++){
                     SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
-                    dd("dele".$compares);
                 }
-
-                dd($add_compares);
 
                 for ($i=0; $i < sizeof($add_compares); $i++){
                     $newItem = new SmsPapers();
@@ -505,7 +502,6 @@ class SmsJobController extends Controller
                     $newItem->sp_code = $savedSpCode;
                     $newItem->sp_status = Configurations::$SMS_STATUS_READY;
                     $newItem->save();
-                    echo $i;
                 }
             }else{
                 // new insert
