@@ -450,7 +450,7 @@ class SmsJobController extends Controller
         $tfIdsString = implode(",",$tfIds);
 
         $clIds = explode(",",$clIdRoot);
-        dd($clIds);
+
         for ($i=0; $i < sizeof($clIds); $i++){
             // check
             $clId = $clIds[$i];
@@ -463,6 +463,7 @@ class SmsJobController extends Controller
                 ["week",'=',$week]
             ];
             $oldValues = SmsPapers::where($wheres)->whereIn('tf_id',[$tfIdsString])->get();
+            dd($oldValues);
             if (sizeof($oldValues) > 0){
                 $saved_tf_ids = [];
                 $savedSpCode = "";
