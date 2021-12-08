@@ -487,7 +487,7 @@ class SmsJobController extends Controller
                 // 삭제할 것.
                 for($i=0; $i < sizeof($compares); $i++){
                     SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
-                    dd($compares);
+                    dd("dele".$compares);
                 }
 
                 dd($add_compares);
