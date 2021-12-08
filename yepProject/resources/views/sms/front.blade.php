@@ -419,7 +419,7 @@
             let spCode = $(this).data("spcode");
             let pId = $(this).data("code");
 
-            $("#previewModalCenter").modal("show");
+            //$("#previewModalCenter").modal("show");
 
             $.ajax({
                 url:"/getTempPage",
@@ -430,10 +430,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    $.post("/sms/preview/",{
-                        pid:msg.spcode,
-                        tel:msg.tel
-                    },function(data){
+                    $.post("/sms/preview/" + msg.spcode  + "/" + msg.tel,function(data){
                         var w = window.open('about:blank');
                         w.document.open();
                         w.document.write(data);
