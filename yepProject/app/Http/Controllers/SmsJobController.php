@@ -450,6 +450,7 @@ class SmsJobController extends Controller
         $tfIdsString = implode(",",$tfIds);
 
         $clIds = explode(",",$clIdRoot);
+        dd($clIds);
         for ($i=0; $i < sizeof($clIds); $i++){
             // check
             $clId = $clIds[$i];
