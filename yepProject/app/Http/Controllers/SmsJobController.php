@@ -483,12 +483,13 @@ class SmsJobController extends Controller
                     }
                 }
                 $compares = array_diff($tfIds,$saved_tf_ids);   // $tfIds 에 있는 요소만 남는다. 삭제할 요소
-                dd($compares);
                 $add_compares = array_diff($saved_tf_ids,$tfIds);   // 입력해야할 요소.
                 // 삭제할 것.
                 for($i=0; $i < sizeof($compares); $i++){
                     SmsPapers::where($wheres)->where('tf_id','=',$compares[$i])->delete();
                 }
+                dd($add_compares);
+
                 for ($i=0; $i < sizeof($add_compares); $i++){
                     $newItem = new SmsPapers();
                     $newItem->writer_id = Auth::user()->id;
