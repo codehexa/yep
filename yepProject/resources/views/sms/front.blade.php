@@ -430,11 +430,11 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    $("#preview_panel").load("/sms/views",[
-                        {"_token":$("#input[name='_token']").val()},
-                        {"up_code":msg.spcode},
-                        {"up_parent_tel":msg.data.parent_hp}
-                    ]);
+                    $("#preview_panel").load("/sms/views",
+                        {"_token":$("#input[name='_token']").val(),
+                        "up_code":msg.spcode,
+                        "up_parent_tel":msg.data.parent_hp}
+                    );
                 }
             });
         });
