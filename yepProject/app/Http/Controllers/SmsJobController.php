@@ -451,6 +451,8 @@ class SmsJobController extends Controller
 
         $clIds = explode(",",$clIdRoot);
 
+        dd($request);
+
         for ($i=0; $i < sizeof($clIds); $i++){
             // check
             $clId = $clIds[$i];
@@ -501,6 +503,7 @@ class SmsJobController extends Controller
                     $newItem->sp_code = $savedSpCode;
                     $newItem->sp_status = Configurations::$SMS_STATUS_READY;
                     $newItem->save();
+                    echo $i;
                 }
             }else{
                 // new insert
