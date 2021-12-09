@@ -232,8 +232,6 @@ class StudentsController extends Controller
                 }
                 $absCode = $this->addZero($vals[15]);
 
-                dd($absCode);
-
                 //$absCode = number_format($vals[15],"","");   // 학번
 
                 //dd($gradeHashes);
