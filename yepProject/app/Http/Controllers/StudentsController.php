@@ -216,7 +216,7 @@ class StudentsController extends Controller
                 $forCheck[] = $inClass->id;
             }*/
 
-            for($i=4; $i < sizeof($data[0]); $i++){
+            for($i=1; $i < sizeof($data[0]); $i++){
                 $vals = $data[0][$i];
                 $name = $vals[1];   // 이름
                 $tel = $vals[2];    // 전화번호
