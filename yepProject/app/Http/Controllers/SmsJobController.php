@@ -660,7 +660,7 @@ class SmsJobController extends Controller
         $wordianVals = $request->get("ss_wordian");
         $sendReady = $request->get("sready");
 
-        dd($sendReady);
+        //dd($sendReady);
 
 
         if (!is_null($ssIds)){

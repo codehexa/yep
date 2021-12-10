@@ -111,7 +111,7 @@
                         <th scope="row">
                             <div class="form-check align-self-center">
                                 <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["id"] }}" />
-                                <input type="checkbox" name="sready[]" class="form-check-input" {{ $data[$i]["send_ready"] == "Y"?"checked":"" }}/>
+                                <input type="checkbox" name="sready[]" class="form-check-input" {{ $data[$i]["send_ready"] == "Y"?"checked":"" }} value="Y"/>
                             </div>
                         </th>
                         <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->student_name }}</td>
@@ -138,7 +138,7 @@
                                                    fn_total="N"
                                                @endif
                                                class="form-control form-control-sm text-center align-self-center fn_input fn_scores"
-                                               style="min-width: 30px;max-width: 40px;"
+                                               style="min-width: 400px;"
                                         />
                                 </td>
                                 @php ($num++)
