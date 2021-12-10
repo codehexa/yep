@@ -111,7 +111,8 @@
                         <th scope="row">
                             <div class="form-check align-self-center">
                                 <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["id"] }}" />
-                                <input type="checkbox" name="sready[]" class="form-check-input" {{ $data[$i]["send_ready"] == "Y"?"checked":"" }} value="Y"/>
+                                <input type="hidden" name="sready_vals[]" id="sready_vals_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["send_ready"] == "Y"?"Y":"N" }}" />
+                                <input type="checkbox" name="sready[]" data-rid="sready_vals_id_{{ $data[$i]["id"] }}" class="form-check-input" {{ $data[$i]["send_ready"] == "Y"?"checked":"" }} value="Y"/>
                             </div>
                         </th>
                         <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->student_name }}</td>
@@ -276,6 +277,12 @@
         $(document).on("click","#ch_box",function (){
             $("input[name='sready[]']").each(function(i,obj){
                 $(obj).prop("checked",$("#ch_box").prop("checked"));
+                let objId = $(obj).data("rid");
+                if ($("#ch_box").prop("checked")){
+                    $("#" + objId).val("Y");
+                }else{
+                    $("#" + objId).val("N");
+                }
             });
         });
 

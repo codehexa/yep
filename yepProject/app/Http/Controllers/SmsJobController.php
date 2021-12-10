@@ -658,7 +658,7 @@ class SmsJobController extends Controller
         //dd($testFormItemsCount); 9
         $opinionVals = $request->get("ss_opinion");
         $wordianVals = $request->get("ss_wordian");
-        $sendReady = $request->get("sready");
+        $sendReady = $request->get("sready_vals");
 
         //dd($sendReady);
 
