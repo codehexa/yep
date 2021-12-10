@@ -90,7 +90,7 @@ class TestExcelExport implements FromView
             $responses->push((object)$item);
         }
 
-        dd($data);
+        dd($responses);
 
 
         return view('exports.papers',['items'=>$tItems,
