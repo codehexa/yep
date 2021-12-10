@@ -50,6 +50,7 @@ class CreateSmsscoresTable extends Migration
             $table->enum("sent",["Y","N"])->default("N")->nullable();
             $table->timestamp("sent_date")->nullable();
             $table->enum("saved_check",["Y","N"])->default("N");
+            $table->enum("send_ready",["Y","N"])->default("Y")->comment("보내도 되는 지 확인");
         });
     }
 

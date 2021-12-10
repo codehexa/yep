@@ -378,10 +378,12 @@ class SmsJobController extends Controller
         $scores = $request->get("scores");
         $opinion = $request->get("opinion");
         $wordian = $request->get("wordian");
+        $sendReady = $request->get("sready");
 
         $score = SmsScores::find($scId);
         $score->opinion = $opinion;
         $score->wordian = $wordian;
+        $score->send_ready = $sendReady;
 
         $arr = explode(",",$scores);
         for ($i=0; $i < sizeof($arr); $i++){
@@ -417,31 +419,42 @@ class SmsJobController extends Controller
         $send_N = 0;
         foreach($spPapers as $spPaper){
             $classId = $spPaper->cl_id;
+            $tfId = $spPaper->tf_id;
+            $year = $spPaper->year;
+            $week = $spPaper->week;
 
             $students = Students::where('class_id','=',$classId)->where('is_live','=','Y')->get();
             foreach ($students as $student){
-                $smsReMsg = str_replace(Configurations::$SMS_REPLACE_NAME,$student->student_name,$smsMsg);
-                $smsReMsg .= $smsURL;
-                $newSmsSend = new SmsSendResults();
-                $newSmsSend->student_id = $student->id;
-                $newSmsSend->class_id = $classId;
-                $newSmsSend->sms_paper_code = $spCode;
-                $newSmsSend->sms_msg = $smsReMsg;
-                $newSmsSend->ssr_status = Configurations::$SMS_SEND_RESULTS_READY;
-                $newSmsSend->sms_tel_no = $student->parent_hp;
-                $newSmsSend->ssr_view = Configurations::$SMS_SEND_VIEW_N;
-                $newSmsSend->save();
-                $send_N++;
-                if ($student->student_hp != ""){
+                $smsReadyCheck = SmsScores::where('year','=',$year)
+                    ->where('week','=',$week)
+                    ->where('tf_id','=',$tfId)
+                    ->where('st_id','=',$student->id)
+                    ->where('send_ready','=','Y')
+                    ->count();
+                if ($smsReadyCheck > 0){
+                    $smsReMsg = str_replace(Configurations::$SMS_REPLACE_NAME,$student->student_name,$smsMsg);
+                    $smsReMsg .= $smsURL;
                     $newSmsSend = new SmsSendResults();
                     $newSmsSend->student_id = $student->id;
                     $newSmsSend->class_id = $classId;
                     $newSmsSend->sms_paper_code = $spCode;
                     $newSmsSend->sms_msg = $smsReMsg;
                     $newSmsSend->ssr_status = Configurations::$SMS_SEND_RESULTS_READY;
-                    $newSmsSend->sms_tel_no = $student->student_hp;
+                    $newSmsSend->sms_tel_no = $student->parent_hp;
                     $newSmsSend->ssr_view = Configurations::$SMS_SEND_VIEW_N;
                     $newSmsSend->save();
+                    $send_N++;
+                    if ($student->student_hp != ""){
+                        $newSmsSend = new SmsSendResults();
+                        $newSmsSend->student_id = $student->id;
+                        $newSmsSend->class_id = $classId;
+                        $newSmsSend->sms_paper_code = $spCode;
+                        $newSmsSend->sms_msg = $smsReMsg;
+                        $newSmsSend->ssr_status = Configurations::$SMS_SEND_RESULTS_READY;
+                        $newSmsSend->sms_tel_no = $student->student_hp;
+                        $newSmsSend->ssr_view = Configurations::$SMS_SEND_VIEW_N;
+                        $newSmsSend->save();
+                    }
                 }
             }
             $spPaper->sp_status = Configurations::$SMS_STATUS_SENT;
@@ -629,6 +642,7 @@ class SmsJobController extends Controller
             }
         }
 
+        //dd($data);
         return view("sms.input",["paperInfo"=>$smsPaper,"spId"=>$spId,"testForm"=>$testForm,"tItems"=>$tItems,"data"=>$data,"hasDouble"=>$hasDouble]);
     }
 
@@ -644,39 +658,45 @@ class SmsJobController extends Controller
         //dd($testFormItemsCount); 9
         $opinionVals = $request->get("ss_opinion");
         $wordianVals = $request->get("ss_wordian");
-
-        for($i=0; $i < sizeof($ssIds); $i++){   // $ssId smsscores.id
-            //dd($ssIds[$i]);
-            $nowSmsScore = SmsScores::find($ssIds[$i]);
+        $sendReady = $request->get("sready");
 
 
-            for ($j=0; $j < $testFormItemsCount; $j++){
-                $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$j;
-                $nowRequest = $request->get($fieldName);
-                //dd($nowRequest[$i]);
-                $nowScore = $nowRequest[$i];
-                //dd($nowScore);
-                $nowSmsScore->$fieldName = $nowScore;
+        if (!is_null($ssIds)){
+            for($i=0; $i < sizeof($ssIds); $i++){   // $ssId smsscores.id
+                //dd($ssIds[$i]);
+                $nowSmsScore = SmsScores::find($ssIds[$i]);
+
+                for ($j=0; $j < $testFormItemsCount; $j++){
+                    $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$j;
+                    $nowRequest = $request->get($fieldName);
+                    //dd($nowRequest[$i]);
+                    $nowScore = $nowRequest[$i];
+                    //dd($nowScore);
+                    $nowSmsScore->$fieldName = $nowScore;
+                }
+                $sendReadyEach = "Y";
+                if (!isset($sendReady[$i]) || $sendReady[$i] != "Y"){
+                    $sendReadyEach = "N";
+                }
+
+                $nowSmsScore->send_ready = $sendReadyEach;
+                $nowSmsScore->opinion = $opinionVals[$i];
+                $nowSmsScore->wordian = $wordianVals[$i];
+                $nowSmsScore->save();
+            }
+            if ($autoSave == "Y"){
+                $smsPaper->sp_status = Configurations::$SMS_STATUS_ABLE;
+            }else{
+                $smsPaper->sp_status = Configurations::$SMS_STATUS_SAVING;
             }
 
-            $nowSmsScore->opinion = $opinionVals[$i];
-            $nowSmsScore->wordian = $opinionVals[$i];
-            $nowSmsScore->save();
+            try {
+                $smsPaper->save();
+            }catch (\Exception $exception){
+                return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
+            }
         }
-        if ($autoSave == "Y"){
-            $smsPaper->sp_status = Configurations::$SMS_STATUS_ABLE;
-        }else{
-            $smsPaper->sp_status = Configurations::$SMS_STATUS_SAVING;
-        }
-
-
-        try {
-            $smsPaper->save();
-
-            return redirect("/SmsFront");
-        }catch (\Exception $exception){
-            return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
-        }
+        return redirect("/SmsFront");
     }
 
     // excel download
