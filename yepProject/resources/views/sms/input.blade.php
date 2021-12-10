@@ -112,7 +112,7 @@
                             <div class="form-check align-self-center">
                                 <input type="hidden" name="ss_id[]" id="ss_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["id"] }}" />
                                 <input type="hidden" name="sready_vals[]" id="sready_vals_id_{{ $data[$i]["id"] }}" value="{{ $data[$i]["send_ready"] == "Y"?"Y":"N" }}" />
-                                <input type="checkbox" name="sready[]" data-rid="sready_vals_id_{{ $data[$i]["id"] }}" class="form-check-input" {{ $data[$i]["send_ready"] == "Y"?"checked":"" }} value="Y"/>
+                                <input type="checkbox" name="sready[]" data-rid="sready_vals_id_{{ $data[$i]["id"] }}" class="form-check-input fn_chbox" {{ $data[$i]["send_ready"] == "Y"?"checked":"" }} value="Y"/>
                             </div>
                         </th>
                         <td class="text-center text-nowrap">{{ $data[$i]["studentItem"]->student_name }}</td>
@@ -284,6 +284,15 @@
                     $("#" + objId).val("N");
                 }
             });
+        });
+
+        $(document).on("click",".fn_chbox",function(){
+            let rid = $(this).data("rid");
+            if ($(this).prop("checked")){
+                $("#" + rid).val("Y");
+            }else{
+                $("#" + rid).val("N");
+            }
         });
 
         let chkMax = false; // 기본 65 점제로 함. 만약 체크 되어 있다면, 100 점제로 환산하여 표시함.
