@@ -288,6 +288,7 @@
 
         $(document).on("click",".fn_chbox",function(){
             let rid = $(this).data("rid");
+            console.log(rid);
             if ($(this).prop("checked")){
                 $("#" + rid).val("Y");
             }else{
