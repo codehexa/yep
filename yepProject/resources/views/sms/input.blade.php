@@ -138,7 +138,7 @@
                                                    fn_total="N"
                                                @endif
                                                class="form-control form-control-sm text-center align-self-center fn_input fn_scores"
-                                               style="min-width: 400px;"
+                                               style="min-width: 40px;"
                                         />
                                 </td>
                                 @php ($num++)
