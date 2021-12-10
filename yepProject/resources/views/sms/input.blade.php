@@ -144,8 +144,8 @@
                                 @php ($num++)
                             @endif
                         @endforeach
-                        <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion fn_input "/> </td>
-                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ isset($data[$i]["wordian"]) ? $data[$i]["wordian"]:"" }}" fn_wd_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian fn_input "/> </td>
+                        <td><input type="text" name="ss_opinion[]" id="ss_opinion_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ $data[$i]["opinion"] }}" fn_op_id="{{ $data[$i]["id"] }}" class="form-control fn_opinion fn_input " style="min-width: 80px;"/> </td>
+                        <td><input type="text" name="ss_wordian[]" id="ss_wordian_{{ $data[$i]["id"] }}" fn_row="{{ $i }}" value="{{ isset($data[$i]["wordian"]) ? $data[$i]["wordian"]:"" }}" fn_wd_id="{{ $data[$i]["id"] }}" class="form-control fn_wordian fn_input " style="min-width: 80px"/> </td>
                         <td>
                             @if ($data[$i]["sent"] == "N")
                                 <div class="btn-group-sm btn-group">
