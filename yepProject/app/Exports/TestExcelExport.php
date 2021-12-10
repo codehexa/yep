@@ -90,9 +90,6 @@ class TestExcelExport implements FromView
             $responses->push((object)$item);
         }
 
-        dd($responses);
-
-
         return view('exports.papers',['items'=>$tItems,
             'no'=>$paper->week,
             'head_colspan'=>$head_col_size,
