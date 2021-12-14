@@ -256,7 +256,6 @@ class SmsViewController extends Controller
             ->where('sp_code','=','"'.$upCode.'"')
             ->first();*/
 
-        dd($smsPapers);
         if (is_null($smsPapers)){
             die("NO Data");
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
@@ -266,8 +265,9 @@ class SmsViewController extends Controller
         foreach ($smsPapers as $sp){
             $clId = $sp->cl_id;
         }*/
-        $clId = $smsPapers->cl_id;
+        $clId = $smsPapers->first()->cl_id;
 
+        dd($clId);
         $student_all = Students::where('class_id','=',$clId)->get();
         if (sizeof($student_all) > 0){
             $student = $student_all->random();
