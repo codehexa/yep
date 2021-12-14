@@ -219,7 +219,7 @@ class SmsViewController extends Controller
                 'dataSet'=>$dataSet,
                 'scoreAnalysis' => $reOpinions,
                 'teacherSays'=>$teacherSays,
-                "wordians"=>$wordians,"canvas_height"=>$tmpHeightCount * 4,
+                "wordians"=>$wordians,"canvas_height"=>$tmpHeightCount * 10,
             ]);
         }
     }
