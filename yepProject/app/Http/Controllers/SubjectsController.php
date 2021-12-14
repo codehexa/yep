@@ -34,7 +34,7 @@ class SubjectsController extends Controller
             }
         }
 
-        $maxScoreObj = Settings::where('set_code','=',Configurations::$SETTINGS_TEST_MAX_SCORE)->get()->first();
+        $maxScoreObj = Settings::where('set_code','=',Configurations::$SETTINGS_TEST_MAX_SCORE)->orderBy('id','asc')->get()->first();
         $maxScore = $maxScoreObj->set_value;
 
         return view("subjects.index",["data"=>$data,"grades"=>$grades,"rGrade"=>$grade,"maxScore"=>$maxScore]);
