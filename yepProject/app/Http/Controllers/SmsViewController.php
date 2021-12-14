@@ -253,14 +253,12 @@ class SmsViewController extends Controller
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
-
-        dd($smsPapers);
-
+/* on mac. first()-> change to get()
         $clId = $smsPapers->first()->cl_id;
         foreach ($smsPapers as $sp){
             $clId = $sp->cl_id;
-        }
-        //$clId= $smsPapers->cl_id;
+        }*/
+        $clId= $smsPapers->cl_id;
 
         $student_all = Students::where('class_id','=',$clId)->get();
         if (sizeof($student_all) > 0){
