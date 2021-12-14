@@ -248,7 +248,7 @@ class SmsViewController extends Controller
     public function viewDetailPreview($pid){
         $upCode = $pid;
 
-        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
+        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->first();
         /*$smsPapers = DB::table('sms_papers')
             ->select("*")
             ->where('sp_code','=','"'.$upCode.'"')
