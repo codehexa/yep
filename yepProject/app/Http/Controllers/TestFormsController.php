@@ -40,6 +40,8 @@ class TestFormsController extends Controller
             $data = TestForms::orderBy('form_title','asc')->paginate($limit);
         }
 
+        dd($data);
+
         return view('testforms.index',
             [
                 'data'=>$data,'academies'=>$academies,
