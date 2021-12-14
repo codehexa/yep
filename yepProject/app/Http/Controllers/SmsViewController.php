@@ -258,7 +258,8 @@ class SmsViewController extends Controller
         foreach ($smsPapers as $sp){
             $clId = $sp->cl_id;
         }*/
-        $clId= $smsPapers[0]->cl_id;
+        dd($smsPapers);
+        $clId = $smsPapers[0]->cl_id;
 
         $student_all = Students::where('class_id','=',$clId)->get();
         if (sizeof($student_all) > 0){
