@@ -282,6 +282,7 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
             $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
+            dd($smsPapers);
             $student_id = $student->id;
             $smsSettings = SmsPageSettings::first();    // on Mac get()->
             $smsPaperFirst = $smsPapers->first();
@@ -438,7 +439,6 @@ class SmsViewController extends Controller
             }
 
 
-            dd($jsData);
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
                 'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
