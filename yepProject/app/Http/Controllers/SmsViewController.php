@@ -267,7 +267,6 @@ class SmsViewController extends Controller
         }*/
         $clId = $smsPapers->first()->cl_id;
 
-        dd($clId);
         $student_all = Students::where('class_id','=',$clId)->get();
         if (sizeof($student_all) > 0){
             $student = $student_all->random();
