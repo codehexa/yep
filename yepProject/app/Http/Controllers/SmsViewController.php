@@ -250,7 +250,7 @@ class SmsViewController extends Controller
 
         //$smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
         $smsPapers = DB::table('sms_papers')
-            ->select(DB::raw('*'))
+            ->select("*")
             ->where('sp_code','=',$upCode)
             ->get();
 
