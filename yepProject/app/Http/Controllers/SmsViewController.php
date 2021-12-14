@@ -247,6 +247,7 @@ class SmsViewController extends Controller
     // preview
     public function viewDetailPreview($pid){
         $upCode = $pid;
+        echo $upCode;
 
         //$smsPapers = SmsPapers::where('sp_code','=',$upCode)->get();
         $smsPapers = DB::table('sms_papers')
@@ -255,7 +256,7 @@ class SmsViewController extends Controller
             ->first();
 
         if (is_null($smsPapers)){
-            die("NO USER");
+            die("NO Data");
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 /* on mac. first()-> change to get()
