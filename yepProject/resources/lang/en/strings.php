@@ -428,6 +428,7 @@ return [
     "lb_check_send_reservation" => "예약 전송 적용",
     "err_check_days"    => "수업 시간을 선택하세요",
     "err_not_proper_date"   => "현재 시간보다 10분 이후로 설정하세요",
+    "lb_zero_point_guide"   => "'0'점인 과목의 경우 미응시(또는 미실시)를 뜻함",
 
     /* BMS 과목 관리 */
     "lb_subject_manage" => "과목관리",

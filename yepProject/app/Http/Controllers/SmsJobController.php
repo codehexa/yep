@@ -100,7 +100,7 @@ class SmsJobController extends Controller
             $dataWhere[] = ["week","=",$week];
         }
 
-        $settings = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $settings = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->get()->first();
         $limit = $settings->set_value;
 
         if ($nowPower == Configurations::$USER_POWER_TEACHER){

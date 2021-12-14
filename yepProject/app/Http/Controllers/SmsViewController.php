@@ -107,72 +107,83 @@ class SmsViewController extends Controller
 
                 $parent_subject_title = "";
                 $saved_parent_id = -1;
-                $stack = 1;
-                $score_N = 0;
+                $stack = 0;
+                $score_N = -1;
+
+                $parent_title = "";
+
+                $tmpHeightCount = 0;
+                $opinionItem = [];
 
                 for ($i=0; $i < sizeof($testFormChildData); $i++){
                     $cItem = $testFormChildData[$i];
-                    $scoreFieldName = "score_".$score_N;
-                    if (is_null($studentPreScore)) {
-                        $preScore = "0";
-                    }else{
-                        $preScore = $studentPreScore->$scoreFieldName;
-                    }
-                    if (is_null($studentNowScore)){
-                        $nowScore = "0";
-                    }else{
-                        $nowScore = $studentNowScore->$scoreFieldName;
+                    $DoAdd = false;
+
+                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){
+                        $score_N++;
+                        $stack++;
+                        $parent_title = $cItem->sj_title;
+                        $nowTitle = $parent_title;
+                        $DoAdd = true;
+                        $opinionItem["title"] = $cItem->sj_title;
+                        $opinionItem["hasBlock"] = "Y";
+                    } else if ($cItem->sj_depth == "1" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){
+                        $score_N++;
+                        $DoAdd = true;
+                        $nowTitle = $parent_title." / ".$cItem->sj_title;
+                        $opinionItem["sub_title"]   = $cItem->sj_title;
+                        $opinionItem["hasBlock"] = "N";
+                    } else if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "Y" && $cItem->sj_type != "T"){
+                        $stack++;
+                        $parent_title = $cItem->sj_title;
+                        $opinionItem["title"] = $cItem->sj_title;
+                        $opinionItem["sub_title"]   = $cItem->sj_title;
+                        $opinionItem["hasBlock"] = "Y";
+                    } else if ($cItem->sj_depth == "1" && $cItem->sj_has_child == "N" && $cItem->sj_type == "T"){
+                        $score_N++;
+                        $opinionItem["sub_title"]   = $cItem->js_title;
                     }
 
-                    $parent_title = "";
-                    if ($cItem->sj_depth == "1"){
-                        $parent_title = "";
-                    }
+                    if ($DoAdd){
+                        $scoreFieldName = "score_".$score_N;
+                        if (is_null($studentPreScore)) {
+                            $preScore = "0";
+                        }else{
+                            $preScore = $studentPreScore->$scoreFieldName;
+                        }
+                        if (!isset($studentNowScore)){
+                            $nowScore = "0";
+                        }else{
+                            //echo "<br/>Score FIeld Name ; {$scoreFieldName}";
+                            $nowScore = $studentNowScore->$scoreFieldName;
+                        }
 
-
-                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T") {   // 대표 및 셀프
-                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
+                        $nowJsData[$score_N]["labels"] = $nowTitle;//$cItem->sj_title;
                         $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
                         $nowJsData[$score_N]["id"] = $cItem->id;
                         $nowJsData[$score_N]["stack"] = $stack;
-                        $stack++;
-                        $score_N++;
+
                         if ($cItem->testFormParent->exam == "N"){
                             $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
-                            $opinionsAll[] = ["title" => $cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
-                        }
-                    }else if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "Y" && $cItem->sj_type != "T"){    // 과목 그룹 대표
-//                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
-//                        $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
-//                        $nowJsData[$score_N]["id"] = $cItem->id;
-//                        $nowJsData[$score_N]["stack"] = $stack;
-                        //$stack++;
-                        //$score_N++;
-                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){    // inner
-                        for ($k = 0; $k < sizeof($testFormChildData); $k++){
-                            if ($testFormChildData[$k]["id"] == $cItem->sj_parent_id){
-                                $parent_title = $testFormChildData[$k]->sj_title;
-                                break;
+                            if ($opinion_txt != "NONE"){
+                                $opinionItem["txt"] = $opinion_txt;
+                                $opinionsAll[] = $opinionItem;
                             }
+                            $opinionN++;
                         }
-                        $nowJsData[$score_N]["labels"]   = $parent_title." / ".$cItem->sj_title;
-                        $nowJsData[$score_N]["scores"]   = "{$preScore},{$nowScore}";
-                        $nowJsData[$score_N]["id"]   = $cItem->id;
-                        $nowJsData[$score_N]["stack"]    = $stack;
-                        $score_N++;
-                        if ($cItem->testFormParent->exam == "N"){
-                            $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
-                            $opinionsAll[] = ["title" => $parent_title." / ".$cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
-                        }
-                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type == "T"){
-                        $stack++;
+
+                        $tmpHeightCount++;
                     }
                 }
+                if (sizeof($nowJsData) > 0){
+                    $tmpArray = [];
+                    foreach($nowJsData as $jd){
+                        $tmpArray[] = $jd;
+                    }
 
+                    $jsData[] = $tmpArray;
+                }
 
-                $jsData[] = $nowJsData;
-
-                $opinionN++;
                 $formSet = [];
                 $formSet['exam']    = $testFormData->exam;
                 $formSet['testTitle'] = $testFormData->form_title;
@@ -180,14 +191,33 @@ class SmsViewController extends Controller
                 $dataSet[] = $formSet;
             }
 
+            $reOpinions = [];
+
+            if (sizeof($opinionsAll) > 0){
+                for ($ar=0; $ar < sizeof($opinionsAll) ; $ar++){
+                    if ($ar > 0){
+                        $lastIndex = sizeof($reOpinions) -1;
+                        if ($reOpinions[$lastIndex]['bTitle'] == $opinionsAll[$ar]['title']){
+                            $reOpinions[$lastIndex]['child'][] = [
+                                'sTitle'=>$opinionsAll[$ar]['sub_title'],
+                                'txt'=>$opinionsAll[$ar]['txt']
+                            ];
+                        }else{
+                            $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
+                        }
+                    } else {
+                        $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
+                    }
+                }
+            }
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
                 'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
                 'jsData'=>$jsData,
                 'dataSet'=>$dataSet,
-                'scoreAnalysis' => $opinionsAll,
+                'scoreAnalysis' => $reOpinions,
                 'teacherSays'=>$teacherSays,
-                "wordians"=>$wordians
+                "wordians"=>$wordians,"canvas_height"=>$tmpHeightCount * 4,
             ]);
         }
     }
@@ -224,9 +254,18 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
-        $clId= $smsPapers->first()->cl_id;
+        foreach ($smsPapers as $sp){
+            $clId = $sp->cl_id;
+        }
+        //$clId= $smsPapers->cl_id;
 
-        $student = Students::where('class_id','=',$clId)->get()->random();
+        $student_all = Students::where('class_id','=',$clId)->get();
+        if (sizeof($student_all) > 0){
+            $student = $student_all->random();
+        }else{
+            //dd("NON");
+            return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
+        }
 
         $opinionsAll = [];
         $opinionN = 0;
@@ -235,7 +274,7 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
             $student_id = $student->id;
-            $smsSettings = SmsPageSettings::first();
+            $smsSettings = SmsPageSettings::get()->first();
             $smsPaperFirst = $smsPapers->first();
 
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
@@ -277,78 +316,90 @@ class SmsViewController extends Controller
                         ->where('year','=',$year)->where('week','=',$week -1)
                         ->first();
                 }
+
                 $subjectN = 0;
                 $hasPreScore = "N";
                 if (!is_null($studentPreScore)) $hasPreScore = "Y";
 
                 $parent_subject_title = "";
                 $saved_parent_id = -1;
-                $stack = 1;
-                $score_N = 0;
+                $stack = 0; // old 1
+                $score_N = -1;  // old 0
+                //dd($testFormChildData);
+                $parent_title = "";
 
+                $tmpHeightCount = 0;
+                $opinionItem = [];
                 for ($i=0; $i < sizeof($testFormChildData); $i++){
                     $cItem = $testFormChildData[$i];
-                    $scoreFieldName = "score_".$score_N;
-                    if (is_null($studentPreScore)) {
-                        $preScore = "0";
-                    }else{
-                        $preScore = $studentPreScore->$scoreFieldName;
-                    }
-                    if (is_null($studentNowScore)){
-                        $nowScore = "0";
-                    }else{
-                        $nowScore = $studentNowScore->$scoreFieldName;
+                    $DoAdd = false;
+
+                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){
+                        $score_N++;
+                        $stack++;
+                        $parent_title = $cItem->sj_title;
+                        $nowTitle = $parent_title;
+                        $DoAdd = true;
+                        $opinionItem["title"] = $cItem->sj_title;
+                        $opinionItem["hasBlock"] = "Y";
+                    } else if ($cItem->sj_depth == "1" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){
+                        $score_N++;
+                        $DoAdd = true;
+                        $nowTitle = $parent_title." / ".$cItem->sj_title;
+                        $opinionItem["sub_title"]   = $cItem->sj_title;
+                        $opinionItem["hasBlock"] = "N";
+                    } else if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "Y" && $cItem->sj_type != "T"){
+                        $stack++;
+                        $parent_title = $cItem->sj_title;
+                        $opinionItem["title"] = $cItem->sj_title;
+                        $opinionItem["sub_title"]   = $cItem->sj_title;
+                        $opinionItem["hasBlock"] = "Y";
+                    } else if ($cItem->sj_depth == "1" && $cItem->sj_has_child == "N" && $cItem->sj_type == "T"){
+                        $score_N++;
+                        $opinionItem["sub_title"]   = $cItem->js_title;
                     }
 
-                    $parent_title = "";
-                    if ($cItem->sj_depth == "1"){
-                        $parent_title = "";
-                    }
+                    if ($DoAdd){
+                        $scoreFieldName = "score_".$score_N;
+                        if (is_null($studentPreScore)) {
+                            $preScore = "0";
+                        }else{
+                            $preScore = $studentPreScore->$scoreFieldName;
+                        }
+                        if (!isset($studentNowScore)){
+                            $nowScore = "0";
+                        }else{
+                            //echo "<br/>Score FIeld Name ; {$scoreFieldName}";
+                            $nowScore = $studentNowScore->$scoreFieldName;
+                        }
 
-
-                    if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T") {   // 대표 및 셀프
-                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
+                        $nowJsData[$score_N]["labels"] = $nowTitle;//$cItem->sj_title;
                         $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
                         $nowJsData[$score_N]["id"] = $cItem->id;
                         $nowJsData[$score_N]["stack"] = $stack;
-                        $stack++;
-                        $score_N++;
+
                         if ($cItem->testFormParent->exam == "N"){
                             $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
-                            $opinionsAll[] = ["title" => $cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
-                        }
-                    }else if ($cItem->sj_depth == "0" && $cItem->sj_has_child == "Y" && $cItem->sj_type != "T"){    // 과목 그룹 대표
-//                        $nowJsData[$score_N]["labels"] = $cItem->sj_title;
-//                        $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
-//                        $nowJsData[$score_N]["id"] = $cItem->id;
-//                        $nowJsData[$score_N]["stack"] = $stack;
-                        //$stack++;
-                        //$score_N++;
-                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){    // inner
-                        for ($k = 0; $k < sizeof($testFormChildData); $k++){
-                            if ($testFormChildData[$k]["id"] == $cItem->sj_parent_id){
-                                $parent_title = $testFormChildData[$k]->sj_title;
-                                break;
+                            if ($opinion_txt != "NONE"){
+                                $opinionItem["txt"] = $opinion_txt;
+                                $opinionsAll[] = $opinionItem;
                             }
+                            $opinionN++;
                         }
-                        $nowJsData[$score_N]["labels"]   = $parent_title." / ".$cItem->sj_title;
-                        $nowJsData[$score_N]["scores"]   = "{$preScore},{$nowScore}";
-                        $nowJsData[$score_N]["id"]   = $cItem->id;
-                        $nowJsData[$score_N]["stack"]    = $stack;
-                        $score_N++;
-                        if ($cItem->testFormParent->exam == "N"){
-                            $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
-                            $opinionsAll[] = ["title" => $parent_title." / ".$cItem->sj_title, "opinion" => $opinion_txt, "now_score" => $nowScore, "max_score" => $cItem->subjectObject->sj_max_score];
-                        }
-                    }else if ($cItem->sj_depth != "0" && $cItem->sj_has_child == "N" && $cItem->sj_type == "T"){
-                        $stack++;
+
+                        $tmpHeightCount++;
                     }
                 }
 
+                if (sizeof($nowJsData) > 0){
+                    $tmpArray = [];
+                    foreach($nowJsData as $jd){
+                        $tmpArray[] = $jd;
+                    }
 
-                $jsData[] = $nowJsData;
+                    $jsData[] = $tmpArray;
+                }
 
-                $opinionN++;
                 $formSet = [];
                 $formSet['exam']    = $testFormData->exam;
                 $formSet['testTitle'] = $testFormData->form_title;
@@ -356,14 +407,35 @@ class SmsViewController extends Controller
                 $dataSet[] = $formSet;
             }
 
+            $reOpinions = [];
+
+            if (sizeof($opinionsAll) > 0){
+                for ($ar=0; $ar < sizeof($opinionsAll) ; $ar++){
+                    if ($ar > 0){
+                        $lastIndex = sizeof($reOpinions) -1;
+                        if ($reOpinions[$lastIndex]['bTitle'] == $opinionsAll[$ar]['title']){
+                            $reOpinions[$lastIndex]['child'][] = [
+                                'sTitle'=>$opinionsAll[$ar]['sub_title'],
+                                'txt'=>$opinionsAll[$ar]['txt']
+                            ];
+                        }else{
+                            $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
+                        }
+                    } else {
+                        $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
+                    }
+                }
+            }
+
+
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
                 'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
                 'jsData'=>$jsData,
                 'dataSet'=>$dataSet,
-                'scoreAnalysis' => $opinionsAll,
+                'scoreAnalysis' => $reOpinions,
                 'teacherSays'=>$teacherSays,
-                "wordians"=>$wordians
+                "wordians"=>$wordians,"canvas_height"=>$tmpHeightCount * 4,
             ]);
         }
     }

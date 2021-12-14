@@ -111,33 +111,34 @@
                                     {{ $dataSet[$i]['testTitle'] }}
                             </h5>
                             <div class="d-flex justify-content-center">
-                                <canvas id="chart_{{ $i }}" style="width: 80vw; height:30vh" role="img"></canvas>
+                                <canvas id="chart_{{ $i }}" style="width: 80vw;min-height: 30vh; height:{{ $canvas_height }}vh; max-height: 80vh;" role="img"></canvas>
                             </div>
 
                         </div>
                     @endfor
+                    <div class="mt-1 text-sm text-center">{{ __('strings.lb_zero_point_guide') }}</div>
                 </div>
-
                 <!-- 성적표 내용 표시하기 -->
 
                 <h5 class="mt-3">{{ __('strings.lb_test_analysis') }}</h5>
 
+                <div class="list-group">
                 @for($i=0; $i < sizeof($scoreAnalysis); $i++)
-                    <div class="list-group">
-                    @if ($scoreAnalysis[$i]['opinion'] == \App\Models\Configurations::$SMS_OPINION_NONE)
-                        <div class="list-group-item">
-                            [{{ $scoreAnalysis[$i]['title'] }}] : {{ $scoreAnalysis[$i]['now_score'] }} / {{ $scoreAnalysis[$i]['max_score'] }}
+                    <div class="list-group-item ">
+                        <div class="w-100">
+                            <div class="font-weight-bold">[{{ $scoreAnalysis[$i]['bTitle'] }}]</div>
+                            @for($j=0; $j < sizeof($scoreAnalysis[$i]['child']); $j++)
+                                <div class="text-sm">{{ $scoreAnalysis[$i]['child'][$j]['sTitle'] == "" ? "":$scoreAnalysis[$i]['child'][$j]['sTitle']." :" }}  {{$scoreAnalysis[$i]['child'][$j]['txt']}}</div>
+                            @endfor
                         </div>
-                    @else
-                        <div class="list-group-item">
-                            [{{ $scoreAnalysis[$i]['title'] }}]
-                            {{ $scoreAnalysis[$i]['opinion'] }}
-                        </div>
-                    @endif
                     </div>
-                @endfor
 
-                <!-- 선생님 내용 표시하기 -->
+
+                @endfor
+                </div>
+
+
+                    <!-- 선생님 내용 표시하기 -->
                 <h5 class="mt-3">{{ $settings->teacher_title }} </h5>
                 <div class="list-group">
                     @foreach($teacherSays as $teacherSay)
