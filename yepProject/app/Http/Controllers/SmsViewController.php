@@ -254,6 +254,8 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
+        dd($smsPapers);
+
         $clId = $smsPapers->first()->cl_id;
         foreach ($smsPapers as $sp){
             $clId = $sp->cl_id;
