@@ -279,6 +279,7 @@ class SmsViewController extends Controller
         if (is_null($student)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
+            $smsPapers = SmsScores::where('sp_code','=',$upCode)->get();
             $student_id = $student->id;
             $smsSettings = SmsPageSettings::get()->first();
             $smsPaperFirst = $smsPapers->first();
