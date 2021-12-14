@@ -35,7 +35,7 @@ class TestFormsController extends Controller
         if ($gradeId != "") $wheres[] = ["grade_id","=",$gradeId];
 
         if (sizeof($wheres) > 0){
-            $data = TestForms::where($wheres)->orderBy('form_title','asc')->paginate($limit)->toSql();
+            $data = TestForms::where('grade_id','=',$gradeId)->orderBy('form_title','asc')->paginate($limit);
         }else{
             $data = TestForms::orderBy('form_title','asc')->paginate($limit);
         }
