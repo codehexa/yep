@@ -438,6 +438,7 @@ class SmsViewController extends Controller
             }
 
 
+            dd($jsData);
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
                 'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
