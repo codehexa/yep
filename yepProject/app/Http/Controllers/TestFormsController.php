@@ -179,7 +179,7 @@ class TestFormsController extends Controller
             }
         } else {
             // modify
-            $savedForm = TestForms::find($infoId);
+            $savedForm = TestForms::where('id','=',$infoId)->get()->first();
             $oldSubjectsCount = $savedForm->subjects_count;
 
             // old subject id clear
