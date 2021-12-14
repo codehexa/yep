@@ -254,8 +254,10 @@ class TestFormsController extends Controller
         $tfId = $request->get("tfId");
 
         $tfForm = TestForms::find($tfId);
-        $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
+        $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->
+        where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
 
+        dd($tfFormSubjectsRoot);
         $root = [];
         foreach($tfFormSubjectsRoot as $tfFormSubject){
             if ($tfFormSubject->sj_has_child == "Y"){
