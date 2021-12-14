@@ -252,7 +252,7 @@ class SmsViewController extends Controller
         $smsPapers = DB::table('sms_papers')
             ->select("*")
             ->where('sp_code','=','"'.$upCode.'"')
-            ->toSql();
+            ->first();
 
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
