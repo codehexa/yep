@@ -254,6 +254,7 @@ class TestFormsController extends Controller
         $tfId = $request->get("tfId");
 
         $tfForm = TestForms::find($tfId);
+        dd($tfForm);
         $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->
         where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
 
