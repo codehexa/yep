@@ -28,7 +28,7 @@ class TestFormsController extends Controller
         $academies = Academies::orderBy('ac_name','asc')->get();
         $scGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
-        $config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->orderBy('id','asc')->first();
+        $config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->orderBy('id','asc')->get()->first();
         $limit = $config->set_value;
 
         $wheres = [];
