@@ -73,6 +73,8 @@ class SmsViewController extends Controller
 
             $jsData = [];
 
+            $tmpHeightCount = 0;
+
             foreach ($smsPapers as $sPaper){
                 $sgId = $sPaper->sg_id;
                 $tfId = $sPaper->tf_id;
@@ -112,7 +114,7 @@ class SmsViewController extends Controller
 
                 $parent_title = "";
 
-                $tmpHeightCount = 0;
+
                 $opinionItem = [];
 
                 for ($i=0; $i < sizeof($testFormChildData); $i++){
