@@ -14,7 +14,7 @@ class SubjectsController extends Controller
     //
     public function index($grade=''){
         $grades = schoolGrades::orderBy('scg_index','asc')->get();
-
+//dd($grades);
         $data = [];
         if ($grade != ''){
             $parents = Subjects::where('sg_id','=',$grade)
@@ -22,6 +22,7 @@ class SubjectsController extends Controller
                 ->orderBy('sj_order','asc')
                 ->get();
 
+            //dd($parents);
             foreach ($parents as $parent){
                 $hasChild = $parent->has_child;
                 $children = [];
@@ -33,7 +34,7 @@ class SubjectsController extends Controller
             }
         }
 
-        $maxScoreObj = Settings::where('set_code','=',Configurations::$SETTINGS_TEST_MAX_SCORE)->first();
+        $maxScoreObj = Settings::where('set_code','=',Configurations::$SETTINGS_TEST_MAX_SCORE)->get()->first();
         $maxScore = $maxScoreObj->set_value;
 
         return view("subjects.index",["data"=>$data,"grades"=>$grades,"rGrade"=>$grade,"maxScore"=>$maxScore]);

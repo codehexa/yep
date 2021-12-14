@@ -367,7 +367,9 @@
 
             $("#fn_loading").removeClass("d-none");
 
-            $("#up_grade_id").val($("#section_grade").val());
+            if ($("#up_grade_id").val() === ""){
+                $("#up_grade_id").val($("#section_grade").val());
+            }
 
             $("#tfFrm").submit();
         });
@@ -399,6 +401,7 @@
                         $("#info_name").val(msg.tfData.form_title);
                         $("#info_count").val(msg.tfData.subjects_count);
                         $("#info_desc").val(msg.tfData.tf_desc);
+                        $("#up_grade_id").val(msg.tfData.grade_id);
                         if (msg.tfData.exam === "Y"){
                             $("#info_exam").prop("checked",true);
                         }else{

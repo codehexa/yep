@@ -28,7 +28,7 @@ class TestFormsController extends Controller
         $academies = Academies::orderBy('ac_name','asc')->get();
         $scGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
-        $config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first();
+        $config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->orderBy('id','asc')->first();
         $limit = $config->set_value;
 
         $wheres = [];
@@ -87,6 +87,8 @@ class TestFormsController extends Controller
         $desc = $request->get("info_desc");
         $exam = $request->get("info_exam");
         $subjectIds = $request->get("tfSavedItems");
+
+        //dd($subjectIds);
 
         if (is_null($exam)) $exam = "N";
 
@@ -180,14 +182,48 @@ class TestFormsController extends Controller
             $oldSubjectsCount = $savedForm->subjects_count;
 
             // old subject id clear
-            for ($i=$oldSubjectsCount; $i < Configurations::$TEST_FORM_IN_SUBJECT_MAX; $i++){
+            /*for ($i=$oldSubjectsCount; $i < Configurations::$TEST_FORM_IN_SUBJECT_MAX; $i++){
                 $sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
                 $savedForm->$sjFieldName = 0;
+            }*/
+
+            // 기존의 폼 아이템을 가져온다.
+            $savedFormItems = TestFormsItems::where('tf_id','=',$infoId)
+                ->where('sj_depth','=','0')->orderBy('sj_index','asc')->get();
+
+            $savedIdsToUpdate = []; // 기존에 저장되어 있는 아이템 배열
+            $IdsToAdd = []; // 새로 넣어야 할 아이템 배열
+            $IdsToDel = []; // 지워야할 아이템들
+            foreach($savedFormItems as $savedFormItem){
+                $savedIdsToUpdate[] = $savedFormItem->id;
+            }
+            for ($i=0; $i < sizeof($subjectIds); $i++){
+                //$sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
+                //$savedForm->$sjFieldName = $subjectIds[$i];
+                if (!in_array($subjectIds[$i],$savedIdsToUpdate)){
+                    $IdsToAdd[] = $subjectIds[$i];
+                }
             }
 
-            for ($i=0; $i < sizeof($subjectIds); $i++){
-                $sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
-                $savedForm->$sjFieldName = $subjectIds[$i];
+            for ($j =0; $j < sizeof($savedIdsToUpdate); $j++){
+                if (!in_array($savedIdsToUpdate[$j],$subjectIds)){
+                    $IdsToDel[] = $savedIdsToUpdate[$j];
+                }
+            }
+
+            // 삭제하기
+//            dd($IdsToDel);
+            for ($k=0; $k < sizeof($IdsToDel); $k++){
+                $delChildren = TestFormsItems::where('sj_parent_id','=',$IdsToDel[$k])->orderBy('sj_index','desc')->delete();
+                $delChildRoot = TestFormsItems::find($IdsToDel[$k])->delete();
+            }
+
+
+            if (sizeof($IdsToAdd) > 0){
+                for($i=0; $i < sizeof($IdsToAdd); $i++){
+                    //$toAddItemsTestItems = ::find($IdsToAdd[$i]);
+                }
+
             }
             //$savedSubjects = TestFormsItems::where('tf_id','=',$infoId);
 
@@ -195,15 +231,18 @@ class TestFormsController extends Controller
             $savedForm->form_title = $name;
             $savedForm->ac_id = $acId;
             $savedForm->grade_id = $gradeId;
-            $savedForm->subjects_count = sizeof($subjectIds);
+            $savedForm->items_count = sizeof($subjectIds);
             $savedForm->tf_desc = $desc;
             $savedForm->exam = $exam;
 
+            //dd($savedForm);
             try {
+
                 $savedForm->save();
 
                 return redirect("/testForm");
             }catch (\Exception $exception){
+                dd($exception);
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
             }
         }
