@@ -268,10 +268,6 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
-        echo "<pre>";
-        print_r($student);
-        echo "</pre>";
-
         $opinionsAll = [];
         $opinionN = 0;
 
