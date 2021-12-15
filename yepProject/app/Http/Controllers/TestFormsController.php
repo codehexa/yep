@@ -186,6 +186,7 @@ class TestFormsController extends Controller
             foreach($subjectIds as $subjectId){
                 $cTfItem = TestFormsItems::find($subjectId);
                 $cTfItem->sj_index = $loginN;
+                $cTfItem->save();
                 $loginN++;
             }
             // old subject id clear
