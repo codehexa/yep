@@ -357,15 +357,35 @@
             event.preventDefault();
             let items = $("#tf_has_items").find(".fn_saved");
             let forDels = [];
+            let reqDels = [];   // to delete items array
             for (var i=0; i < items.length; i++){
                 if (items.eq(i).prop("checked") === true){
                     let selObj = savedDataSet[i];
                     if(!checkHasIndex(subjectDataSet,selObj.Id)){
                         subjectDataSet.push(selObj);
-
                     }
+                    reqDels.push(selObj.Id);
                     forDels.push(i);
                 }
+            }
+
+            if ($("#info_id").val() !== ""){
+                $.ajax({
+                    type:"POST",
+                    url:"/testFormDelSubjects",
+                    dataType:"json",
+                    data:{
+                        "_token":$("input[name='_token']").val(),
+                        "tfId":$("#info_id").val(),
+                        "subjectIds":reqDels.toString()
+                    },
+                    success:function(msg){
+                        console.log(msg.result);
+                    },
+                    error:function (e1,e2,e3){
+                        console.log(e2);
+                    }
+                })
             }
 
             for (let j=forDels.length -1; j >= 0; j--){

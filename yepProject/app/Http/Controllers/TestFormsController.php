@@ -189,7 +189,7 @@ class TestFormsController extends Controller
             }*/
 
             // 기존의 폼 아이템을 가져온다.
-            $savedFormItems = TestFormsItems::where('tf_id','=',$infoId)
+            /*$savedFormItems = TestFormsItems::where('tf_id','=',$infoId)
                 ->where('sj_depth','=','0')->orderBy('sj_index','asc')->get();
 
             $savedIdsToUpdate = []; // 기존에 저장되어 있는 아이템 배열
@@ -227,6 +227,8 @@ class TestFormsController extends Controller
 
             }
             //$savedSubjects = TestFormsItems::where('tf_id','=',$infoId);
+            아이템 추가 , 삭제는 ajax 로 view 화면에서 처리한다.
+            */
 
             $savedForm->writer_id = $user->id;
             $savedForm->form_title = $name;
@@ -236,7 +238,6 @@ class TestFormsController extends Controller
             $savedForm->tf_desc = $desc;
             $savedForm->exam = $exam;
 
-            //dd($savedForm);
             try {
 
                 $savedForm->save();
@@ -247,6 +248,28 @@ class TestFormsController extends Controller
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
             }
         }
+    }
+
+    // delete testitems
+    public function testFormDelSubjects(Request $request){
+        $tfId = $request->get("tfId");
+        $subjects = $request->get("subjectIds");
+
+        $exp = explode(",",$subjects);
+
+        for ($i=0; $i < sizeof($exp); $i++){
+            // del parent key
+            $delsChildren = TestFormsItems::where('tf_id','=',$tfId)
+                ->where('sj_parent_id','=',$exp[$i])->delete();
+            $delsItem = TestFormsItems::find($exp[$i])->delete();
+        }
+
+        $arrangeCount = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','0')->count();
+        $rootTf = TestForms::find($tfId);
+        $rootTf->items_count = $arrangeCount;
+        $rootTf->save();
+
+        return response()->json(['result'=>'true']);
     }
 
     // get info to modify
@@ -372,7 +395,7 @@ class TestFormsController extends Controller
 
         }
 
-        $allCount = TestFormsItems::where('tf_id','=',$tfId)->count();
+        $allCount = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','0')->count();
         $updateCount = TestForms::find($tfId);
         $updateCount->items_count = $allCount;
         $updateCount->save();
