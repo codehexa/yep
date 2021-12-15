@@ -454,7 +454,7 @@
                 return;
             }
 
-            if (pidToDown.length >= pidToSent.length){
+            if (pidToSent.length > 0 && pidToDown.length >= pidToSent.length){
                 return;
             }
             let cnt = pidToSent.length;
