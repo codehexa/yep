@@ -438,7 +438,7 @@
             $(".fn_excel_item").each(function (i,obj){
                 if ($(obj).prop("checked")){
                     let pid = $(obj).val();
-                    let delay = Math.floor(Math.random() * 500) + (i * 500);
+                    let delay = i * 1000;
                     setTimeout(function (){
                         location.href = "/SmsExcelDownload/" + pid;
                         console.log("delay : " + delay + ", pid : " + pid);
