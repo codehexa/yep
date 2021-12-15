@@ -27,6 +27,9 @@ class SubjectsController extends Controller
                 $children = [];
                 if ($hasChild == "Y"){
                     $children = $this->getChildren($parent->id);
+                    echo "<pre>";
+                    print_r($children);
+                    echo "</pre>";
                 }
                 $parent->setAttribute('children',$children);
                 $data[] = $parent;
