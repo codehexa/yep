@@ -151,6 +151,13 @@
             <button class="btn btn-outline-primary btn-sm" id="btnFormLoad"><i class="fa fa-cloud-download-alt"></i>
                 {{ __('strings.lb_get_test_forms') }}
             </button>
+
+            <button class="btn btn-outline-success btn-sm" id="btnDownExcel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</button>
+
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="excelAll">
+                <label class="custom-control-label" for="excelAll"><i class="fa fa-check-circle-o"></i> {{ __('strings.fn_select_all_or_not') }}</label>
+            </div>
         </div>
     </div>
     <div class="mt-3">
@@ -191,7 +198,7 @@
                                     @case(\App\Models\Configurations::$SMS_STATUS_SENT)
                                     <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                     @if (isset($datum->TestForm))
-                                        <div class="custom-control custom-checkbox">
+                                        <div class="custom-control custom-checkbox mr-2">
                                             <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
                                             <label class="custom-control-label" for="cst_check_{{ $datum->id }}"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</label>
                                         </div>

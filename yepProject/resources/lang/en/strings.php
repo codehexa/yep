@@ -535,7 +535,7 @@ return [
     "fn_inputs" => "입력 항목",
     "fn_go_first"   => "맨 처음으로",
     "fn_restore"    => "복귀",
-
+    "fn_select_all_or_not"  => "선택/해제",
 
     /* errors */
     "err_need_admin_power"  => "Admin 권한이 필요합니다",
