@@ -257,7 +257,7 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
-        $clId = $smsPapers->first()->cl_id;
+        $clId = $smsPapers->cl_id;
 
         $student_all = Students::where('class_id','=',$clId)->get();
         if (sizeof($student_all) > 0){
@@ -285,11 +285,11 @@ class SmsViewController extends Controller
             $jsData = [];
 
             $tmpHeightCount = 0;
-            foreach ($smsPapers as $sPaper){
-                $sgId = $sPaper->sg_id;
-                $tfId = $sPaper->tf_id;
-                $year = $sPaper->year;
-                $week = $sPaper->week;
+            //foreach ($smsPapers as $sPaper){
+                $sgId = $smsPapers->sg_id;
+                $tfId = $smsPapers->tf_id;
+                $year = $smsPapers->year;
+                $week = $smsPapers->week;
 
                 $nowJsData = [];
 
@@ -406,7 +406,7 @@ class SmsViewController extends Controller
                 $formSet['testTitle'] = $testFormData->form_title;
 
                 $dataSet[] = $formSet;
-            }
+           // }
 
             $reOpinions = [];
 
