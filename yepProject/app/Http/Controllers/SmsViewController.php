@@ -251,11 +251,6 @@ class SmsViewController extends Controller
         $upCode = $pid;
 
         $smsPapers = SmsPapers::where('sp_code','=',$upCode)->orderBy('id','asc')->get();
-        /*$smsPapers = DB::table('sms_papers')
-            ->select("*")
-            ->where('sp_code','=','"'.$upCode.'"')
-            ->first();*/
-        dd($smsPapers);
 
         if (is_null($smsPapers)){
             die("NO Data");
