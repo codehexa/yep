@@ -192,7 +192,7 @@
                                     <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                     @if (isset($datum->TestForm))
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="form-check-input fn_excel_item" />
+                                            <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
                                             <label class="custom-control-label" for="cst_check_{{ $datum->id }}"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</label>
                                         </div>
 <!--
