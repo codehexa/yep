@@ -198,7 +198,7 @@
                                     @case(\App\Models\Configurations::$SMS_STATUS_SENT)
                                     <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                     @if (isset($datum->TestForm))
-                                        <div class="custom-control custom-checkbox mr-2">
+                                        <div class="custom-control custom-checkbox">
                                             <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
                                             <label class="custom-control-label" for="cst_check_{{ $datum->id }}"></label>
                                         </div>
