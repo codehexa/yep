@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Configurations;
 use App\Models\SmsPapers;
+use App\Models\SmsScores;
 use App\Models\TestForms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,14 @@ class SmsPapersController extends Controller
 
         $data = SmsPapers::find($delId);
 
+        $clId = $data->cl_id;
+        $year = $data->year;
+        $week = $data->week;
+        $tfid = $data->tf_id;
+
         try {
             $data->delete();
+            $smsScores = SmsScores::where('year','=',$year)->where('week','=',$week)->where('cl_id','=',$clId)->where('tf_id','=',$tfid)->delete();
             return redirect()->back();
         }catch (\Exception $exception){
             return redirect()->back()->withErrors(["msg"=>"FAIL_TO_DELETE"]);
