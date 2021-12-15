@@ -18,7 +18,7 @@ class SubjectsController extends Controller
         $data = [];
         if ($grade != ''){
             $parents = Subjects::where('sg_id','=',$grade)
-                ->where('depth','=','0')
+                ->where('parent_id','=','0')
                 ->orderBy('sj_order','asc')
                 ->get();
 
