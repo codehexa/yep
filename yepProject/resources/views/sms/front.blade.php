@@ -433,19 +433,37 @@
         });
 
         // Download Excel
+        let pidToDown = [];
+        let pidToSent = [];
         $(document).on("click","#btnDownExcel",function(){
             event.preventDefault();
+            pidToDown = []; // initialize
+            pidToSent = [];
             $(".fn_excel_item").each(function (i,obj){
                 if ($(obj).prop("checked")){
                     let pid = $(obj).val();
-                    let delay = i * 2000;
-                    setTimeout(function (){
-                        location.href = "/SmsExcelDownload/" + pid;
-                        console.log("delay : " + delay + ", pid : " + pid);
-                    }, delay);
+                    pidToDown.push(pid);
                 }
             });
+
+            runToDownload();
         });
+
+        function runToDownload(){
+            if (pidToDown.length <= 0) {
+                return;
+            }
+            let cnt = pidToSent.length;
+            let pid = pidToDown[cnt];
+            location.href = "/SmsExcelDownload/" + pid;
+            pidToSent.push(pid);
+            console.log("pid : " + pid);
+
+            setTimeout(function (){
+                //
+                runToDownload();
+            },1000);
+        }
 
         // preview
         $(document).on("click",".fn_detail_view",function (){
