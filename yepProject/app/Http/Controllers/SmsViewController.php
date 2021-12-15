@@ -39,15 +39,14 @@ class SmsViewController extends Controller
         $upCode = $request->get("up_code");
         $upTel = $request->get("up_parent_tel");
 
-        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->orderBy('id','asc')->get();
+        $smsPapersRoot = SmsPapers::where('sp_code','=',$upCode)->get()->take(1);
+        $smsPapers = $smsPapersRoot->first();
 
         if (is_null($smsPapers)){
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
-        foreach($smsPapers as $smsPaper){
-            $clId = $smsPaper->cl_id;
-        }
+        $clId = $smsPapers->cl_id;
 
         $student = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->first();
 
@@ -75,16 +74,27 @@ class SmsViewController extends Controller
 
             $tmpHeightCount = 0;
 
-            foreach ($smsPapers as $sPaper){
-                $sgId = $sPaper->sg_id;
-                $tfId = $sPaper->tf_id;
-                $year = $sPaper->year;
-                $week = $sPaper->week;
+            //foreach ($smsPapers as $sPaper){
+                $sgId = $smsPapers->sg_id;
+                $tfId = $smsPapers->tf_id;
+                $year = $smsPapers->year;
+                $week = $smsPapers->week;
 
                 $nowJsData = [];
 
                 $testFormData = TestForms::find($tfId);
-                $testFormChildData = TestFormsItems::where('tf_id','=',$tfId)->orderBy('sj_index','asc')->get();
+                $testFormChildRoot = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','0')->orderBy('sj_index','asc')->get();
+                $testFormChildData = [];
+                foreach($testFormChildRoot as $tfData){
+                    $testFormChildData[] = $tfData;
+                    if ($tfData->sj_has_child == "Y"){
+                        $innerItems = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','1')->where('sj_parent_id','=',$tfData->id)->orderBy('sj_index','asc')->get();
+                        foreach ($innerItems as $innerItem){
+                            $testFormChildData[] = $innerItem;
+                        }
+                    }
+                }
+
                 $studentNowScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                     ->where('sg_id','=',$sgId)
                     ->where('year','=',$year)
@@ -191,7 +201,7 @@ class SmsViewController extends Controller
                 $formSet['testTitle'] = $testFormData->form_title;
 
                 $dataSet[] = $formSet;
-            }
+            //}
 
             $reOpinions = [];
 
