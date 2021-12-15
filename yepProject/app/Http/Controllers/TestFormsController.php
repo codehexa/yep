@@ -29,6 +29,7 @@ class TestFormsController extends Controller
         $scGrades = schoolGrades::orderBy('scg_index','asc')->get();
 
         $config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->orderBy('id','asc')->get()->first();
+        //$config = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->orderBy('id','asc')->latest()->first();
         $limit = $config->set_value;
 
         $wheres = [];
@@ -253,7 +254,8 @@ class TestFormsController extends Controller
     public function getTestFormData(Request $request){
         $tfId = $request->get("tfId");
 
-        $tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->get()->first();
+        //$tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->get()->first();  // on centos
+        $tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->first();    // on mac
         $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->
         where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
 
