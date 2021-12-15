@@ -330,7 +330,7 @@ class TestFormsController extends Controller
         $tfId = $request->get("tfId");
         $subjects = $request->get("subjectIds");
 
-        $exp = explode($subjects);
+        $exp = explode(",",$subjects);
 
         $lastSjIndex = TestFormsItems::where('tf_id','=',$tfId)->
             where('sj_depth','=','0')->count();
@@ -370,7 +370,13 @@ class TestFormsController extends Controller
                 }
             }
 
-            return response()->json(['result'=>'true']);
         }
+
+        $allCount = TestFormsItems::where('tf_id','=',$tfId)->count();
+        $updateCount = TestForms::find($tfId);
+        $updateCount->items_count = $allCount;
+        $updateCount->save();
+
+        return response()->json(['result'=>'true']);
     }
 }
