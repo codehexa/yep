@@ -442,7 +442,7 @@
                     let delay = Math.floor(Math.random() * 500) + (i * 500);
                     setTimeout(function (){
                         location.href = "/SmsExcelDownload/" + pid;
-                        console.log("delay : " + delay);
+                        console.log("delay : " + delay + ", pid : " + pid);
                     }, delay);
                 }
             });
