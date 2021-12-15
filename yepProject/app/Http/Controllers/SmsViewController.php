@@ -295,7 +295,17 @@ class SmsViewController extends Controller
                 $nowJsData = [];
 
                 $testFormData = TestForms::find($tfId);
-                $testFormChildData = TestFormsItems::where('tf_id','=',$tfId)->orderBy('sj_index','asc')->get();
+                $testFormChildRoot = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','0')->orderBy('sj_index','asc')->get();
+                $testFormChildData = [];
+                foreach($testFormChildRoot as $tfData){
+                    $testFormChildData[] = $tfData;
+                    if ($tfData->sj_has_child == "Y"){
+                        $innerItems = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','1')->where('sj_parent_id','=',$tfData->id)->orderBy('sj_index','asc')->get();
+                        foreach ($innerItems as $innerItem){
+                            $testFormChildData[] = $innerItem;
+                        }
+                    }
+                }
                 $studentNowScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                     ->where('sg_id','=',$sgId)
                     ->where('year','=',$year)
