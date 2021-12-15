@@ -252,7 +252,7 @@ class SmsViewController extends Controller
 
         $smsPapers = SmsPapers::where('sp_code','=',$upCode)->orderBy('id','asc')->get();
 
-        if (is_null($smsPapers)){
+        if (!isset($smsPapers)){
             die("NO Data");
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
