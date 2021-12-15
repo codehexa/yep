@@ -252,6 +252,7 @@ class SmsViewController extends Controller
 
         $smsPapers = SmsPapers::where('sp_code','=',$upCode)->latest()->take(1);
 
+        dd($smsPapers);
         if (!isset($smsPapers)){
             die("NO Data");
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
