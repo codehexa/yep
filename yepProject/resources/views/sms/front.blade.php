@@ -461,8 +461,12 @@
             let pid = pidToDown[cnt];
             console.log("pids : " + pidToDown.toString());
 
-            let url = "/SmsExcelDownload/" + pid;
-            location.href = url;
+            let urlItem = "/SmsExcelDownload/" + pid;
+
+            $.get(urlItem,{},function(data,status){
+                console.log("data : " + data + ", status : " + status);
+            });
+
             pidToSent.push(pid);
             console.log("pid : " + pid);
 
