@@ -25,12 +25,8 @@ class SubjectsController extends Controller
             foreach ($parents as $parent){
                 $hasChild = $parent->has_child;
                 $children = [];
-                echo "has : {$hasChild}";
                 if ($hasChild == "Y"){
                     $children = $this->getChildren($parent->id);
-                    echo "<pre>";
-                    print_r($children);
-                    echo "</pre>";
                 }
                 $parent->setAttribute('children',$children);
                 $data[] = $parent;
