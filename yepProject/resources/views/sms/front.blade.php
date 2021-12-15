@@ -191,7 +191,12 @@
                                     @case(\App\Models\Configurations::$SMS_STATUS_SENT)
                                     <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                     @if (isset($datum->TestForm))
-                                        <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="form-check-input fn_excel_item" />
+                                            <label class="custom-control-label" for="cst_check_{{ $datum->id }}"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</label>
+                                        </div>
+<!--
+                                        <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>-->
                                     @endif
                                     @break
                                     @case(\App\Models\Configurations::$SMS_STATUS_SAVING)
