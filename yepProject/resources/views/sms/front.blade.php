@@ -455,6 +455,7 @@
             }
             let cnt = pidToSent.length;
             let pid = pidToDown[cnt];
+            console.log("pids : " + pidToDown.toString());
             location.href = "/SmsExcelDownload/" + pid;
             pidToSent.push(pid);
             console.log("pid : " + pid);
