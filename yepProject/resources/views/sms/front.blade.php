@@ -462,20 +462,11 @@
             console.log("pids : " + pidToDown.toString());
 
             let url = "/SmsExcelDownload/" + pid;
-            $.get(url, function(data){
-                var w = window.open('about:blank');
-                w.document.open();
-                w.document.write(data);
-                w.document.close();
-            })
-            //location.href = "/SmsExcelDownload/" + pid;
+            location.href = url;
             pidToSent.push(pid);
             console.log("pid : " + pid);
 
-            setTimeout(function (){
-                //
-                runToDownload();
-            },1000);
+            setTimeout(runToDownload,1000);
         }
 
         // preview
