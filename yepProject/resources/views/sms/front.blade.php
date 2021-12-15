@@ -200,10 +200,9 @@
                                     @if (isset($datum->TestForm))
                                         <div class="custom-control custom-checkbox mr-2">
                                             <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
-                                            <label class="custom-control-label" for="cst_check_{{ $datum->id }}"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</label>
+                                            <label class="custom-control-label" for="cst_check_{{ $datum->id }}"></label>
                                         </div>
-<!--
-                                        <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>-->
+                                        <a href="/SmsExcelDownload/{{ $datum->id }}" class="ml-1 btn btn-sm btn-success fn_excel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</a>
                                     @endif
                                     @break
                                     @case(\App\Models\Configurations::$SMS_STATUS_SAVING)
