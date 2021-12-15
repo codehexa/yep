@@ -463,10 +463,6 @@
 
             let urlItem = "/SmsExcelDownload/" + pid;
 
-            $.get(urlItem,{},function(data,status){
-                console.log("data : " + data + ", status : " + status);
-            });
-
             pidToSent.push(pid);
             console.log("pid : " + pid);
 
