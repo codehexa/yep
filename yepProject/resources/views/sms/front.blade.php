@@ -462,6 +462,7 @@
             console.log("pids : " + pidToDown.toString());
 
             let urlItem = "/SmsExcelDownload/" + pid;
+            location.href = urlItem;
 
             pidToSent.push(pid);
             console.log("pid : " + pid);
