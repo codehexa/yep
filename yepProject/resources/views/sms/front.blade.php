@@ -462,7 +462,7 @@
             console.log("pids : " + pidToDown.toString());
 
             let url = "/SmsExcelDownload/" + pid;
-            $.post(url, function(data){
+            $.get(url, function(data){
                 var w = window.open('about:blank');
                 w.document.open();
                 w.document.write(data);
