@@ -162,7 +162,6 @@ class TestFormsController extends Controller
                     $n++;
                 }
 
-
                 $ltMode = "add";
                 $ltTarget = $newTest->id;
                 $ltOld = "";
@@ -182,6 +181,13 @@ class TestFormsController extends Controller
             $savedForm = TestForms::where('id','=',$infoId)->get()->first();
             $oldSubjectsCount = $savedForm->subjects_count;
 
+            // 순서 저장 이외의 기능은 버튼에서 이전 처리하므로 패스
+            $loginN = 0;
+            foreach($subjectIds as $subjectId){
+                $cTfItem = TestFormsItems::find($subjectId);
+                $cTfItem->sj_index = $loginN;
+                $loginN++;
+            }
             // old subject id clear
             /*for ($i=$oldSubjectsCount; $i < Configurations::$TEST_FORM_IN_SUBJECT_MAX; $i++){
                 $sjFieldName = Configurations::$TEST_FORM_IN_SUBJECT_PREFIX.$i;
