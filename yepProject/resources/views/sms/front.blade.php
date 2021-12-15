@@ -156,7 +156,7 @@
 
             <div class="custom-control custom-checkbox ml-2">
                 <input type="checkbox" class="custom-control-input" id="excelAll">
-                <label class="custom-control-label" for="excelAll"><i class="fa fa-check-circle"></i> {{ __('strings.fn_select_all_or_not') }}</label>
+                <label class="custom-control-label" for="excelAll" id="excelAllLabel"><i class="fa fa-check-circle"></i> {{ __('strings.fn_select_all_or_not') }}</label>
             </div>
         </div>
     </div>
@@ -426,6 +426,27 @@
 @section('scripts')
 
     <script type="text/javascript">
+        // check all
+        $(document).on("click","#excelAll , #excelAllLabel",function (){
+            $(".fn_excel_item").each(function (i,obj){
+                $(obj).prop("checked",$("#excelAll").prop("checked"));
+            });
+        });
+
+        // Download Excel
+        $(document).on("click","#btnDownExcel",function(){
+            event.preventDefault();
+            $(".fn_excel_item").each(function (i,obj){
+                if ($(obj).prop("checked")){
+                    let pid = $(obj).val();
+                    let delay = Math.floor(Math.random() * 500) + (index * 500);
+                    setTimeout(function (){
+                        location.href = "/SmsExcelDownload/" + pid;
+                    }, delay);
+                }
+            });
+        });
+
         // preview
         $(document).on("click",".fn_detail_view",function (){
             event.preventDefault();
