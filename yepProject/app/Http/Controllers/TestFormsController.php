@@ -359,6 +359,8 @@ class TestFormsController extends Controller
             where('sj_depth','=','0')->count();
         $lastSjIndexCount = $lastSjIndex + 1;
 
+        $returnsArray = [];
+
         for ($i=0; $i < sizeof($exp); $i++){
             $subjectRoot = Subjects::find($exp[$i]);
             $newTestFormItem = new TestFormsItems();
@@ -373,9 +375,11 @@ class TestFormsController extends Controller
             $newTestFormItem->sj_has_child = $subjectRoot->has_child;
 
             $newTestFormItem->save();
+            $newTFId = $newTestFormItem->id;
+            $returnsArray[] = $newTFId;
             if ($subjectRoot->has_child == "Y"){
                 $subjectChildren = Subjects::where('parent_id','=',$exp[$i])->orderBy('sj_order','asc')->get();
-                $newTFId = $newTestFormItem->id;
+
                 $newChildIndex = 1;
                 foreach($subjectChildren as $subjectChild){
                     $newSubItem = new TestFormsItems();
@@ -392,14 +396,15 @@ class TestFormsController extends Controller
                     $newChildIndex++;
                 }
             }
-
         }
+
+        $returnsString = implode(",",$returnsArray);
 
         $allCount = TestFormsItems::where('tf_id','=',$tfId)->where('sj_depth','=','0')->count();
         $updateCount = TestForms::find($tfId);
         $updateCount->items_count = $allCount;
         $updateCount->save();
 
-        return response()->json(['result'=>'true']);
+        return response()->json(['result'=>'true','returns'=>$returnsString]);
     }
 }

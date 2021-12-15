@@ -332,6 +332,7 @@
                     success:function(msg){
                         if (msg.result === "true"){
                             console.log("true");
+                            loadItemsLeft($("#info_id").val());
                         }else{
                             console.log("false");
                         }
@@ -342,9 +343,6 @@
 
                 });
             }
-
-
-
 
             for (let j=forDels.length -1; j >= 0; j--){
                 subjectDataSet.splice(forDels[j],1);
@@ -437,6 +435,11 @@
 
             $("#fn_loading").removeClass("d-none");
             $("#btnTfDelete").removeClass("d-none");
+
+            loadItemsLeft(tfId);
+        });
+
+        function loadItemsLeft(tfId){
             $.ajax({
                 type:"POST",
                 url:"/getTestFormJson",
@@ -485,7 +488,7 @@
                     }
                 }
             });
-        });
+        }
 
         $(document).on("click","#btnStSubmit",function (){
             //
