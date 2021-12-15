@@ -433,7 +433,8 @@ class SmsJobController extends Controller
                     ->count();
                 if ($smsReadyCheck > 0){
                     $smsReMsg = str_replace(Configurations::$SMS_REPLACE_NAME,$student->student_name,$smsMsg);
-                    $smsReMsg .= $smsURL;
+                    $smsReMsg = str_replace(Configurations::$SMS_REPLACE_WEEK,$week,$smsReMsg);
+                    $smsReMsg .= " ".$smsURL;
                     $newSmsSend = new SmsSendResults();
                     $newSmsSend->student_id = $student->id;
                     $newSmsSend->class_id = $classId;

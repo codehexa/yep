@@ -303,7 +303,7 @@ return [
     "lb_input_teacher_say"  => "선생님 말씀 제목을 입력하세요",
     "lb_sms_text_title"   => "SMS 에 표시되는 내용",
     "lb_input_sms_text_title"   => "SMS 에 표시되는 내용을 입력하세요",
-    "lb_sms_define_name"    => "학생이름 위치는 '학생이름' 이라 적힌 위치에 표시됩니다. 예: '학생이름' 성적표입니다.",
+    "lb_sms_define_name"    => "학생이름 위치는 '학생이름' 이라 적힌 위치에 표시됩니다.또한 주차(week)의 위치는 주차 라고 적힌 위치에 표시됩니다. 예: '학생이름' week 주차 성적표입니다.",
     "str_total_sent"    => "전체 :TOTAL 건을 발송 예약했습니다. 순서에 따라 순차 발송 됩니다.",
     "lb_weekly_test_paper" => "주간 성적표",
     "lb_test_paper_title" => "성적표 이름",

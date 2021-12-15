@@ -70,6 +70,7 @@ class Configurations extends Model
     public static $SMS_SEND_VIEW_N  = "N";
 
     public static $SMS_REPLACE_NAME = "'학생이름'";
+    public static $SMS_REPLACE_WEEK = "주차";
     public static $SMS_PAGE_URL = "http://yepmanager.co.kr/sms/viewpage/";
 
     public static $SMS_OPINION_NONE = "NONE";
