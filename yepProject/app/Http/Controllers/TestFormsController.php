@@ -222,7 +222,7 @@ class TestFormsController extends Controller
 
             if (sizeof($IdsToAdd) > 0){
                 for($i=0; $i < sizeof($IdsToAdd); $i++){
-                    //$toAddItemsTestItems = ::find($IdsToAdd[$i]);
+                    $toAddItemsTestItems = Subjects::find($IdsToAdd[$i]);
                 }
 
             }
@@ -243,7 +243,7 @@ class TestFormsController extends Controller
 
                 return redirect("/testForm");
             }catch (\Exception $exception){
-                dd($exception);
+                //dd($exception);
                 return redirect()->back()->withErrors(['msg'=>'FAIL_TO_MODIFY']);
             }
         }
@@ -253,7 +253,7 @@ class TestFormsController extends Controller
     public function getTestFormData(Request $request){
         $tfId = $request->get("tfId");
 
-        $tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->get()->first();  // on centos
+        $tfForm = TestForms::find($tfId);//where('id','=',$tfId)->orderBy('id','asc')->get()->first();  // on centos
         //$tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->first();    // on mac
         $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->
         where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
