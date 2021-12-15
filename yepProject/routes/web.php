@@ -144,6 +144,7 @@ Route::group(['middleware' => ['managerPower']],function() {
     Route::post("/getTestFormJson",[\App\Http\Controllers\TestFormsController::class, "getTestFormData"]);
     Route::post("/getTestFormsJson",[\App\Http\Controllers\TestFormsController::class, "getTestForms"]);
     Route::post("/delTestForms",[\App\Http\Controllers\TestFormsController::class, "deleteForm"]);
+    Route::post("/testFormAddSubjects",[\App\Http\Controllers\TestFormsController::class, "testFormAddSubjects"]);
 });
 
 /* SMS 업무 */

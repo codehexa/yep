@@ -325,4 +325,52 @@ class TestFormsController extends Controller
 
         return response()->json(['data'=>$data]);
     }
+
+    public function testFormAddSubjects(Request $request){
+        $tfId = $request->get("tfId");
+        $subjects = $request->get("subjectIds");
+
+        $exp = explode($subjects);
+
+        $lastSjIndex = TestFormsItems::where('tf_id','=',$tfId)->
+            where('sj_depth','=','0')->count();
+        $lastSjIndexCount = $lastSjIndex + 1;
+
+        for ($i=0; $i < sizeof($exp); $i++){
+            $subjectRoot = Subjects::find($exp[$i]);
+            $newTestFormItem = new TestFormsItems();
+            $newTestFormItem->tf_id = $tfId;
+            $newTestFormItem->sj_id = $exp[$i];
+            $newTestFormItem->sj_index = $lastSjIndexCount;
+            $newTestFormItem->sj_title = $subjectRoot->sj_title;
+            $newTestFormItem->sj_type = $subjectRoot->sj_type;
+            $newTestFormItem->sj_max_score = $subjectRoot->sj_max_score;
+            $newTestFormItem->sj_parent_id = $subjectRoot->parent_id;
+            $newTestFormItem->sj_depth = $subjectRoot->depth;
+            $newTestFormItem->sj_has_child = $subjectRoot->has_child;
+
+            $newTestFormItem->save();
+            if ($subjectRoot->has_child == "Y"){
+                $subjectChildren = Subjects::where('parent_id','=',$exp[$i])->orderBy('sj_order','asc')->get();
+                $newTFId = $newTestFormItem->id;
+                $newChildIndex = 1;
+                foreach($subjectChildren as $subjectChild){
+                    $newSubItem = new TestFormsItems();
+                    $newSubItem->tf_id = $tfId;
+                    $newSubItem->sj_id = $subjectChild->id;
+                    $newSubItem->sj_index = $newChildIndex;
+                    $newSubItem->sj_title = $subjectChild->sj_title;
+                    $newSubItem->sj_type = $subjectChild->sj_type;
+                    $newSubItem->sj_max_score = $subjectChild->sj_max_score;
+                    $newSubItem->sj_parent_id = $newTFId;
+                    $newSubItem->sj_depth = 1;
+                    $newSubItem->sj_has_child = $subjectChild->has_child;
+                    $newSubItem->save();
+                    $newChildIndex++;
+                }
+            }
+
+            return response()->json(['result'=>'true']);
+        }
+    }
 }

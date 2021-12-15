@@ -319,6 +319,30 @@
             }
 
             console.log(toUpdateIds);
+            if ($("#info_id").val() !== ""){
+                $.ajax({
+                    type:"POST",
+                    url:"/testFormAddSubjects",
+                    dataType:"json",
+                    data:{
+                        "_token":$("input[name='_token']").val(),
+                        "tfId":$("#info_id").val(),
+                        "subjectIds":toUpdateIds.toString()
+                    },
+                    success:function(msg){
+                        if (msg.result === "true"){
+                            console.log("true");
+                        }else{
+                            console.log("false");
+                        }
+                    },
+                    error:function (e1,e2,e3){
+                        console.log(e2);
+                    },
+
+                });
+            }
+
 
 
 
