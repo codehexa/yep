@@ -22,7 +22,7 @@ class SubjectsController extends Controller
                 ->orderBy('sj_order','asc')
                 ->get();
 
-            //dd($parents);
+            dd($parents);
             foreach ($parents as $parent){
                 $hasChild = $parent->has_child;
                 $children = [];
