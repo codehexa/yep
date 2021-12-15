@@ -20,7 +20,7 @@ class SubjectsController extends Controller
             $parents = Subjects::where('sg_id','=',$grade)
                 ->where('depth','=','0')
                 ->orderBy('sj_order','asc')
-                ->get();
+                ->toSql();
 
             dd($parents);
             foreach ($parents as $parent){
