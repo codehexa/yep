@@ -303,17 +303,24 @@
         // 배정시키기.
         $(document).on("click","#btnToLeft",function (){
             event.preventDefault();
+
             let items = $("#tf_all_items").find(".fn_subjects");
             let forDels = [];
+            let toUpdateIds = [];   // 신규 업데이트할 대상을 담는다.
             for (let i=0; i < items.length; i++){
                 if (items.eq(i).prop("checked") === true){
                     let selObj = subjectDataSet[i];
+                    toUpdateIds.push(selObj.Id);
                     if (!checkHasIndex(savedDataSet, selObj.Id)){   // 과목의 아이디 값을 저장한다.
                         savedDataSet.push(selObj);
                         forDels.push(i);
                     }
                 }
             }
+
+            console.log(toUpdateIds);
+
+
 
             for (let j=forDels.length -1; j >= 0; j--){
                 subjectDataSet.splice(forDels[j],1);
