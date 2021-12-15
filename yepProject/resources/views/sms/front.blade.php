@@ -453,6 +453,10 @@
             if (pidToDown.length <= 0) {
                 return;
             }
+
+            if (pidToDown.length >= pidToSent.length){
+                return;
+            }
             let cnt = pidToSent.length;
             let pid = pidToDown[cnt];
             console.log("pids : " + pidToDown.toString());
