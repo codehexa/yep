@@ -626,6 +626,7 @@ class SmsJobController extends Controller
                 $newSmsScore->hg_id = $hgId;
                 $newSmsScore->opinion = "";
                 $newSmsScore->sent = "N";
+                $newSmsScore->send_ready = "N";
                 $newSmsScore->score_count = sizeof($tItems);
                 for ($i=0; $i < sizeof($tItems); $i++){
                     $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
