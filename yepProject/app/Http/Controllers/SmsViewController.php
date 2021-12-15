@@ -332,9 +332,7 @@ class SmsViewController extends Controller
 
 
                 $opinionItem = [];
-                echo "<pre>";
-                print_r($testFormChildData);
-                echo "</pre>";
+
                 for ($i=0; $i < sizeof($testFormChildData); $i++){
                     $cItem = $testFormChildData[$i];
                     $DoAdd = false;
