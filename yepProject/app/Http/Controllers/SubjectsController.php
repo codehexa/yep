@@ -44,8 +44,7 @@ class SubjectsController extends Controller
     }
 
     public function getChildren($parent_id){
-        return Subjects::where('parent_id','=',$parent_id)
-            ->orderBy('sj_order','asc')->get();
+        return Subjects::where('parent_id','=',$parent_id)->orderBy('sj_order','asc')->get();
     }
 
     public function add(Request $request){
