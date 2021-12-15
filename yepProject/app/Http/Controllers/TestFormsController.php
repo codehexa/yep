@@ -41,7 +41,6 @@ class TestFormsController extends Controller
             $data = TestForms::orderBy('form_title','asc')->get();
         }
 
-
         return view('testforms.index',
             [
                 'data'=>$data,'academies'=>$academies,
@@ -254,8 +253,8 @@ class TestFormsController extends Controller
     public function getTestFormData(Request $request){
         $tfId = $request->get("tfId");
 
-        //$tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->get()->first();  // on centos
-        $tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->first();    // on mac
+        $tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->get()->first();  // on centos
+        //$tfForm = TestForms::where('id','=',$tfId)->orderBy('id','asc')->first();    // on mac
         $tfFormSubjectsRoot = TestFormsItems::where('tf_id','=',$tfId)->
         where('sj_depth','=',0)->orderBy('sj_index','asc')->get();
 
