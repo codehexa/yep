@@ -183,6 +183,7 @@
                         <textarea type="text" name="info_name" id="info_name" placeholder="{{ __('strings.str_input_opinion') }}" class="form-control">
                         </textarea>
                     </div>
+                    <div class="text-right"><small id="opinion_cnt">0</small></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -273,6 +274,13 @@
 @section('scripts')
 
     <script type="text/javascript">
+        // 글 입력시 글자 수 계산
+        $(document).on("keyup","#info_name",function (){
+            countStrings();
+        });
+        function countStrings(){
+            $("#opinion_cnt").html($("#info_name").val().length);
+        }
         // 학생 선택 체크박스
         $(document).on("click","#ch_box",function (){
             $("input[name='sready[]']").each(function(i,obj){
@@ -462,6 +470,7 @@
             $("#infoModalCenter").modal("show");
             $("#info_id").val(curId);
             $("#info_name").val(curOpinion).focus();
+            countStrings();
         });
 
         // wordian click

@@ -215,8 +215,9 @@
                                     <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-outline-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
                                     @break
                                 @endswitch
-<!--                                <button class="btn btn-info btn-sm fn_add_item" fn_code="{{ $datum->id }}"><i class="fa fa-plus-circle"></i> {{ __('strings.lb_add_paper') }}</button>-->
+                                @if (\Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
                                 <button class="btn btn-danger btn-sm fn_del_item" fn_code="{{ $datum->id }}"><i class="fa fa-trash"></i> {{ __('strings.fn_delete') }}</button>
+                                @endif
                             </div>
 
                         </td>

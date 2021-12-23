@@ -386,10 +386,19 @@ class SmsJobController extends Controller
         $score->send_ready = $sendReady;
 
         $arr = explode(",",$scores);
+        $logScores = [];
         for ($i=0; $i < sizeof($arr); $i++){
             $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
             $score->$fieldName = $arr[$i];
+            $logScores[] = $arr[$i];
         }
+
+        $logScoresController = new LogScoresController();
+        $logMode = "add_each";
+        $logScoreTarget = $scId;
+        $logScoreOld = "";
+        $logScoreNew = $scId."::"."TFID:{$score->tf_id}::SCORES:".implode(",",$logScores)."::OPINION:{$opinion}::WORDIAN:{$wordian}";
+        $logScoresController->addLog($logMode,$logScoreTarget,$logScoreOld,$logScoreNew);
 
         try {
             $score->save();
@@ -627,7 +636,7 @@ class SmsJobController extends Controller
                 $newSmsScore->hg_id = $hgId;
                 $newSmsScore->opinion = "";
                 $newSmsScore->sent = "N";
-                $newSmsScore->send_ready = "N";
+                $newSmsScore->send_ready = "Y";
                 $newSmsScore->score_count = sizeof($tItems);
                 for ($i=0; $i < sizeof($tItems); $i++){
                     $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$i;
@@ -654,6 +663,8 @@ class SmsJobController extends Controller
         $smsPaper = SmsPapers::find($request->get("saved_sp_id"));
         $autoSave = $request->get("saved_auto");
 
+        $oldSmsPaper = $smsPaper;
+
         $ssIds = $request->get("ss_id");
 
         $testFormItemsCount = TestFormsItems::where('tf_id','=',$smsPaper->tf_id)->where('sj_has_child','=','N')->count();
@@ -662,23 +673,35 @@ class SmsJobController extends Controller
         $wordianVals = $request->get("ss_wordian");
         $sendReady = $request->get("sready_vals");
 
+        $logSmsPaperController = new LogSmsPapersController();
+        $logScoresController = new LogScoresController();
+
         if (!is_null($ssIds)){
             for($i=0; $i < sizeof($ssIds); $i++){   // $ssId smsscores.id
                 //dd($ssIds[$i]);
                 $nowSmsScore = SmsScores::find($ssIds[$i]);
 
+                $logScores = [];
                 for ($j=0; $j < $testFormItemsCount; $j++){
                     $fieldName = Configurations::$TEST_SCORES_FIELD_PREFIX.$j;
                     $nowRequest = $request->get($fieldName);
                     //dd($nowRequest[$i]);
                     $nowScore = $nowRequest[$i];
                     //dd($nowScore);
+                    $logScores[] = $nowScore;
+
                     $nowSmsScore->$fieldName = $nowScore;
                 }
                 $sendReadyEach = "Y";
                 if (!isset($sendReady[$i]) || $sendReady[$i] != "Y"){
                     $sendReadyEach = "N";
                 }
+
+                $logMode = "add";
+                $logScoreTarget = $ssIds[$i];
+                $logScoreOld = "";
+                $logScoreNew = $logScoreTarget."::"."PPID:{$smsPaper->id}::SCORES:".implode(",",$logScores)."::OPINION:{$opinionVals[$i]}::WORDIAN:{$wordianVals[$i]}";
+                $logScoresController->addLog($logMode,$logScoreTarget,$logScoreOld,$logScoreNew);
 
                 $nowSmsScore->send_ready = $sendReadyEach;
                 $nowSmsScore->opinion = $opinionVals[$i];
@@ -692,12 +715,18 @@ class SmsJobController extends Controller
             }
 
             try {
+                $logMode = "add";
+                $targetId = $smsPaper->id;
+                $oldValue = $oldSmsPaper->sp_status;
+                $newVaule = $smsPaper->sp_status;
+                $logField = "status";
+                $logSmsPaperController->addLog($logMode,$targetId,$oldValue,$newVaule,$logField);
                 $smsPaper->save();
             }catch (\Exception $exception){
                 return redirect()->back()->withErrors(["msg"=>"FAIL_TO_SAVE"]);
             }
         }
-        return redirect("/SmsFront");
+        return redirect("/SmsFront/{$smsPaper->ac_id}/{$smsPaper->sg_id}/{$smsPaper->cl_id}");
     }
 
     // excel download
