@@ -116,7 +116,9 @@
 
                         </div>
                     @endfor
-                    <div class="mt-1 text-sm text-center">{{ __('strings.lb_zero_point_guide') }}</div>
+                    <div class="mt-1 text-sm text-center"><small>{{ __('strings.lb_zero_point_guide') }}</small></div>
+                    <div class="mt-1 text-center">{{ __('strings.guide_all_dt_65') }}</div>
+                    <div class="mt-1 text-sm text-center"><small>{{ __('strings.guide_max_score_100') }}</small></div>
                 </div>
                 <!-- 성적표 내용 표시하기 -->
 
@@ -191,10 +193,11 @@
                                 {
                                     label: '{!! $jsData[$i][$j]['labels'] !!}',
                                     data: [{{ $jsData[$i][$j]['scores'] }}],
-                                    backgroundColor: getRandomeColor({{ $jsData[$i][$j]['stack'] }}),
+                                    backgroundColor: getRandomColor({{ $jsData[$i][$j]['stack'] }},'{!! $jsData[$i][$j]['max'] !!}'),
                                     borderColor: 'rgba(0, 0, 0, 0.2)',
                                     borderWidth: 1,
                                     stack: 'Stack {{ $jsData[$i][$j]['stack'] }}',
+                                    dataMaxs: '{!! $jsData[$i][$j]['max'] !!}',
                                 },
                                 @endfor
                             ]
@@ -210,6 +213,20 @@
                                     stacked: true
                                 }
                             },
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += tooltipItem.yLabel;
+                                        label += " / " + data.datasets[tooltipItem.datasetIndex].dataMaxs;
+                                        return label;
+                                    }
+                                }
+                            },
                             plugins: {
                                 datalabels: {
                                     //color: 'white',
@@ -223,7 +240,8 @@
                                             color: 'green'
                                         }
                                     }
-                                }
+                                },
+
                             }
                         }
                     });
@@ -232,7 +250,7 @@
 
             }
 
-            function getRandomeColor(index){
+            function getRandomColor(index,mScore){
                 let colors = [
                     'rgb(255, 99, 132, 0.2)',
                     'rgb(255, 159, 64, 0.2)',
@@ -240,9 +258,16 @@
                     'rgb(75, 192, 192, 0.2)',
                     'rgb(54, 162, 235, 0.2)',
                     'rgb(153, 102, 255, 0.2)',
-                    'rgb(201, 203, 207, 0.2)'
+                    'rgb(201, 203, 207, 0.2)',
+                    'rgba(0,255,0,0.2)',
+                    'rgba(252,3,3,0.5)',
                     ];
-                return colors[index];
+                if (mScore === '100'){
+                    return colors[8];
+                }else{
+                    return colors[index];
+                }
+
             }
         </script>
     </body>

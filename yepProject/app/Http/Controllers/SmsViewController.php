@@ -174,6 +174,7 @@ class SmsViewController extends Controller
                         $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
                         $nowJsData[$score_N]["id"] = $cItem->id;
                         $nowJsData[$score_N]["stack"] = $stack;
+                        $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
 
                         if ($cItem->testFormParent->exam == "N"){
                             $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
@@ -264,7 +265,6 @@ class SmsViewController extends Controller
         $smsPapers = $smsPapersRoot->first();
 
         if (!isset($smsPapers)){
-            die("NO Data");
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
@@ -400,6 +400,7 @@ class SmsViewController extends Controller
                         $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
                         $nowJsData[$score_N]["id"] = $cItem->id;
                         $nowJsData[$score_N]["stack"] = $stack;
+                        $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
 
                         if ($cItem->testFormParent->exam == "N"){
                             $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);

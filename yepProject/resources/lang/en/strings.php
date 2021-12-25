@@ -562,6 +562,11 @@ return [
     "err_fail_to_new_add_dup"   => "기존 등록된 E-Mail 이 있습니다",
     "err_input_title"   => "제목을 입력하세요",
 
+    /* guide */
+    "guide_all_dt_65"   => "모든 DT는 65점 만점임",
+    "guide_max_score_100" => "*예비고1 이상 실시하는 모의고사 과제는 100점 만점",
+
+
     /* Excel Strings */
     "exc_student_info"   => "원생 자료",
     "exc_week_pre"   => "WEEK :NO",
