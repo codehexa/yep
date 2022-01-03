@@ -575,6 +575,8 @@ return [
     "exc_grade" => "학년",
     "exc_class" => "반",
     "exc_teacher"   => "담임",
+    "exc_teacher_say"   => "담임의견",
+    "exc_wordian"   => "워디언",
     "wait_to_download_and_get_bottom"   => "파일이 다운로드 될 때 까지 잠시만 기다려 주세요. 브라우저 하단에 다운로드 파일 링크가 생깁니다.",
 
 ];

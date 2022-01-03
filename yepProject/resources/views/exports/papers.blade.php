@@ -28,6 +28,8 @@
                     <td style="text-align: center; vertical-align: auto">{{ $item->sj_title }}</td>
                 @endif
             @endforeach
+            <td style="text-align: center; vertical-align: auto">{{ __('strings.exc_teacher_say') }}</td>
+            <td style="text-align: center; vertical-align: auto">{{ __('strings.exc_wordian') }}</td>
         </tr>
 
         @foreach ($data as $datum)
@@ -43,6 +45,8 @@
                     @endphp
                     <td style="text-align: center; background-color: #ffe495">{{ $datum->$field }}</td>
                 @endfor
+                <td style="text-align: center; background-color: #ffe495">{{ $datum->teacher_say }}</td>
+                <td style="text-align: center; background-color: #ffe495">{{ $datum->wordian }}</td>
             </tr>
         @endforeach
     </table>

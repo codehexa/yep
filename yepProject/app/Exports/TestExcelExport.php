@@ -82,6 +82,8 @@ class TestExcelExport implements FromView
                 "school_grade"  => $datum->school_grade,
                 "teacher_name"  => $datum->teacher_name,
                 "class_name"    => $datum->class_name,
+                "teacher_say"   => $datum->opinion,
+                "wordian"   => $datum->wordian
             ];
             for ($i=0; $i < $head_col_size; $i++){
                 $fieldName = "score_".$i;
