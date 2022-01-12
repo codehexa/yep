@@ -186,7 +186,7 @@
                         type: 'bar',
                         data: {
                             labels: [
-                                '이전 주','이번 주'
+                                '이전 주','이번 주','DB'
                             ],
                             datasets: [
                                 @for($j = 0; $j < sizeof($jsData[$i]); $j++)
@@ -216,7 +216,7 @@
                             legend: {
                                 display: true,
                                 labels: {
-                                    fontColor: 'rgb(255,99,132)'
+                                    fontColor: 'rgb(31,30,30)'
                                 }
                             },
                             tooltips: {
