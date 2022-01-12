@@ -206,14 +206,14 @@
                             responsive: false,
                             scales: {
                                 //x: {
-                                xAxes: {
+                                xAxes: [{
                                     stacked: true,
                                     ticks: {
-                                        callback: function(label){
-                                            return label;
+                                        callback: function(value,index,values){
+                                            return value;
                                         }
                                     }
-                                },
+                                }],
                                 y: {
                                     beginAtZero: true,
                                     stacked: true
