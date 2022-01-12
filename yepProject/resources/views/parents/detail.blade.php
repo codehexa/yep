@@ -190,7 +190,7 @@
                                 {
                                     label: '{!! $jsData[$i][$j]['labels'] !!}',
                                     data: [{{ $jsData[$i][$j]['scores'] }}],
-                                    backgroundColor: getRandomColor({{ $jsData[$i][$j]['stack'] }},'{!! $jsData[$i][$j]['max'] !!}'),
+                                    backgroundColor: getRandomColor({{ $jsData[$i][$j]['stack'] }},'{!! $jsData[$i][$j]['isTest'] !!}'),
                                     borderColor: 'rgba(0, 0, 0, 0.2)',
                                     borderWidth: 1,
                                     stack: 'Stack {{ $jsData[$i][$j]['stack'] }}',
@@ -272,7 +272,7 @@
 
             }
 
-            function getRandomColor(index,mScore){
+            function getRandomColor(index,isTest){
                 let colors = [
                     'rgb(249, 237, 237, 1)',
                     'rgb(230, 238, 247, 1)',
@@ -288,7 +288,7 @@
                     'rgba(54,79,243,0.2)',
                     'rgba(246,117,245,0.2)'
                     ];
-                if (mScore === '100'){
+                if (isTest === 'Y'){
                     return 'rgba(252,3,3,0.5)';
                 }else{
                     return colors[index];
