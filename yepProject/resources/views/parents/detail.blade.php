@@ -88,7 +88,7 @@
                             <div class="list-group-item">
                                 <label for="">{{ __('strings.lb_test_paper_title') }}</label>
                                 <span class="text-primary">
-                                    {{ $smsPaper->year }} {{ __('strings.lb_year') }}
+{{--                                    {{ $smsPaper->year }} {{ __('strings.lb_year') }}--}}
                                     {{ $smsPaper->Hakgi->hakgi_name }}
                                     {{ $smsPaper->week }} {{ __('strings.lb_week_st') }}
                                     {{ __('strings.lb_weekly_test_paper') }}
@@ -105,10 +105,7 @@
                     @for($i=0; $i < sizeof($dataSet); $i++)
                         <div class="mt-2">
                             <h5>
-                                @if($dataSet[$i]["exam"] == "Y")
-                                    [{{ __("strings.lb_practice_exam") }}]
-                                @endif
-                                    {{ $dataSet[$i]['testTitle'] }}
+                                {{ $student->ClassObj->class_name }}
                             </h5>
                             <div class="d-flex justify-content-center">
                                 <canvas id="chart_{{ $i }}" style="width: 80vw;min-height: 30vh; height:{{ $canvas_height }}vh; max-height: 140vh;" role="img"></canvas>
