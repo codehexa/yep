@@ -179,13 +179,12 @@ class SmsViewController extends Controller
                             $parentItem = TestFormsItems::find($cItem->sj_parent_id);
                             $parentItemMax = $parentItem->sj_max_score;
                             if ($parentItemMax == 100){
-                                $nowJsData[$score_N]["max"] = $parentItemMax; // 21.12.25. added
+                                $nowJsData[$score_N]["isTest"] = "Y";
                             }else{
-                                $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
+                                $nowJsData[$score_N]["isTest"] = "N";
                             }
-
                         }else{
-                            $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
+                            $nowJsData[$score_N]["isTest"] = "N";
                         }
 
                         if ($cItem->testFormParent->exam == "N"){
