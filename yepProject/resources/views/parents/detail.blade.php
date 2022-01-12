@@ -216,6 +216,7 @@
                             datalabels: {
                                 labels: {
                                     title: {
+                                        text: 'dldld',
                                         font: {
                                             weight:'bold',
                                         }
@@ -230,10 +231,6 @@
                                 labels: {
                                     fontColor: 'rgb(31,30,30)'
                                 }
-                            },
-                            title: {
-                                display: true,
-                                text: 'asdkfasldf'
                             },
                             tooltips: {
                                 callbacks: {
