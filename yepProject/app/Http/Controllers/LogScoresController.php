@@ -19,6 +19,11 @@ class LogScoresController extends Controller
         $logScore->old_value = $old;
         $logScore->new_value = $new;
 
-        $logScore->save();
+        try {
+            $logScore->save();
+        }catch (\Exception $exception){
+
+        }
+
     }
 }

@@ -706,7 +706,17 @@ class SmsJobController extends Controller
                 $nowSmsScore->send_ready = $sendReadyEach;
                 $nowSmsScore->opinion = $opinionVals[$i];
                 $nowSmsScore->wordian = $wordianVals[$i];
-                $nowSmsScore->save();
+                try {
+                    $nowSmsScore->save();
+                }catch (\Exception $exception){
+                    $logMode = "Fail";
+                    $logScoreTarget = $smsPaper->id;
+                    $logScoreOld = "";
+                    $logScoreNew = "저장하는데 실패했습니다.";
+                    $logScoresController->addLog($logMode,$logScoreTarget,$logScoreOld,$logScoreNew);
+
+                }
+
             }
             if ($autoSave == "Y"){
                 $smsPaper->sp_status = Configurations::$SMS_STATUS_ABLE;
