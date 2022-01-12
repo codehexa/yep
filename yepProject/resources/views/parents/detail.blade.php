@@ -209,6 +209,7 @@
                                 xAxes: [{
                                     stacked: true,
                                     ticks: {
+                                        display: true,
                                         callback: function(value,index,values){
                                             return value;
                                         }
