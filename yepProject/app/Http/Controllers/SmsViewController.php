@@ -174,7 +174,14 @@ class SmsViewController extends Controller
                         $nowJsData[$score_N]["scores"] = "{$preScore},{$nowScore}";
                         $nowJsData[$score_N]["id"] = $cItem->id;
                         $nowJsData[$score_N]["stack"] = $stack;
-                        $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
+                        $cItemDepth = $cItem->sj_depth;
+                        if ($cItemDepth > 0){
+                            $parentItem = TestFormsItems::find($cItem->sj_parent_id);
+                            $parentItemMax = $parentItem->sj_max_score;
+                            $nowJsData[$score_N]["max"] = $parentItemMax; // 21.12.25. added
+                        }else{
+                            $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
+                        }
 
                         if ($cItem->testFormParent->exam == "N"){
                             $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);

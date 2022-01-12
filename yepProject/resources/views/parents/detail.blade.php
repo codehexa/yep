@@ -231,6 +231,10 @@
                                     fontColor: 'rgb(31,30,30)'
                                 }
                             },
+                            title: {
+                                display: true,
+                                text: 'asdkfasldf'
+                            },
                             tooltips: {
                                 callbacks: {
                                     label: function(tooltipItem, data) {
