@@ -186,6 +186,7 @@ class SmsViewController extends Controller
                         }else{
                             $nowJsData[$score_N]["isTest"] = "N";
                         }
+                        $nowJsData[$score_N]["max"] = $cItem->sj_max_score;
 
                         if ($cItem->testFormParent->exam == "N"){
                             $opinion_txt = $this->getOpinion($cItem->sj_id, $nowScore);
