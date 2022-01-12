@@ -213,6 +213,12 @@
                                     stacked: true
                                 }
                             },
+                            legend: {
+                                display: true,
+                                labels: {
+                                    fontColor: 'rgb(255,99,132)'
+                                }
+                            },
                             tooltips: {
                                 callbacks: {
                                     label: function(tooltipItem, data) {
