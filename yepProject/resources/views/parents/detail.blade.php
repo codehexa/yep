@@ -215,10 +215,12 @@
                                         }
                                     }
                                 }],
-                                y: {
-                                    beginAtZero: true,
-                                    stacked: true
-                                },
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stacked: true
+                                    }
+                                }],
                             },
                             datalabels: {
                                 labels: {
