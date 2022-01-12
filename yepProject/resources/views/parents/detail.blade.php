@@ -207,11 +207,16 @@
                             scales: {
                                 x: {
                                     stacked: true,
+                                    ticks: {
+                                        callback: function(label){
+                                            return label;
+                                        }
+                                    }
                                 },
                                 y: {
                                     beginAtZero: true,
                                     stacked: true
-                                }
+                                },
                             },
                             datalabels: {
                                 labels: {
