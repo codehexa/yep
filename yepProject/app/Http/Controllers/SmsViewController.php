@@ -178,7 +178,12 @@ class SmsViewController extends Controller
                         if ($cItemDepth > 0){
                             $parentItem = TestFormsItems::find($cItem->sj_parent_id);
                             $parentItemMax = $parentItem->sj_max_score;
-                            $nowJsData[$score_N]["max"] = $parentItemMax; // 21.12.25. added
+                            if ($parentItemMax == 100){
+                                $nowJsData[$score_N]["max"] = $parentItemMax; // 21.12.25. added
+                            }else{
+                                $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
+                            }
+
                         }else{
                             $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
                         }
@@ -411,7 +416,11 @@ class SmsViewController extends Controller
                         if ($cItemDepth > 0){
                             $parentItem = TestFormsItems::find($cItem->sj_parent_id);
                             $parentItemMax = $parentItem->sj_max_score;
-                            $nowJsData[$score_N]["max"] = $parentItemMax; // 21.12.25. added
+                            if ($parentItemMax == 100){
+                                $nowJsData[$score_N]["max"] = $parentItemMax; // 21.12.25. added
+                            }else{
+                                $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
+                            }
                         }else{
                             $nowJsData[$score_N]["max"] = $cItem->sj_max_score; // 21.12.25. added
                         }
