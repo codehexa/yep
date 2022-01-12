@@ -214,7 +214,11 @@
                                             return value;
                                         }
                                     }
-                                }],
+                                },
+                                    {
+                                        labels:['dasfasdf']
+                                    }
+                                ],
                                 yAxes: [{
                                     ticks: {
                                         beginAtZero: true,
