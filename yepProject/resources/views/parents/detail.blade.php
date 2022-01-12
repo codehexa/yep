@@ -205,7 +205,8 @@
                         options: {
                             responsive: false,
                             scales: {
-                                x: {
+                                //x: {
+                                xAxes: {
                                     stacked: true,
                                     ticks: {
                                         callback: function(label){
