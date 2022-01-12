@@ -116,8 +116,8 @@
 
                         </div>
                     @endfor
-                    <div class="mt-1 text-sm text-center"><small>{{ __('strings.lb_zero_point_guide') }}</small></div>
                     <div class="mt-1 text-center">{{ __('strings.guide_all_dt_65') }}</div>
+                    <div class="mt-1 text-sm text-center"><small>{{ __('strings.lb_zero_point_guide') }}</small></div>
                     <div class="mt-1 text-sm text-center"><small>{{ __('strings.guide_max_score_100') }}</small></div>
                 </div>
                 <!-- 성적표 내용 표시하기 -->
@@ -222,7 +222,7 @@
                             datalabels: {
                                 labels: {
                                     title: {
-                                        text: 'dldld',
+                                        text: '',
                                         font: {
                                             weight:'bold',
                                         }
