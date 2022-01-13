@@ -71,6 +71,7 @@ class TempController extends Controller
         curl_close($cinit);
 
         echo "<html>";
+        echo "ddd: {$key} , userid : {$userId}";
         echo $res;
         echo (iconv("UTF-8","EUC-KR",$res));
         echo "</html>";
