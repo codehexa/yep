@@ -70,7 +70,7 @@ class TempController extends Controller
         $res = curl_exec($cinit);
         curl_close($cinit);
 
-        dd($key);
+        dd($res);
 
         return $res;
 
