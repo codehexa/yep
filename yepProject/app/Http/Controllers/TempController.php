@@ -34,7 +34,7 @@ class TempController extends Controller
     }
 
     public function sms(){
-        /*
+
         $message = "aligo test";
         $receiver = "01023768670";
         $destination = "01023768670|tester";
@@ -73,7 +73,7 @@ class TempController extends Controller
         dd($res);
 
         return $res;
-        */
+
         /*$newPasswd = "a891dfasdf";
         $user = User::find(4);
         $smsCtrl = new AligoController();
