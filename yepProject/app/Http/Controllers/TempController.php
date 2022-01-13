@@ -73,7 +73,7 @@ class TempController extends Controller
         echo "<html>";
         echo "ddd: {$key} , userid : {$userId}";
         echo $res;
-        echo (iconv("UTF-8","EUC-KR",$res));
+        echo (iconv("UTF-8","EUC-KR","\ub4f1\ub85d\/\uc778\uc99d\ub418\uc9c0 \uc54a\uc740 \ubc1c\uc2e0\ubc88\ud638\uc785\ub2c8\ub2e4"));
         echo "</html>";
 
         //return $res;
