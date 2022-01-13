@@ -70,10 +70,12 @@ class TempController extends Controller
         $res = curl_exec($cinit);
         curl_close($cinit);
 
+        echo "<html>";
         echo $res;
         echo (iconv("UTF-8","EUC-KR",$res));
+        echo "</html>";
 
-        return $res;
+        //return $res;
 
         /*$newPasswd = "a891dfasdf";
         $user = User::find(4);
@@ -89,7 +91,7 @@ class TempController extends Controller
 
         dd($send);*/
 
-        $aligoCtrl = new AligoController();
-        $aligoCtrl->sendScoreResults();
+//        $aligoCtrl = new AligoController();
+//        $aligoCtrl->sendScoreResults();
     }
 }
