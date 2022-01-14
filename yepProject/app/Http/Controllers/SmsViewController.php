@@ -53,6 +53,7 @@ class SmsViewController extends Controller
             return view('parents.select',['code'=>$upCode,'up_students'=>$students,'up_tel'=>$upTel,'result'=>'true']);
         }else{
             $student = Students::find($studentId);
+            dd($student);
         }
 
         $opinionsAll = [];
