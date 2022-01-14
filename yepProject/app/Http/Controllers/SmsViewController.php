@@ -41,6 +41,7 @@ class SmsViewController extends Controller
         $studentId = $request->get("up_student_id");
 
         $smsPapersRoot = SmsPapers::where('sp_code','=',$upCode)->get();
+        dd($smsPapersRoot);
         $smsPapers = $smsPapersRoot->first();
 
         if (is_null($smsPapers)){
@@ -54,8 +55,6 @@ class SmsViewController extends Controller
         }else{
             $student = Students::find($studentId);
         }
-
-        dd($student);
 
         $opinionsAll = [];
         $opinionN = 0;
