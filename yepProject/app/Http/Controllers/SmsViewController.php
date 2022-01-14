@@ -40,7 +40,7 @@ class SmsViewController extends Controller
         $upTel = $request->get("up_parent_tel");
         $studentId = $request->get("up_student_id");
 
-        $smsPapersRoot = SmsPapers::where('sp_code','=',$upCode)->get();
+        $smsPapersRoot = SmsPapers::where('sp_code','=',$upCode)->toSql();
         $smsPapers = $smsPapersRoot->first();
 
         dd($smsPapersRoot);
