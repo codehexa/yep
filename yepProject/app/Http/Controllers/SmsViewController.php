@@ -55,6 +55,8 @@ class SmsViewController extends Controller
             $student = Students::find($studentId);
         }
 
+        dd($student);
+
         $opinionsAll = [];
         $opinionN = 0;
 
