@@ -228,7 +228,7 @@ class SmsViewController extends Controller
 
             $reOpinions = [];
 
-            dd($opinionsAll);
+            //dd($opinionsAll);
 
             if (sizeof($opinionsAll) > 0){
                 for ($ar=0; $ar < sizeof($opinionsAll) ; $ar++){
