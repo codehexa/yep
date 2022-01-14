@@ -245,6 +245,8 @@ class SmsViewController extends Controller
                     }
                 }
             }
+
+            dd($reOpinions);
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
                 'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
