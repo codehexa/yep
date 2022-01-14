@@ -89,7 +89,7 @@
                                 <label for="">{{ __('strings.lb_test_paper_title') }}</label>
                                 <span class="text-primary">
 {{--                                    {{ $smsPaper->year }} {{ __('strings.lb_year') }}--}}
-                                    {{ $smsPaper->Hakgi->hakgi_name }}
+                                    {{ isset($smsPaper->Hakgi)? $smsPaper->Hakgi->hakgi_name:"NOT_SET" }}
                                     {{ $smsPaper->week }} {{ __('strings.lb_week_st') }}
                                     {{ __('strings.lb_weekly_test_paper') }}
                                 </span>
