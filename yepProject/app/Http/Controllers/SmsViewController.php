@@ -228,6 +228,8 @@ class SmsViewController extends Controller
 
             $reOpinions = [];
 
+            dd($opinionsAll);
+
             if (sizeof($opinionsAll) > 0){
                 for ($ar=0; $ar < sizeof($opinionsAll) ; $ar++){
                     if ($ar > 0){
@@ -246,7 +248,7 @@ class SmsViewController extends Controller
                 }
             }
 
-            dd($reOpinions);
+
             return view('parents.detail',[
                 'papers'=>$smsPapers,'student'=>$student,
                 'settings'=>$smsSettings, 'smsPaper'=>$smsPaperFirst,
