@@ -111,6 +111,7 @@
         <script type="text/javascript">
             var timer;
             $(document).on("click","#btnSubmit",function (){
+                event.preventDefault();
                 if ($("#up_parent_tel").val() === ""){
                     $("#up_parent_tel").focus();
                     return;
