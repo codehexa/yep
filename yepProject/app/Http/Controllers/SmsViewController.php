@@ -65,7 +65,7 @@ class SmsViewController extends Controller
             $student_id = $student->id;
             $smsSettings = SmsPageSettings::first();
             //$smsSettings = SmsPageSettings::get()->take(1);
-            $smsPaperFirst = $smsPapers->first();
+            $smsPaperFirst = $smsPapers;
 
             $smsSendResult = SmsSendResults::where('sms_paper_code','=',$upCode)
                 ->where('student_id','=',$student_id)->first();
