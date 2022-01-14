@@ -50,7 +50,11 @@ class SmsViewController extends Controller
         $clId = $smsPapers->cl_id;
         if (!isset($studentId)){
             $students = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->get();
-            return view('parents.select',['code'=>$upCode,'up_students'=>$students,'up_tel'=>$upTel,'result'=>'true']);
+            if (sizeof($students) > 1){
+                return view('parents.select',['code'=>$upCode,'up_students'=>$students,'up_tel'=>$upTel,'result'=>'true']);
+            }else{
+                $student = $students->first();
+            }
         }else{
             $student = Students::where('id','=',$studentId)->first();
         }
