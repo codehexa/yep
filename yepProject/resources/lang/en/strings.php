@@ -327,6 +327,8 @@ return [
     "err_show_only_my_class"    => "오직 선생님의 반 정보만 리스트 됩니다.",
     "sms_excel_download"    => "Download",
 
+    "sms_select_student"    => "확인할 학생을 선택하세요",
+
     /* BMS */
     "lb_bms_program_title"  => "수업공지 프로그램",
     "lb_bms_bbs"    => "게시글 관리",

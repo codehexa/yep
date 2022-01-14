@@ -38,6 +38,7 @@ class SmsViewController extends Controller
     public function viewDetail(Request $request){
         $upCode = $request->get("up_code");
         $upTel = $request->get("up_parent_tel");
+        $studentId = $request->get("up_student_id");
 
         $smsPapersRoot = SmsPapers::where('sp_code','=',$upCode)->get()->take(1);
         $smsPapers = $smsPapersRoot->first();
@@ -47,8 +48,12 @@ class SmsViewController extends Controller
         }
 
         $clId = $smsPapers->cl_id;
-
-        $student = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->first();
+        if (!isset($studentId)){
+            $students = Students::where('class_id','=',$clId)->where('parent_hp','=',$upTel)->get();
+            return view('parents.select',['code'=>$upCode,'up_students'=>$students,'up_tel'=>$upTel,'result'=>'true']);
+        }else{
+            $student = Students::find($studentId);
+        }
 
         $opinionsAll = [];
         $opinionN = 0;
@@ -58,6 +63,7 @@ class SmsViewController extends Controller
         }else{
             $student_id = $student->id;
             $smsSettings = SmsPageSettings::first();
+            //$smsSettings = SmsPageSettings::get()->take(1);
             $smsPaperFirst = $smsPapers->first();
 
             $smsSendResult = SmsSendResults::where('sms_paper_code','=',$upCode)
