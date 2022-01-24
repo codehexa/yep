@@ -490,7 +490,11 @@ class SmsViewController extends Controller
                             $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
                         }
                     } else {
-                        $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
+                        if (isset($opinionsAll[$ar]['sub_title'])){
+                            $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>$opinionsAll[$ar]['sub_title'],"txt"=>$opinionsAll[$ar]['txt']]]];
+                        }else{
+                            $reOpinions[] = ["bTitle"=>$opinionsAll[$ar]["title"],"child"=>[["sTitle"=>"","txt"=>$opinionsAll[$ar]['txt']]]];
+                        }
                     }
                 }
             }
