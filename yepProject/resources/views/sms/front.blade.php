@@ -451,6 +451,8 @@
 
     <script type="text/javascript">
         $(document).on("click",".fn_show_result",function(){
+            event.preventDefault();
+            event.stopImmediatePropagation();
             $("#resultModalCenter").modal("show");
             let nCode = $(this).data("code");
 
