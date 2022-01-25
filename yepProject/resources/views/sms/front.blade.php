@@ -199,7 +199,7 @@
                                     <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
                                     <button class="btn btn-primary btn-sm fn_item" fn_code="{{ $datum->sp_code }}"><i class="fa fa-paper-plane"></i> {{ __('strings.lb_sms_paper_able') }} </button>
                                     <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
-                                    <button class="btn btn-outline-success btn-sm fn_item fn_show_result" data-code="{{ $datum->sp_code }}"><i class="fa fa-list"></i> {{ __('strings.lb_sent_results') }}</button>
+                                    <button class="btn btn-outline-success btn-sm fn_show_result" data-code="{{ $datum->sp_code }}"><i class="fa fa-list"></i> {{ __('strings.lb_sent_results') }}</button>
                                     @if (isset($datum->TestForm))
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
