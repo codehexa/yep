@@ -458,6 +458,8 @@
 
             $("#result_body").empty();
 
+            console.log("nCode : " + nCode);
+
             $.ajax({
                 type:"POST",
                 url:"/getSmsSendResultJson",
