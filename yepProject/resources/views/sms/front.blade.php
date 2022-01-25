@@ -458,8 +458,6 @@
 
             $("#result_body").empty();
 
-            console.log("nCode : " + nCode);
-
             $.ajax({
                 type:"POST",
                 url:"/getSmsSendResultJson",
@@ -477,11 +475,11 @@
                         htmls += "<td>" + obj.udate +"</td>";
                         htmls += "<td>" + obj.student + "</td>";
                         if (obj.status === "SENT"){
-                            htmls += "<td class='bg-white'>" + obj.status + "</td>";
+                            htmls += "<td class='text-primary'>" + obj.status + "</td>";
                         } else if (obj.status === "FALSE"){
-                            htmls += "<td class='bg-danger'>" + obj.status + "</td>";
+                            htmls += "<td class='text-danger'>" + obj.status + "</td>";
                         } else {
-                            htmls += "<td class='bg-success'>" + obj.status + "</td>";
+                            htmls += "<td class='text-success'>" + obj.status + "</td>";
                         }
                         htmls += "<td>" + obj.sview + "</td>";
                         htmls += "</tr>";
