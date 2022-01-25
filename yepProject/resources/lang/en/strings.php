@@ -438,6 +438,7 @@ return [
 
     /* send log */
     "lb_list_log_guide" => "시행자 명 : :NAME , 시행일자 : :SENT , 사용포인트 : :POINT , 결과코드 : :RESULT_CODE",
+    "lb_sent_results"   => "결과보기",
 
     /* page settings */
     "lb_page_setting"   => "결과 페이지 셋팅",

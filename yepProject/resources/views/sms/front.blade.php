@@ -197,6 +197,9 @@
                                     @break
                                     @case(\App\Models\Configurations::$SMS_STATUS_SENT)
                                     <span class="text-danger mr-1"> {{ __('strings.lb_sms_paper_sent') }}</span>
+                                    <button class="btn btn-primary btn-sm fn_item" fn_code="{{ $datum->sp_code }}"><i class="fa fa-paper-plane"></i> {{ __('strings.lb_sms_paper_able') }} </button>
+                                    <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
+                                    <button class="btn btn-outline-success btn-sm fn_item fn_show_result" data-code="{{ $datum->sp_code }}"><i class="fa fa-list"></i> {{ __('strings.lb_sent_results') }}</button>
                                     @if (isset($datum->TestForm))
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
@@ -390,6 +393,27 @@
     </div>
 </div>
 
+<div class="modal fade" id="resultModalCenter" tabindex="-1" role="dialog" aria-labelledby="resultModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLongTitle">{{ __('strings.lb_sent_results') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="overflow-auto" style="min-height: 500px;" id="result_body">
+                    <div class="list-group"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> {{ __('strings.fn_okay') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
     <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="true" >
         <div class="toast-header">
@@ -426,6 +450,47 @@
 @section('scripts')
 
     <script type="text/javascript">
+        $(document).on("click",".fn_show_result",function(){
+            $("#resultModalCenter").modal("show");
+            let nCode = $(this).data("code");
+
+            $("#result_body").empty();
+
+            $.ajax({
+                type:"POST",
+                url:"/getSmsSendResultJson",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "nCode":nCode
+                },
+                success:function(msg){
+                    //
+                    let htmls = "<table class='table'>";
+
+                    $.each(msg.data,function (i,obj){
+                        htmls += "<tr>";
+                        htmls += "<td>" + obj.udate +"</td>";
+                        htmls += "<td>" + obj.student + "</td>";
+                        if (obj.status === "SENT"){
+                            htmls += "<td class='bg-white'>" + obj.status + "</td>";
+                        } else if (obj.status === "FALSE"){
+                            htmls += "<td class='bg-danger'>" + obj.status + "</td>";
+                        } else {
+                            htmls += "<td class='bg-success'>" + obj.status + "</td>";
+                        }
+                        htmls += "<td>" + obj.sview + "</td>";
+                        htmls += "</tr>";
+                    });
+                    htmls += "</table>";
+                    $("#result_body").html(htmls);
+                },
+                error:function(e1,e2,e3){
+                    console.log(e2);
+                }
+            })
+        });
+
         // check all
         $(document).on("click","#excelAll , #excelAllLabel",function (){
             $(".fn_excel_item").each(function (i,obj){

@@ -135,6 +135,29 @@ class SmsJobController extends Controller
         ]);
     }
 
+    // get send result
+    public function getSmsSendResult(Request $request){
+        $spCode = $request->get("nCode");
+
+        $data = SmsSendResults::where('sms_paper_code','=',$spCode)->get();
+
+        $rs = [];
+        foreach($data as $datum){
+            $udate = $datum->updated_at;
+            $studentId = $datum->student_id;
+            $status = $datum->ssr_status;
+            $tel = $datum->sms_tel_no;
+            $ssrView = $datum->ssr_view;
+            $student = Students::find($studentId);
+            $student_name = $student->student_name;
+            $rs[] = [
+                "udate"=>$udate,"student"=>$student_name,"status"=>$status,"tel"=>$tel,"sview"=>$ssrView
+            ];
+        }
+
+        return response()->json(["data"=>$rs]);
+    }
+
     public function index($acId='',$gradeId='',$classId='',$tfId='',$year='',$hakgi='',$weeks=''){
 
         $user = Auth::user();

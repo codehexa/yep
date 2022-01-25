@@ -169,6 +169,7 @@ Route::post("/getTestPapersJson",[\App\Http\Controllers\SmsPapersController::cla
 Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "addSmsPapers"]);
 Route::get("/SmsExcelDownload/{ppId}",[\App\Http\Controllers\SmsJobController::class, "SmsExcelDownload"]);
 Route::post("/getTempPage",[\App\Http\Controllers\SmsJobController::class,"tempGet"]);
+Route::post("/getSmsSendResultJson",[\App\Http\Controllers\SmsJobController::class,"getSmsSendResult"]);
 
 
 Route::prefix('bms')->group(function(){
