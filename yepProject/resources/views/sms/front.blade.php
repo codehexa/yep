@@ -481,7 +481,7 @@
                         } else {
                             htmls += "<td class='text-success'>" + obj.status + "</td>";
                         }
-                        htmls += "<td>" + obj.sview + "</td>";
+                        //htmls += "<td>" + obj.sview + "</td>";
                         htmls += "</tr>";
                     });
                     htmls += "</table>";

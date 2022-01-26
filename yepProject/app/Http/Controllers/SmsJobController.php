@@ -143,7 +143,7 @@ class SmsJobController extends Controller
 
         $rs = [];
         foreach($data as $datum){
-            $udate = $datum->updated_at;
+            $udate = date("Y-m-d H:i:s",$datum->updated_at);
             $studentId = $datum->student_id;
             $status = $datum->ssr_status;
             $tel = $datum->sms_tel_no;
