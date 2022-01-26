@@ -878,6 +878,12 @@
                 loadURL = loadURL + "/ALL";
             }
 
+            if ($("#section_weeks").val() !== ""){
+                loadURL = loadURL + "/" + $("#section_weeks").val();
+            }else{
+                loadURL = loadURL + "/ALL";
+            }
+
             location.href = loadURL;
             //location.href = "/SmsFront/" + $("#section_academy").val() + "/" + $("#section_grade").val() + "/" + $("#section_class").val() +
                 "/" + $("#section_year").val() + "/" + $("#section_hakgi").val() + "/" + $("#section_weeks").val();
