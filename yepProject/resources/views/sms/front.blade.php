@@ -153,7 +153,7 @@
             </button>
 
             <button class="btn btn-outline-success btn-sm" id="btnDownExcel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</button>
-            <button class="btn btn-outline-primary btn-sm" id="btnDownExcel2"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</button>
+            <button class="btn btn-outline-primary btn-sm" id="btnDownExcel2"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download_2') }}</button>
 
             <div class="custom-control custom-checkbox ml-2">
                 <input type="checkbox" class="custom-control-input" id="excelAll">
