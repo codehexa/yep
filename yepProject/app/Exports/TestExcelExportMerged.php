@@ -25,7 +25,7 @@ class TestExcelExportMerged implements FromView
     {
         $ppId = $this->pp;
         $ppArray = explode("_",$ppId);
-        $papers = SmsPapers::whereIn('id',$ppArray)->distinct()->groupBy('tf_id')->get();
+        $papers = SmsPapers::whereIn('id',$ppArray)->get();
 
         $tfId = 0;
         $classIds = [];
@@ -39,7 +39,6 @@ class TestExcelExportMerged implements FromView
             $week = $pp->week;
         }
 
-        dd($classIds);
         $formCtrl = new TestFormsController();
 
         $testFormItems = TestFormsItems::where('tf_id','=',$tfId)->where('sj_parent_id','=',0)->orderBy('sj_index','asc')->get();
