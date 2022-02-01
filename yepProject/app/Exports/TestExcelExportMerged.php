@@ -6,6 +6,12 @@ use App\Http\Controllers\TestFormsController;
 use App\Models\SmsPapers;
 use App\Models\SmsScores;
 use App\Models\TestFormsItems;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
+use Ramsey\Collection\Collection;
+
 
 class TestExcelExportMerged implements FromView
 {
