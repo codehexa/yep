@@ -25,6 +25,8 @@ class TestExcelExportMerged implements FromView
         $classIds = [];
         $year = "";
         $week = "";
+
+        dd($papers);
         foreach ($papers as $pp){
             $classIds[] = $pp->cl_id;
             $tfId = $pp->tf_id;
