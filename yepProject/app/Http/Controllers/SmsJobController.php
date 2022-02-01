@@ -781,8 +781,9 @@ class SmsJobController extends Controller
     // check Same IDS
     public function SmsCheckSameTestId(Request $request){
         $pids = $request->get("pids");
+        $pidArray = explode(",",$pids);
 
-        $cnts = SmsPapers::select('tf_id')->whereIn('id',$pids)->count();
+        $cnts = SmsPapers::select('tf_id')->whereIn('id',$pidArray)->count();
         if ($cnts <= 0){
             return response()->json(['result'=>'NONE']);
         } elseif ($cnts > 1){
