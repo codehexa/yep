@@ -60,7 +60,9 @@ class TestExcelExportMerged implements FromView
             }
         }
 
+
         $classesTxt = implode(",",$classIds);
+        dd($classesTxt);
         $data = SmsScores::where('tf_id','=',$tfId)
             ->whereIn('cl_id',$classesTxt)
             ->get();
