@@ -202,7 +202,7 @@
                                     <a href="/SmsJobInput/{{ $datum->id }}" class="ml-1 btn btn-sm btn-primary"><i class="fa fa-keyboard"></i> {{ __('strings.fn_modify') }}</a>
                                     <button class="btn btn-outline-success btn-sm fn_show_result" data-code="{{ $datum->sp_code }}"><i class="fa fa-list"></i> {{ __('strings.lb_sent_results') }}</button>
                                     @if (isset($datum->TestForm))
-                                        <div class="custom-control custom-checkbox">
+                                        <div class="custom-control custom-checkbox ml-2">
                                             <input type="checkbox" value="{{ $datum->id }}" id="cst_check_{{ $datum->id }}" class="custom-control-input fn_excel_item" />
                                             <label class="custom-control-label" for="cst_check_{{ $datum->id }}"></label>
                                         </div>
