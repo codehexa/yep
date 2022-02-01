@@ -783,7 +783,7 @@ class SmsJobController extends Controller
         $pids = $request->get("pids");
         $pidArray = explode(",",$pids);
 
-        $cnts = SmsPapers::select('tf_id')->whereIn('id',$pidArray)->distinct()->groupBy('tf_id')->count();
+        $cnts = SmsPapers::select(DB::raw('count(*) as tf_id'))->whereIn('id',$pidArray)->distinct()->groupBy('tf_id')->count();
         if ($cnts <= 0){
             return response()->json(['result'=>'NONE']);
         } elseif ($cnts > 1){
