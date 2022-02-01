@@ -506,8 +506,10 @@
             event.preventDefault();
             pidToDown = []; // initialize
             $(".fn_excel_item").each(function(i,obj){
-                let pid = $(obj).val();
-                pidToDown.push(pid);
+                if ($(obj).is(":checked")){
+                    let pid = $(obj).val();
+                    pidToDown.push(pid);
+                }
             });
 
             if (pidToDown.length <= 0){
