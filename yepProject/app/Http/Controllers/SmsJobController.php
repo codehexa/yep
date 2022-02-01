@@ -804,6 +804,8 @@ class SmsJobController extends Controller
         $year = $papers->first()->year;
         $week = $papers->first()->week;
 
+        dd($papers);
+
         $excelFilename = date("Ymd")."_".$year."_".$week."_".$fileName.".xlsx";
         return Excel::download(new TestExcelExportMerged($sper),$excelFilename);
     }
