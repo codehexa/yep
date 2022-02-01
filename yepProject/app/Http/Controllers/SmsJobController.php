@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\TestExcelExport;
+use App\Exports\TestExcelExportMerged;
 use App\Models\Academies;
 use App\Models\Classes;
 use App\Models\Configurations;
@@ -787,7 +788,7 @@ class SmsJobController extends Controller
         if ($cnts <= 0){
             return response()->json(['result'=>'NONE']);
         } elseif ($cnts > 1){
-            return response()->json(['result'=>'false','cnt'=>$cnts]);
+            return response()->json(['result'=>'false']);
         } else {
             return response()->json(['result'=>'true']);
         }
@@ -795,7 +796,8 @@ class SmsJobController extends Controller
 
     // excel merged download
     public function SmsMergedExcelDownload($sper){
-        $papers = SmsPapers::whereIn('id',$sper)->groupBy('tf_id')->get();
+        $sperArray = explode(",",$sper);
+        $papers = SmsPapers::select(DB::raw('count(*) as tf_id'))->whereIn('id',$sperArray)->distinct()->groupBy('tf_id')->latest();
         $testform = TestForms::find($papers->tf_id);
         $fileName = $testform->form_title;
         $year = $papers->year;
