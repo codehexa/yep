@@ -39,6 +39,7 @@ class TestExcelExportMerged implements FromView
             $week = $pp->week;
         }
 
+        dd($classIds);
         $formCtrl = new TestFormsController();
 
         $testFormItems = TestFormsItems::where('tf_id','=',$tfId)->where('sj_parent_id','=',0)->orderBy('sj_index','asc')->get();
