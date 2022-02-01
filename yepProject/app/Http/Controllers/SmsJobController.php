@@ -787,7 +787,7 @@ class SmsJobController extends Controller
         if ($cnts <= 0){
             return response()->json(['result'=>'NONE']);
         } elseif ($cnts > 1){
-            return response()->json(['result'=>'false']);
+            return response()->json(['result'=>'false','cnt'=>$cnts]);
         } else {
             return response()->json(['result'=>'true']);
         }
