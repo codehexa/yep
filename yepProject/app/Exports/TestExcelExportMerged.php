@@ -60,11 +60,8 @@ class TestExcelExportMerged implements FromView
             }
         }
 
-
-        $classesTxt = implode(",",$classIds);
-        dd($classesTxt);
         $data = SmsScores::where('tf_id','=',$tfId)
-            ->whereIn('cl_id',$classesTxt)
+            ->whereIn('cl_id',$classIds)
             ->get();
 
         $fields = [];
@@ -78,7 +75,7 @@ class TestExcelExportMerged implements FromView
             ->join('classes','smsscores.cl_id','=','classes.id')
             ->select("smsscores.*","students.student_name","students.school_name","students.school_grade","students.teacher_name","classes.class_name")
             ->where('smsscores.tf_id','=',$tfId)
-            ->whereIn('smsscores.cl_id',$classesTxt)
+            ->whereIn('smsscores.cl_id',$classIds)
             ->where('smsscores.year','=',$year)
             ->where('smsscores.week','=',$week)
             ->where('students.is_live','=','Y')
