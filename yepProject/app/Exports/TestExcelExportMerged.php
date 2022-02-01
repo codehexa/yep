@@ -18,8 +18,9 @@ class TestExcelExportMerged implements FromView
     public function view():View
     {
         $ppId = $this->pp;
+        $ppArray = explode("_",$ppId);
 
-        $papers = SmsPapers::whereIn('id',$ppId)->groupBy('tf_id')->get();
+        $papers = SmsPapers::whereIn('id',$ppArray)->groupBy('tf_id')->get();
         $tfId = 0;
         $classIds = [];
         $year = "";
