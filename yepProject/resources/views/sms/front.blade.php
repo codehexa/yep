@@ -156,7 +156,7 @@
             <button class="btn btn-outline-primary btn-sm mr-1" id="btnDownExcel2"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download_2') }}</button>
 
             <div class="custom-control custom-checkbox ml-2">
-                <input type="checkbox" class="custom-control-input" id="excelAll">
+                <input type="checkbox" class="custom-control-input ml-2" id="excelAll">
                 <label class="custom-control-label" for="excelAll" id="excelAllLabel"><i class="fa fa-check-circle"></i> {{ __('strings.fn_select_all_or_not') }}</label>
             </div>
         </div>
