@@ -25,7 +25,6 @@ class TestExcelExportMerged implements FromView
     {
         $ppId = $this->pp;
         $ppArray = explode("_",$ppId);
-        dd($ppArray);
         $papers = SmsPapers::select('tf_id')->whereIn('id',$ppArray)->distinct()->groupBy('tf_id')->get();
 
         $tfId = 0;
@@ -33,7 +32,6 @@ class TestExcelExportMerged implements FromView
         $year = "";
         $week = "";
 
-        dd($papers);
         foreach ($papers as $pp){
             $classIds[] = $pp->cl_id;
             $tfId = $pp->tf_id;
