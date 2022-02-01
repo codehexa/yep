@@ -801,8 +801,8 @@ class SmsJobController extends Controller
 
         $testform = TestForms::find($papers->first()->tf_id);
         $fileName = $testform->form_title;
-        $year = $papers->year;
-        $week = $papers->week;
+        $year = $papers->first()->year;
+        $week = $papers->first()->week;
 
         $excelFilename = date("Ymd")."_".$year."_".$week."_".$fileName.".xlsx";
         return Excel::download(new TestExcelExportMerged($sper),$excelFilename);
