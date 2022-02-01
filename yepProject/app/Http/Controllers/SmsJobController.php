@@ -798,7 +798,7 @@ class SmsJobController extends Controller
     public function SmsMergedExcelDownload($sper){
         $sperArray = explode("_",$sper);
         $papers = SmsPapers::select('tf_id')->whereIn('id',$sperArray)->distinct()->groupBy('tf_id')->get();
-        dd($papers);
+
         $testform = TestForms::find($papers->tf_id);
         $fileName = $testform->form_title;
         $year = $papers->year;
