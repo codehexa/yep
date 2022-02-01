@@ -153,6 +153,7 @@
             </button>
 
             <button class="btn btn-outline-success btn-sm" id="btnDownExcel"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</button>
+            <button class="btn btn-outline-primary btn-sm" id="btnDownExcel2"><i class="fa fa-file-excel"></i> {{ __('strings.sms_excel_download') }}</button>
 
             <div class="custom-control custom-checkbox ml-2">
                 <input type="checkbox" class="custom-control-input" id="excelAll">
@@ -498,6 +499,49 @@
             $(".fn_excel_item").each(function (i,obj){
                 $(obj).prop("checked",$("#excelAll").prop("checked"));
             });
+        });
+
+        // Download Merged Excel
+        $(document).on("click","#btnDownExcel2",function(){
+            event.preventDefault();
+            pidToDown = []; // initialize
+            $(".fn_excel_item").each(function(i,obj){
+                let pid = $(obj).val();
+                pidToDown.push(pid);
+            });
+
+            if (pidToDown.length <= 0){
+                showAlert("{{ __('strings.err_choose_to_download') }}");
+                return;
+            }
+
+            $.ajax({
+                type:"POST",
+                url:"/SmsCheckSameTestId",
+                dataType:"json",
+                data:{
+                    "_token":$("input[name='_token']").val(),
+                    "pids":pidToDown.toString()
+                },
+                success:function(msg){
+                    if (msg.result === "true"){
+                        // download start
+                        let sper = pid.replace(",","_");
+                        let urlItem = "/SmsMergedExcelDownload/" + sper;
+                        location.href = urlItem;
+                    } else if (msg.result === "NONE"){
+                        showAlert("{{ __('strings.err_nothing_to_download') }}");
+                        return;
+                    } else {
+                        showAlert("{{ __('strings.err_only_same_test') }}");
+                        return;
+                    }
+                },
+                error:function(er1,er2,er3){
+                    showAlert(er2);
+                    return;
+                }
+            })
         });
 
         // Download Excel

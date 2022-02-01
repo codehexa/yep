@@ -326,6 +326,7 @@ return [
     "no_teacher_data"   => "선생님 지정이 되지 않았습니다",
     "err_show_only_my_class"    => "오직 선생님의 반 정보만 리스트 됩니다.",
     "sms_excel_download"    => "Download",
+    "sms_excel_download_2"    => "Merged Download",
 
     "sms_select_student"    => "확인할 학생을 선택하세요",
 
@@ -571,6 +572,9 @@ return [
 
 
     /* Excel Strings */
+    "err_choose_to_download"    => "다운로드할 대상을 선택하세요",
+    "err_nothing_to_download"   => "다운로드할 대상이 없습니다",
+    "err_only_same_test"    => "동일한 시험에 한 하여 합쳐서 다운로드 할 수 있습니다",
     "exc_student_info"   => "원생 자료",
     "exc_week_pre"   => "WEEK :NO",
     "exc_student_name"  => "원생명",

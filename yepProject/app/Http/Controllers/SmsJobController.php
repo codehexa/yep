@@ -762,6 +762,8 @@ class SmsJobController extends Controller
         return redirect("/SmsFront/{$smsPaper->ac_id}/{$smsPaper->sg_id}/{$smsPaper->cl_id}");
     }
 
+
+
     // excel download
     public function SmsExcelDownload($ppId){
         // 프린트용 템플릿은 views/exports/papers.blade.php 사용
@@ -773,6 +775,33 @@ class SmsJobController extends Controller
 
         $excelFilename = date("Ymd").$academyInfo->ac_name."_".$classInfo->class_name."_".$paper->year."_".$paper->week."_".$testform->form_title.".xlsx";
         return Excel::download(new TestExcelExport($ppId),$excelFilename);
+    }
+
+
+    // check Same IDS
+    public function SmsCheckSameTestId(Request $request){
+        $pids = $request->get("pids");
+
+        $cnts = SmsPapers::select('tf_id')->whereIn('id',$pids)->count();
+        if ($cnts <= 0){
+            return response()->json(['result'=>'NONE']);
+        } elseif ($cnts > 1){
+            return response()->json(['result'=>'false']);
+        } else {
+            return response()->json(['result'=>'true']);
+        }
+    }
+
+    // excel merged download
+    public function SmsMergedExcelDownload($sper){
+        $papers = SmsPapers::whereIn('id',$sper)->groupBy('tf_id')->get();
+        $testform = TestForms::find($papers->tf_id);
+        $fileName = $testform->form_title;
+        $year = $papers->year;
+        $week = $papers->week;
+
+        $excelFilename = date("Ymd")."_".$year."_".$week."_".$fileName.".xlsx";
+        return Excel::download(new TestExcelExportMerged($sper),$excelFilename);
     }
 
     // temp for preview

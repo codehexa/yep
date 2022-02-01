@@ -170,6 +170,8 @@ Route::post("/addSmsPapers",[\App\Http\Controllers\SmsPapersController::class, "
 Route::get("/SmsExcelDownload/{ppId}",[\App\Http\Controllers\SmsJobController::class, "SmsExcelDownload"]);
 Route::post("/getTempPage",[\App\Http\Controllers\SmsJobController::class,"tempGet"]);
 Route::post("/getSmsSendResultJson",[\App\Http\Controllers\SmsJobController::class,"getSmsSendResult"]);
+Route::post("/SmsCheckSameTestId",[\App\Http\Controllers\SmsJobController::class,"SmsCheckSameTestId"]);
+Route::get("/SmsMergedExcelDownload/{sper}",[\App\Http\Controllers\SmsJobController::class,"SmsMergedExcelDownload"]);
 
 
 Route::prefix('bms')->group(function(){
