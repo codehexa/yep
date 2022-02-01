@@ -800,11 +800,12 @@ class SmsJobController extends Controller
         $papers = SmsPapers::select('tf_id')->whereIn('id',$sperArray)->distinct()->groupBy('tf_id')->get();
 
         $testform = TestForms::find($papers->first()->tf_id);
-        $fileName = $testform->form_title;
-        $year = $papers->first()->year;
-        $week = $papers->first()->week;
 
-        dd($papers);
+        $paper = SmsPapers::where('id','=',$sperArray[0])->get();
+
+        $fileName = $testform->form_title;
+        $year = $paper->first()->year;
+        $week = $paper->first()->week;
 
         $excelFilename = date("Ymd")."_".$year."_".$week."_".$fileName.".xlsx";
         return Excel::download(new TestExcelExportMerged($sper),$excelFilename);
