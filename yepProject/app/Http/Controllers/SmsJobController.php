@@ -799,8 +799,8 @@ class SmsJobController extends Controller
         $sperArray = explode("_",$sper);
         $papers = SmsPapers::select('tf_id')->whereIn('id',$sperArray)->distinct()->groupBy('tf_id')->get();
 
-        dd($papers);
-        $testform = TestForms::find($papers->tf_id);
+        $testform = TestForms::find($papers->first()->tf_id);
+        dd($testform);
         $fileName = $testform->form_title;
         $year = $papers->year;
         $week = $papers->week;
