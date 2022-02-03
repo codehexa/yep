@@ -528,7 +528,7 @@
                 success:function(msg){
                     if (msg.result === "true"){
                         // download start
-                        let sper = pidToDown.toString().replace(",","_");
+                        let sper = pidToDown.toString().replace(/,/gi,"_");
                         let urlItem = "/SmsMergedExcelDownload/" + sper;
                         location.href = urlItem;
                     } else if (msg.result === "NONE"){
