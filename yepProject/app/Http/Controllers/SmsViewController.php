@@ -317,7 +317,7 @@ class SmsViewController extends Controller
         }else{
             $student_id = $student->id;
             $smsSettings = SmsPageSettings::first();    // on Mac get()->
-            $smsPaperFirst = $smsPapers->first();
+            $smsPaperFirst = $smsPapers;//->first();
 
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
 
