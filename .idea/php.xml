@@ -125,6 +125,32 @@
       <path value="$PROJECT_DIR$/yepProject/vendor/symfony/var-dumper 2" />
       <path value="$PROJECT_DIR$/yepProject/vendor/symfony/polyfill-mbstring 2" />
       <path value="$PROJECT_DIR$/yepProject/vendor/symfony/polyfill-php80 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/laravel/serializable-closure" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/filp/whoops 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/mockery/mockery 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phar-io/manifest 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpspec/prophecy 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpunit/php-text-template 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpunit/php-invoker 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpunit/phpunit 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpunit/php-code-coverage 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpunit/php-file-iterator 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/hamcrest/hamcrest-php 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpoffice/phpspreadsheet 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/diff 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/version 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/exporter 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/code-unit 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/cli-parser 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/object-enumerator 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/object-reflector 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/comparator 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/resource-operations 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/environment 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/sebastian/complexity 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/nunomaduro/collision 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpdocumentor/reflection-common 2" />
+      <path value="$PROJECT_DIR$/yepProject/vendor/phpdocumentor/type-resolver 2" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

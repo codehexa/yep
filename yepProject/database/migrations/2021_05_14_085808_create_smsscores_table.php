@@ -45,6 +45,16 @@ class CreateSmsscoresTable extends Migration
             $table->integer("score_17")->unsigned()->default(0);
             $table->integer("score_18")->unsigned()->default(0);
             $table->integer("score_19")->unsigned()->default(0);
+            $table->integer("score_20")->unsigned()->default(0);
+            $table->integer("score_21")->unsigned()->default(0);
+            $table->integer("score_22")->unsigned()->default(0);
+            $table->integer("score_23")->unsigned()->default(0);
+            $table->integer("score_24")->unsigned()->default(0);
+            $table->integer("score_25")->unsigned()->default(0);
+            $table->integer("score_26")->unsigned()->default(0);
+            $table->integer("score_27")->unsigned()->default(0);
+            $table->integer("score_28")->unsigned()->default(0);
+            $table->integer("score_29")->unsigned()->default(0);
             $table->text("opinion")->nullable();
             $table->text("wordian")->nullable();
             $table->enum("sent",["Y","N"])->default("N")->nullable();
