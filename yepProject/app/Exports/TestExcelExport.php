@@ -53,9 +53,12 @@ class TestExcelExport implements FromView
             }
         }
 
-        $data = SmsScores::where('tf_id','=',$paper->tf_id)
-            ->where('cl_id','=',$paper->cl_id)
-            ->get();
+//        $data = SmsScores::where('tf_id','=',$paper->tf_id)
+//            ->where('cl_id','=',$paper->cl_id)
+//            ->where('hg_id','=',$paper->hg_id)
+//            ->where('year','=',$paper->year)
+//            ->where('week','=',$paper->week)
+//            ->get();
 
         $fields = [];
         for ($i=0; $i < $head_col_size; $i++){
@@ -71,6 +74,7 @@ class TestExcelExport implements FromView
             ->where('smsscores.cl_id','=',$paper->cl_id)
             ->where('smsscores.year','=',$paper->year)
             ->where('smsscores.week','=',$paper->week)
+            ->where('smsscores.hg_id','=',$paper->hg_id)
             ->where('students.is_live','=','Y')
             ->get();
 

@@ -766,7 +766,7 @@ class SmsJobController extends Controller
 
 
     // excel download
-    public function SmsExcelDownload($ppId){
+    public function SmsExcelDownload($ppId){    // sms_papers.id
         // 프린트용 템플릿은 views/exports/papers.blade.php 사용
         // 데이터 클래스는 app/Exports/TestExcelExport.php 사용
         $paper = SmsPapers::find($ppId);

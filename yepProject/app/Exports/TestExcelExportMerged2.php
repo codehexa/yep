@@ -32,11 +32,13 @@ class TestExcelExport implements FromView
         $classIds = [];
         $year = "";
         $week = "";
+        $hgid = "";
         foreach ($papers as $pp){
             $classIds[] = $pp->cl_id;
             $tfId = $pp->tf_id;
             $year = $pp->year;
             $week = $pp->week;
+            $hgid = $pp->hg_id;
         }
 
         $formCtrl = new TestFormsController();
@@ -79,6 +81,7 @@ class TestExcelExport implements FromView
             ->whereIn('smsscores.cl_id',$classesTxt)
             ->where('smsscores.year','=',$year)
             ->where('smsscores.week','=',$week)
+            ->where('smsscores.hg_id','=',$hgid)
             ->where('students.is_live','=','Y')
             ->get();
 
