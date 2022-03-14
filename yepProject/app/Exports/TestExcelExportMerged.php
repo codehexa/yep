@@ -31,12 +31,14 @@ class TestExcelExportMerged implements FromView
         $classIds = [];
         $year = "";
         $week = "";
+        $hgId = "";
 
         foreach ($papers as $pp){
             $classIds[] = $pp->cl_id;
             $tfId = $pp->tf_id;
             $year = $pp->year;
             $week = $pp->week;
+            $hgId = $pp->hg_id;
         }
 
         $formCtrl = new TestFormsController();
@@ -78,6 +80,7 @@ class TestExcelExportMerged implements FromView
             ->whereIn('smsscores.cl_id',$classIds)
             ->where('smsscores.year','=',$year)
             ->where('smsscores.week','=',$week)
+            ->where('smsscores.hg_id','=',$hgId)
             ->where('students.is_live','=','Y')
             ->get();
 
