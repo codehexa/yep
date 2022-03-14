@@ -89,6 +89,7 @@ class SmsViewController extends Controller
                 $tfId = $smsPapers->tf_id;
                 $year = $smsPapers->year;
                 $week = $smsPapers->week;
+                $hgId = $smsPapers->hg_id;
 
                 $nowJsData = [];
 
@@ -109,6 +110,7 @@ class SmsViewController extends Controller
                     ->where('sg_id','=',$sgId)
                     ->where('year','=',$year)
                     ->where('week','=',$week)
+                    ->where('hg_id','=',$hgId)
                     ->first();
 
                 $teacherSays[] = $studentNowScore->opinion;
@@ -332,6 +334,7 @@ class SmsViewController extends Controller
                 $tfId = $smsPapers->tf_id;
                 $year = $smsPapers->year;
                 $week = $smsPapers->week;
+                $hgId = $smsPapers->hg_id;
 
                 $nowJsData = [];
 
@@ -351,6 +354,7 @@ class SmsViewController extends Controller
                     ->where('sg_id','=',$sgId)
                     ->where('year','=',$year)
                     ->where('week','=',$week)
+                    ->where('hg_id','=',$hgId)
                     ->first();
 
                 if (!isset($studentNowScore)){
