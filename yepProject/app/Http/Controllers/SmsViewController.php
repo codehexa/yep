@@ -123,6 +123,7 @@ class SmsViewController extends Controller
                     $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                         ->where('sg_id','=',$sgId)
                         ->where('year','=',$year)->where('week','=',$week -1)
+                        ->where('hg_id','=',$hgId)
                         ->first();
                 }
                 $subjectN = 0;
@@ -371,6 +372,7 @@ class SmsViewController extends Controller
                     $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                         ->where('sg_id','=',$sgId)
                         ->where('year','=',$year)->where('week','=',$week -1)
+                        ->where('hg_id','=',$hgId)
                         ->first();
                 }
 
