@@ -104,16 +104,28 @@ class SmsJobController extends Controller
         $settings = Settings::where('set_code','=',Configurations::$SETTINGS_PAGE_LIMIT_CODE)->first(); // on mac. get()-> add
         $limit = $settings->set_value;
 
+        $showHakgiRoot = Hakgi::where('show','=','Y')->get();
+        $showHakgiArray = [];
+        foreach($showHakgiRoot as $showHakgi){
+            $showHakgiArray[] = $showHakgi->id;
+        }
+
+
         if ($nowPower == Configurations::$USER_POWER_TEACHER){
             if ($acId != "" && $clId != ""){
-                $data = SmsPapers::where($dataWhere)->paginate($limit);
+                $data = SmsPapers::where($dataWhere)->
+                    whereIn("hg_id",$showHakgiArray)->
+                    paginate($limit);
             }else{
                 $data = SmsPapers::where('ac_id','=',$acId)
                     ->whereIn('cl_id',$myClassesIds)
+                    ->whereIn("hg_id",$showHakgiArray)
                     ->paginate($limit);
             }
         }else{
-            $data = SmsPapers::where($dataWhere)->paginate($limit);
+            $data = SmsPapers::where($dataWhere)->
+                whereIn("hg_id",$showHakgiArray)->
+                paginate($limit);
         }
 
 
