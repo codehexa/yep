@@ -114,17 +114,17 @@ class SmsJobController extends Controller
         if ($nowPower == Configurations::$USER_POWER_TEACHER){
             if ($acId != "" && $clId != ""){
                 $data = SmsPapers::where($dataWhere)->
-                    //whereIn("hg_id",$showHakgiArray)->
+                    whereIn("hg_id",$showHakgiArray)->
                     paginate($limit);
             }else{
                 $data = SmsPapers::where('ac_id','=',$acId)
                     ->whereIn('cl_id',$myClassesIds)
-                    //->whereIn("hg_id",$showHakgiArray)
+                    ->whereIn("hg_id",$showHakgiArray)
                     ->paginate($limit);
             }
         }else{
             $data = SmsPapers::where($dataWhere)->
-                //whereIn("hg_id",$showHakgiArray)->
+                whereIn("hg_id",$showHakgiArray)->
                 paginate($limit);
         }
 
