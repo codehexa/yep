@@ -48,17 +48,25 @@
                     <ul class="navbar-nav mr-auto">
                         @auth
                             @if (\Illuminate\Support\Facades\Auth::user()->power != \App\Models\Configurations::$USER_POWER_TEACHER)
-                                <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
-<!--                                <a href="/hakgis" class="btn btn-link text-warning">{{ __('strings.lb_hakgi_manage') }}</a>-->
-<!--                                <a href="/testWeeks" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>-->
-                                <a href="/subjects" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
-                                <a href="/comments" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
-                                <a href="/testForm" class="btn btn-link text-warning">{{ __('strings.lb_test_form_manage') }}</a>
-                                <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
+                                @if (\Illuminate\Support\Facades\Auth::user()->power == \App\Models\Configurations::$USER_POWER_ADMIN)
+
+                                    <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
+    <!--                                <a href="/hakgis" class="btn btn-link text-warning">{{ __('strings.lb_hakgi_manage') }}</a>-->
+    <!--                                <a href="/testWeeks" class="btn btn-link text-warning">{{ __('strings.lb_testweek_manage') }}</a>-->
+
+                                    <a href="/subjects" class="btn btn-link text-warning">{{ __('strings.lb_test_manage') }}</a>
+                                    <a href="/comments" class="btn btn-link text-warning">{{ __('strings.lb_comment_manage') }}</a>
+                                    <a href="/testForm" class="btn btn-link text-warning">{{ __('strings.lb_test_form_manage') }}</a>
+
+                                    <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
+                                @elseif(\Illuminate\Support\Facades\Auth::user()->power == \App\Models\Configurations::$USER_POWER_MANAGER)
+                                    <a href="/classes" class="btn btn-link text-warning">{{ __('strings.lb_ban_manage') }}</a>
+                                    <a href="/students" class="btn btn-link text-warning">{{ __('strings.lb_student_manage') }}</a>
+                                @endif
                             @endif
                                 <a href="/SmsFront" class="btn btn-link text-warning">{{ __('strings.lb_sms_work_manage') }}</a>
 
-                                <a href="/bms/front" class="btn btn-primary"><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }}</a>
+{{--                                <a href="/bms/front" class="btn btn-primary"><i class="fa fa-wind"></i> {{ __('strings.lb_bms_title') }}</a>--}}
                         @endauth
                     </ul>
 
