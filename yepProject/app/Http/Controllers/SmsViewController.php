@@ -40,7 +40,7 @@ class SmsViewController extends Controller
         $upTel = $request->get("up_parent_tel");
         $studentId = $request->get("up_student_id");
 
-        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->first();
+        $smsPapers = SmsPapers::where('sp_code','=',$upCode)->get()->first();   // 2022.05.10. 1st. first() 에서 get()->first()
         //$smsPapers = $smsPapersRoot->first();
 
         if (is_null($smsPapers)){
@@ -119,7 +119,7 @@ class SmsViewController extends Controller
                 }
 
                 $studentPreScore = null;
-                if ($week > 1){
+                if ($week > 1 && $sgId != 2){   // 2022.05.10. 1st. 중등부의 경우 이전 정보는 일정기간 처리하지 않음. 이준영 과장 요청시 $sgId != 2 를 삭제.
                     $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                         ->where('sg_id','=',$sgId)
                         ->where('year','=',$year)->where('week','=',$week -1)
@@ -319,7 +319,8 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
             $student_id = $student->id;
-            $smsSettings = SmsPageSettings::first();    // on Mac get()->
+            $smsSettings = SmsPageSettings::get()->first();    // on Mac get()-> ; 22.05.10. 1st. ::first(); 에서 get()->first(); 로 변경.
+            //dd($smsSettings);
             $smsPaperFirst = $smsPapers;//->first();
 
             $dataSet = [];  // dataSet 에는 타이틀과 이전 데이터 현재 데이터를 포함한 데이터를 규격한다.
@@ -368,7 +369,8 @@ class SmsViewController extends Controller
                 }
 
                 $studentPreScore = null;
-                if ($week > 1){
+                //dd($sgId);
+                if ($week > 1 && $sgId != 2){   // 2022.05.10. 1st. 중등부가 아니라면...
                     $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                         ->where('sg_id','=',$sgId)
                         ->where('year','=',$year)->where('week','=',$week -1)
