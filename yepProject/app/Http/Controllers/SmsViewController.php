@@ -319,7 +319,7 @@ class SmsViewController extends Controller
             return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }else{
             $student_id = $student->id;
-            $smsSettings = SmsPageSettings::get()->first();    // on Mac get()-> ; 22.05.10. 1st. ::first(); 에서 get()->first(); 로 변경.
+            $smsSettings = SmsPageSettings::first();    // on Mac get()-> ; 22.05.10. 1st. ::first(); 에서 get()->first(); 로 변경.
             //dd($smsSettings);
             $smsPaperFirst = $smsPapers;//->first();
 
