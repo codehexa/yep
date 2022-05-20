@@ -119,7 +119,7 @@ class SmsViewController extends Controller
                 }
 
                 $studentPreScore = null;
-                if ($week > 1 && $sgId != 2){   // 2022.05.10. 1st. 중등부의 경우 이전 정보는 일정기간 처리하지 않음. 이준영 과장 요청시 $sgId != 2 를 삭제.
+                if ($week > 1 ){   // 2022.05.10. 1st. 중등부의 경우 이전 정보는 일정기간 처리하지 않음. 이준영 과장 요청시 $sgId != 2 를 삭제. 2022.05.20. 이준영 과장 요청으로 롤백. && $sgId != 2
                     $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                         ->where('sg_id','=',$sgId)
                         ->where('year','=',$year)->where('week','=',$week -1)
@@ -370,7 +370,7 @@ class SmsViewController extends Controller
 
                 $studentPreScore = null;
                 //dd($sgId);
-                if ($week > 1 && $sgId != 2){   // 2022.05.10. 1st. 중등부가 아니라면...
+                if ($week > 1 ){   // 2022.05.10. 1st. 중등부가 아니라면... 2022.05.20 이준영 과장 요청으로 롤백
                     $studentPreScore = SmsScores::where('tf_id','=',$tfId)->where('st_id','=',$student_id)
                         ->where('sg_id','=',$sgId)
                         ->where('year','=',$year)->where('week','=',$week -1)
