@@ -300,7 +300,7 @@ class SmsViewController extends Controller
         $smsPapers = $smsPapersRoot->first();
 
         if (!isset($smsPapers)){
-            return redirect()->back()->withErrors(['msg'=>'NO_MATCH_STUDENT']);
+            return view('parent.detail')->withErrors(['msg'=>'NO_MATCH_STUDENT']);
         }
 
         $clId = $smsPapers->cl_id;
