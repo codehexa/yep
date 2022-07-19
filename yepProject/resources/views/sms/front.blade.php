@@ -592,8 +592,6 @@
             let spCode = $(this).data("spcode");
             let pId = $(this).data("code");
 
-            console.log(pId);
-
             //$("#previewModalCenter").modal("show");
 
             $.ajax({
@@ -605,7 +603,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    var pop = window.open('/sms/preview/' + msg.spcode,'Preview','width=650px');
+                    open('/sms/preview/' + msg.spcode,'Preview','width=650px');
                 }
             });
         });
