@@ -592,6 +592,8 @@
             let spCode = $(this).data("spcode");
             let pId = $(this).data("code");
 
+            console.log(pId);
+
             //$("#previewModalCenter").modal("show");
 
             $.ajax({
