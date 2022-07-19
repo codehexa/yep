@@ -603,7 +603,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    open('/sms/preview/' + msg.spcode,'Preview','width=650px');
+                    //open('/sms/preview/' + msg.spcode,'Preview','width=650px');
                 }
             });
         });
