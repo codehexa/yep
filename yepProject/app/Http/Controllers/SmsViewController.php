@@ -152,6 +152,7 @@ class SmsViewController extends Controller
                         $DoAdd = true;
                         $opinionItem["title"] = $cItem->sj_title;
                         $opinionItem["hasBlock"] = "Y";
+                        $opinionItem["sub_title"]   = $cItem->js_title;
                     } else if ($cItem->sj_depth == "1" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){
                         $score_N++;
                         $DoAdd = true;
@@ -403,6 +404,7 @@ class SmsViewController extends Controller
                         $nowTitle = $parent_title;
                         $DoAdd = true;
                         $opinionItem["title"] = $cItem->sj_title;
+                        $opinionItem["sub_title"]   = $cItem->js_title;
                         $opinionItem["hasBlock"] = "Y";
                     } else if ($cItem->sj_depth == "1" && $cItem->sj_has_child == "N" && $cItem->sj_type != "T"){
                         $score_N++;
