@@ -603,7 +603,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function(msg){
-                    //open('/sms/preview/' + msg.spcode,'Preview','width=650px');
+                    open('http://yepmanager.co.kr/sms/preview/' + msg.spcode,"_blank",'width=650px');
                 }
             });
         });
